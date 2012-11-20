@@ -4,7 +4,7 @@ HarmMeanAggregOperator::HarmMeanAggregOperator()
 {
 }
 
-int HarmMeanAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
+int HarmMeanAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{

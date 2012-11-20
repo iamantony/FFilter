@@ -11,7 +11,7 @@ class DefaultAggregOperator : public QObject
 	// == METHODS ==
 public:
 	explicit DefaultAggregOperator(QObject *parent = 0);
-	virtual int GetWorthlyValue(const QList<int> &t_list, int t_position = ERROR) = 0;
+	virtual int GetWorthlyValue(const QList<int> &t_list) = 0;
 
 protected:
 	virtual void ResetValues() = 0;

@@ -15,7 +15,7 @@ private:
 	// == METHODS ==
 public:
 	MaxAggregOperator();
-	int GetWorthlyValue(const QList<int> &t_list, int t_position = ERROR);
+	int GetWorthlyValue(const QList<int> &t_list);
 
 protected:
 	void ResetValues();

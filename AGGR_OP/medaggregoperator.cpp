@@ -4,7 +4,7 @@ MedAggregOperator::MedAggregOperator()
 {
 }
 
-int MedAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
+int MedAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{

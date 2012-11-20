@@ -26,7 +26,7 @@ FuncAggregOperator::FuncAggregOperator(AggregOperatorFunc::AggrOpFunc t_func)
 
 }
 
-int FuncAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
+int FuncAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{

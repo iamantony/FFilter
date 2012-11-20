@@ -4,7 +4,7 @@ MinAggregOperator::MinAggregOperator()
 {
 }
 
-int MinAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
+int MinAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{

@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG += warn_on
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Wextra -Werror
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

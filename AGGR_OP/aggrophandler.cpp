@@ -73,6 +73,11 @@ void AggrOpHandler::SetNewAggrOp()
 
 void AggrOpHandler::SlotSetAggrOpType(AggregOperatorType::AggrOpType t_type)
 {
+	if (0 == t_type)
+	{
+		qDebug() << "123";
+	}
+
 	m_aggrOpType = t_type;
 }
 
