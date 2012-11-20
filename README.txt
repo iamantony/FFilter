@@ -1,0 +1,1 @@
+This app is for study different types of noise filters in image processing.
