@@ -248,6 +248,12 @@ void SettingsDialog::on_powerLE_editingFinished()
 	}
 }
 
+// User want to change mask
+void SettingsDialog::on_setWeightBtn_clicked()
+{
+
+}
+
 // User pressed "OK" button
 void SettingsDialog::on_buttonBox_accepted()
 {

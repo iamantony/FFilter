@@ -89,6 +89,8 @@ private slots:
 	void on_funcCB_currentIndexChanged(const QString &arg1);
 	// User changed value of power
 	void on_powerLE_editingFinished();
+	// User want to change mask
+	void on_setWeightBtn_clicked();
 	// User pressed "OK" button
 	void on_buttonBox_accepted();
 	// User pressed "Cancel" button
