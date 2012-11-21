@@ -127,10 +127,10 @@ double ImgHandler::GetImgsSKO()
 QImage ImgHandler::PerfFiltration()
 {
 	PowerFilter filter;
+	filter.Init(&m_maskStruct, m_aggrOpHandler.GetAggrOperator());
 	connect(&filter, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
 
-	QImage filteredImg = filter.FilterImg(m_imgMass[TARGET_IMG], m_aggrOpHandler.GetAggrOperator());
-
+	QImage filteredImg = filter.FilterImg(m_imgMass[TARGET_IMG]);
 	if ( true == filteredImg.isNull() )
 	{
 		// Filtration failed. Return noised image.
@@ -138,7 +138,7 @@ QImage ImgHandler::PerfFiltration()
 	}
 	else
 	{
-		// Filtration is successed. Update parameters.
+		// Filtration successed. Update parameters.
 		m_imgMass[TARGET_IMG] = filteredImg;
 		GetImgsSKO();
 	}

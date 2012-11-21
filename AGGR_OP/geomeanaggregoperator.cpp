@@ -4,7 +4,7 @@ GeoMeanAggregOperator::GeoMeanAggregOperator()
 {
 }
 
-int GeoMeanAggregOperator::GetWorthlyValue(const QList<int> &t_list)
+int GeoMeanAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{

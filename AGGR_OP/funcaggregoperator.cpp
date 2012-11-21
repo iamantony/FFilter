@@ -26,7 +26,7 @@ FuncAggregOperator::FuncAggregOperator(AggregOperatorFunc::AggrOpFunc t_func)
 
 }
 
-int FuncAggregOperator::GetWorthlyValue(const QList<int> &t_list)
+int FuncAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{
@@ -40,7 +40,7 @@ int FuncAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 
 	for (int i = 0; i < m_numOfValues; i++)
 	{
-		m_summ += m_directFunc( (long double)t_list.at(i) );
+		m_summ += m_directFunc( t_list.at(i) );
 	}
 
 	m_summ *= (long double)1/m_numOfValues;

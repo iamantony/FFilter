@@ -4,7 +4,7 @@ HarmMeanAggregOperator::HarmMeanAggregOperator()
 {
 }
 
-int HarmMeanAggregOperator::GetWorthlyValue(const QList<int> &t_list)
+int HarmMeanAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{
@@ -18,7 +18,7 @@ int HarmMeanAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 
 	for (int i = 0; i < m_numOfValues; i++)
 	{
-		m_summ += (long double)1/t_list.at(i);
+		m_summ += 1/t_list.at(i);
 	}
 
 	m_summ *= (long double)1/m_numOfValues;

@@ -89,6 +89,10 @@ private slots:
 	void on_FilterButton_clicked();
 	// Construct Settings window
 	void on_actionSettings_triggered();
+	// Slot for destroing Settings for Aggreg Operators window on close
+	void SlotAggrOpSettingsClosed();
+
+	void on_actionMask_settings_triggered();
 
 private:
 	Ui::MainWindow *ui;

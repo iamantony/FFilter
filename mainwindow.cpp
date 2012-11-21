@@ -14,8 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-	// Deleting all created windows
-	delete m_settings;
 	delete ui;
 }
 
@@ -265,8 +263,6 @@ void MainWindow::on_FilterButton_clicked()
 // Construct Settings window
 void MainWindow::on_actionSettings_triggered()
 {
-	delete m_settings;
-
 	m_settings = new SettingsDialog(this);
 
 	m_settings->SetCurrAggrOp(m_imgHandler.GetAggrOpType());
@@ -282,5 +278,19 @@ void MainWindow::on_actionSettings_triggered()
 	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
 			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
 
+	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
+	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
+
 	m_settings->show();
+}
+
+// Slot for destroing Settings for Aggreg Operators window on close
+void MainWindow::SlotAggrOpSettingsClosed()
+{
+	delete m_settings;
+}
+
+void MainWindow::on_actionMask_settings_triggered()
+{
+
 }

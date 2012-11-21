@@ -1,6 +1,7 @@
 #ifndef MAXAGGREGOPERATOR_H
 #define MAXAGGREGOPERATOR_H
 
+#include <math.h>
 #include <QDebug>
 #include "defaultaggregoperator.h"
 #include "../DEFINES/common.h"
@@ -10,12 +11,13 @@ class MaxAggregOperator : public DefaultAggregOperator
 {
 	// == DATA ==
 private:
-	QList<int> m_listOfValues;
+	QList<long double> m_listOfValues;
+	int m_result;
 
 	// == METHODS ==
 public:
 	MaxAggregOperator();
-	int GetWorthlyValue(const QList<int> &t_list);
+	int GetWorthlyValue(const QList<long double> &t_list);
 
 protected:
 	void ResetValues();

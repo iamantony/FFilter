@@ -30,7 +30,6 @@ void SettingsDialog::SetDefaults()
 	m_currAggrOpType = AggregOperatorType::MIN;
 	m_currAggrOpFunc = AggregOperatorFunc::EXP;
 	m_currAggrOpPower = 1;
-	m_weights.append(1);
 
 	m_posOfFuncAggrOp = ERROR;
 	m_posOfMeanAggrOp = ERROR;
@@ -54,12 +53,6 @@ void SettingsDialog::FindGUIElements()
 	if ( false == aggrOpFuncList.isEmpty() )
 	{
 		m_funcType = aggrOpFuncList.at(0);
-	}
-
-	QList<QPushButton *> setWieghtBtn = this->findChildren<QPushButton *>("setWeightBtn");
-	if ( false == setWieghtBtn.isEmpty() )
-	{
-		m_weightsBtn = setWieghtBtn.at(0);
 	}
 }
 
@@ -246,12 +239,6 @@ void SettingsDialog::on_powerLE_editingFinished()
 	{
 		m_currAggrOpPower = power;
 	}
-}
-
-// User want to change mask
-void SettingsDialog::on_setWeightBtn_clicked()
-{
-
 }
 
 // User pressed "OK" button

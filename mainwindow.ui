@@ -202,6 +202,7 @@
      <string>Filter</string>
     </property>
     <addaction name="actionSettings"/>
+    <addaction name="actionMask_settings"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -210,7 +211,14 @@
     <addaction name="actionGrayscale_images"/>
     <addaction name="actionColor_images"/>
    </widget>
+   <widget class="QMenu" name="menuNoise">
+    <property name="title">
+     <string>Noise</string>
+    </property>
+    <addaction name="actionNoise_settings"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuNoise"/>
    <addaction name="menuFilter"/>
    <addaction name="menuMode"/>
   </widget>
@@ -267,7 +275,17 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>Settings for aggreg filter</string>
+   </property>
+  </action>
+  <action name="actionMask_settings">
+   <property name="text">
+    <string>Mask settings</string>
+   </property>
+  </action>
+  <action name="actionNoise_settings">
+   <property name="text">
+    <string>Noise settings</string>
    </property>
   </action>
  </widget>

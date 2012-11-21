@@ -4,7 +4,7 @@ MedAggregOperator::MedAggregOperator()
 {
 }
 
-int MedAggregOperator::GetWorthlyValue(const QList<int> &t_list)
+int MedAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{
@@ -23,16 +23,17 @@ int MedAggregOperator::GetWorthlyValue(const QList<int> &t_list)
 	if ( 0 == m_modulo )
 	{
 		// m_numOfValues is an even number
-		m_result += m_listOfValues.at(m_mean - 1);
-		m_result += m_listOfValues.at(m_mean);
-		m_result /= 2;
+		m_summ += m_listOfValues.at(m_mean - 1);
+		m_summ += m_listOfValues.at(m_mean);
+		m_summ /= 2;
 	}
 	else
 	{
 		// m_numOfValues is an odd number
-		m_result = m_listOfValues.at(m_mean);
+		m_summ = m_listOfValues.at(m_mean);
 	}
 
+	m_result = (int)floor(m_summ + 0.5);
 	if ( m_result < 0 )
 	{
 		m_result = 0;
@@ -51,5 +52,6 @@ void MedAggregOperator::ResetValues()
 	m_numOfValues = 0;
 	m_mean = 0;
 	m_modulo = 0;
+	m_summ = 0;
 	m_result = 0;
 }
