@@ -29,7 +29,6 @@ SOURCES += main.cpp\
 	AGGR_OP/medaggregoperator.cpp \
 	AGGR_OP/funcaggregoperator.cpp \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.cpp \
-	DIALOGS/FILTER_SETTINGS/maskweightsdialog.cpp \
     MASKS/maskstructure.cpp \
     DIALOGS/FILTER_SETTINGS/maskdialog.cpp
 
@@ -50,7 +49,6 @@ HEADERS  += mainwindow.h \
 	DEFINES/enums.h \
 	DEFINES/mask.h \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.h \
-	DIALOGS/FILTER_SETTINGS/maskweightsdialog.h \
     MASKS/maskstructure.h \
     DIALOGS/FILTER_SETTINGS/maskdialog.h
 
