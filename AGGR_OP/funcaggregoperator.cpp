@@ -40,7 +40,7 @@ int FuncAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 
 	for (int i = 0; i < m_numOfValues; i++)
 	{
-		m_summ += m_directFunc( t_list.at(i) );
+		m_summ += m_directFunc( 1 + t_list.at(i) );
 	}
 
 	m_summ *= (long double)1/m_numOfValues;

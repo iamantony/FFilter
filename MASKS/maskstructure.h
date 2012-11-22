@@ -2,7 +2,8 @@
 #define MASKSTRUCTURE_H
 
 #include <QObject>
-#include <QList>
+#include <QMessageBox>
+#include <QMap>
 #include <QImage>
 #include <QColor>
 #include <QDebug>
@@ -17,7 +18,8 @@ class MaskStructure : public QObject
 private:
 	unsigned int m_rowsInMask;
 	unsigned int m_columsInMask;
-	QList<Mask::MasksPixel> m_mask;
+	QMap<unsigned int, QList<Mask::MasksPixel> > m_mask;
+	QList<Mask::MasksPixel *> m_activeMask;
 	QColor m_pixel;
 	long double m_weightedPixel;
 	int m_maskPixelCoordX;
@@ -34,10 +36,14 @@ public:
 private:
 	void SetMaskSize();
 	void SetDefaultMask();
+	// Form list of only activated pixels in mask
+	void FormActiveMask();
+	// Check if mask structure is valid
+	bool CheckMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 
 public slots:
 	// Set new mask structure
-	void SlotSetMaskStructure(QList<Mask::MasksPixel> t_mask);
+	void SlotSetMaskStructure(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 };
 
 #endif // MASKSTRUCTURE_H

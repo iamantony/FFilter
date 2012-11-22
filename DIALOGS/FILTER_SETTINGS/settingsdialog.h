@@ -7,7 +7,6 @@
 #include <QMap>
 #include <QString>
 #include <QDebug>
-#include "maskweightsdialog.h"
 #include "DEFINES/common.h"
 #include "DEFINES/enums.h"
 
