@@ -195,3 +195,8 @@ void ImgHandler::SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func)
 {
 	m_aggrOpHandler.SlotSetAggrOpFunc(t_func);
 }
+
+void ImgHandler::SlotTransmitMask()
+{
+	emit SignalSendMask(m_maskStruct.GetMaskStructure());
+}

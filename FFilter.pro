@@ -30,7 +30,8 @@ SOURCES += main.cpp\
 	AGGR_OP/funcaggregoperator.cpp \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.cpp \
     MASKS/maskstructure.cpp \
-    DIALOGS/FILTER_SETTINGS/maskdialog.cpp
+    DIALOGS/FILTER_SETTINGS/maskdialog.cpp \
+    DIALOGS/NOISE_SETTINGS/noisedialog.cpp
 
 HEADERS  += mainwindow.h \
 	imghandler.h \
@@ -50,8 +51,10 @@ HEADERS  += mainwindow.h \
 	DEFINES/mask.h \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.h \
     MASKS/maskstructure.h \
-    DIALOGS/FILTER_SETTINGS/maskdialog.h
+    DIALOGS/FILTER_SETTINGS/maskdialog.h \
+    DIALOGS/NOISE_SETTINGS/noisedialog.h
 
 FORMS    += mainwindow.ui \
 	settingsdialog.ui \
-    DIALOGS/FILTER_SETTINGS/maskdialog.ui
+    DIALOGS/FILTER_SETTINGS/maskdialog.ui \
+    DIALOGS/NOISE_SETTINGS/noisedialog.ui

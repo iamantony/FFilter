@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 	m_progrBar = NULL;
 	m_settings = NULL;
+	m_maskTable = NULL;
 
 	Init();
 }
@@ -290,7 +291,31 @@ void MainWindow::SlotAggrOpSettingsClosed()
 	delete m_settings;
 }
 
+// Construct Mask Settings window
 void MainWindow::on_actionMask_settings_triggered()
 {
+	m_maskTable = new MaskDialog(this);
 
+	// Mask transfer
+	connect(m_maskTable, SIGNAL(SignalGetMask()), &m_imgHandler, SLOT(SlotTransmitMask()));
+	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> >)),
+			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int,QList<Mask::MasksPixel> >)));
+
+//	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
+//			&m_imgHandler, SLOT());
+
+	// Show window when ready
+	connect(m_maskTable, SIGNAL(SignalReadyToShow()), m_maskTable, SLOT(show()));
+
+	// What we should do when user close Mask Settings Dialog
+	connect(m_maskTable, SIGNAL(accepted()), this, SLOT(SlotMaskSettingsClosed()));
+	connect(m_maskTable, SIGNAL(rejected()), this, SLOT(SlotMaskSettingsClosed()));
+
+	m_maskTable->DefineSettings();
+}
+
+// Slot for destroing Mask Settings dialog
+void MainWindow::SlotMaskSettingsClosed()
+{
+	delete m_maskTable;
 }

@@ -19,7 +19,7 @@ private:
 	unsigned int m_rowsInMask;
 	unsigned int m_columsInMask;
 	QMap<unsigned int, QList<Mask::MasksPixel> > m_mask;
-	QList<Mask::MasksPixel *> m_activeMask;
+	QList<Mask::MasksPixel> m_activeMask;
 	QColor m_pixel;
 	long double m_weightedPixel;
 	int m_maskPixelCoordX;
@@ -33,6 +33,11 @@ public:
 									 const unsigned int &t_pixelCoordX,
 									 const unsigned int &t_pixelCoordY);
 
+	// Send current mask
+	QMap<unsigned int, QList<Mask::MasksPixel> > GetMaskStructure();
+	// Set new mask structure
+	void SetMaskStructure(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
+
 private:
 	void SetMaskSize();
 	void SetDefaultMask();
@@ -40,10 +45,6 @@ private:
 	void FormActiveMask();
 	// Check if mask structure is valid
 	bool CheckMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
-
-public slots:
-	// Set new mask structure
-	void SlotSetMaskStructure(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 };
 
 #endif // MASKSTRUCTURE_H

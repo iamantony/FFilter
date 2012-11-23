@@ -56,13 +56,14 @@ signals:
 	void SignalUIProgrBarValue(int t_value);
 	void SignalUIResetProgrBar();
 	void SignalUISetSKO(double t_sko);
+	void SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> > t_mask);
 
 public slots:
 	void SlotProcProgressPrc(int t_value);
-
 	void SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType t_type);
 	void SlotAggrOpPowerChanged(double t_power);
 	void SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func);
+	void SlotTransmitMask();
 };
 
 #endif // IMGHANDLER_H
