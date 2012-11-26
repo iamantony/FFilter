@@ -24,9 +24,9 @@ class MaskDialog : public QDialog
 	// == DATA ==
 private:
 	Ui::MaskDialog *ui;
-	QMenu m_cellMenu;
-	QAction m_cellActive;
-	QAction m_cellEnable;
+	QMenu *m_cellMenu;
+	QAction *m_cellEnable;
+	QAction *m_cellCentral;
 	QMap<unsigned int, QList<Mask::MasksPixel> > m_mask;
 	QTableWidget *m_maskTable;
 	unsigned int m_rowsInMask;
@@ -50,14 +50,19 @@ public:
 
 private:
 	void FindGUIElements();
-	void CreateCellMenu();
 	void SetDefaults();
+	void CreateCellMenu();
 	void SetTableSize();
 	// Fill table mask with given mask structure
 	void FillTable();
 	void GetMaskSize();
 	void FillCels();
 	QBrush SetCellColor(CellType t_type);
+	void ChangeCellState(const int &t_row,
+						 const int &t_column,
+						 const bool &t_state);
+
+	void ChangeCentralCell(const int &t_row, const int &t_column);
 
 signals:
 	void SignalGetMask();
@@ -68,6 +73,9 @@ public slots:
 	void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 
 private slots:
+	void SlotActivateCell();
+	void SlotCenterCell();
+	void SlotShowContextMenu(const QPoint &t_point);
 	// User pressed "OK" button
 	void on_buttonBox_accepted();
 	// User pressed "Cancel" button

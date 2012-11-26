@@ -49,6 +49,7 @@ void MaskStructure::SetDefaultMask()
 				pixel.isCentral = true;
 				pixel.posX = centralPixelX;
 				pixel.posY = centralPixelY;
+				pixel.weight = 1;
 			}
 			else
 			{
@@ -56,9 +57,8 @@ void MaskStructure::SetDefaultMask()
 				pixel.isCentral = false;
 				pixel.posX = x - centralPixelX;
 				pixel.posY = y - centralPixelY;
+				pixel.weight = 0;
 			}
-
-			pixel.weight = 1;
 
 			newLine.append(pixel);
 		}

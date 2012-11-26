@@ -6,13 +6,19 @@ MaskDialog::MaskDialog(QWidget *parent) :
 	ui(new Ui::MaskDialog)
 {
 	ui->setupUi(this);
+
+	m_cellEnable = NULL;
+	m_cellCentral = NULL;
+	m_cellMenu = NULL;
+	m_maskTable = NULL;
+
 	FindGUIElements();
 	SetDefaults();
+	CreateCellMenu();
 }
 
 MaskDialog::~MaskDialog()
 {
-	SetDefaults();
 	delete ui;
 }
 
@@ -30,15 +36,6 @@ void MaskDialog::FindGUIElements()
 	}
 }
 
-void MaskDialog::CreateCellMenu()
-{
-	m_cellActive.setText("Pixel is active");
-
-	m_cellEnable.setText("Pixel is enabled");
-
-//	m_cellMenu.addAction()
-}
-
 void MaskDialog::SetDefaults()
 {
 	m_mask.clear();
@@ -47,6 +44,30 @@ void MaskDialog::SetDefaults()
 	m_columsInMask = 0;
 
 	SetTableSize();
+}
+
+void MaskDialog::CreateCellMenu()
+{
+	m_cellEnable = new QAction(m_maskTable);
+	m_cellEnable->setText(tr("Enabled"));
+	m_cellEnable->setCheckable(true);
+	m_cellEnable->setChecked(false);
+	connect(m_cellEnable, SIGNAL(triggered()), this, SLOT(SlotActivateCell()));
+
+	m_cellCentral = new QAction(m_maskTable);
+	m_cellCentral->setText(tr("Central"));
+	m_cellCentral->setCheckable(true);
+	m_cellCentral->setChecked(false);
+	connect(m_cellCentral, SIGNAL(triggered()), this, SLOT(SlotCenterCell()));
+
+	m_cellMenu = new QMenu(m_maskTable);
+	m_cellMenu->addAction(m_cellEnable);
+	m_cellMenu->addAction(m_cellCentral);
+
+	m_maskTable->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(m_maskTable, SIGNAL(customContextMenuRequested(const QPoint &)),
+			this, SLOT(SlotShowContextMenu(const QPoint &)));
+
 }
 
 void MaskDialog::SetTableSize()
@@ -138,6 +159,14 @@ void MaskDialog::FillCels()
 					type = ACTIVE_SIMPLE;
 				}
 			}
+			else
+			{
+				// Disable editing for this item
+				Qt::ItemFlags flags = item->flags();
+				flags = flags & ~Qt::ItemIsEditable;
+				item->setFlags(flags);
+//				item->setFlags(Qt::ItemIsEditable);
+			}
 
 			QBrush cellColor = SetCellColor(type);
 			item->setBackground(cellColor);
@@ -175,6 +204,59 @@ QBrush MaskDialog::SetCellColor(CellType t_type)
 	return brush;
 }
 
+void MaskDialog::ChangeCellState(const int &t_row,
+								 const int &t_column,
+								 const bool &t_state)
+{
+	if ( (t_row < 0) || (t_column < 0) )
+	{
+		qDebug() << "MaskDialog::ChangeCellState(): Error - index out of range";
+		return;
+	}
+
+	QTableWidgetItem *cellItem = m_maskTable->item(t_row, t_column);
+	if ( NULL == cellItem )
+	{
+		qDebug() << "MaskDialog::ChangeCellState(): Error - item is NULL (" << t_row << t_column << ")";
+		return;
+	}
+
+	// Change color of the cell
+	QBrush cellColor;
+	if ( true == t_state )
+	{
+		cellColor = SetCellColor(ACTIVE_SIMPLE);
+	}
+	else
+	{
+		cellColor = SetCellColor(UNACTIVE);
+	}
+
+	cellItem->setBackground(cellColor);
+
+	// Change cell edit property
+	Qt::ItemFlags flags = cellItem->flags();
+	if ( true == t_state )
+	{
+		flags |= Qt::ItemIsEditable;
+	}
+	else
+	{
+		flags &= ~Qt::ItemIsEditable;
+	}
+
+	cellItem->setFlags(flags);
+
+
+	// Change state of pixel in mask
+	m_mask[t_row][t_column].isEnabled = t_state;
+}
+
+//void MaskDialog::ChangeCentralCell(const int &t_row, const int &t_column)
+//{
+
+//}
+
 void MaskDialog::SlotRecieveMask(QMap< unsigned int, QList<Mask::MasksPixel> > t_mask)
 {
 	if ( true == t_mask.isEmpty() )
@@ -189,6 +271,50 @@ void MaskDialog::SlotRecieveMask(QMap< unsigned int, QList<Mask::MasksPixel> > t
 	FillTable();
 
 	emit SignalReadyToShow();
+}
+
+void MaskDialog::SlotActivateCell()
+{
+//	qDebug() << "SlotActivateCell()";
+//	qDebug() << "Row =" << m_maskTable->currentRow() << "; Colum =" << m_maskTable->currentColumn();
+
+	int row = m_maskTable->currentRow();
+	int column = m_maskTable->currentColumn();
+	bool state = m_cellEnable->isChecked();
+
+	ChangeCellState(row, column, state);
+}
+
+void MaskDialog::SlotCenterCell()
+{
+	qDebug() << "SlotCenterCell()";
+	qDebug() << "Row =" << m_maskTable->currentRow() << "; Colum =" << m_maskTable->currentColumn();
+}
+
+void MaskDialog::SlotShowContextMenu(const QPoint &t_point)
+{
+	int row = m_maskTable->currentRow();
+	int column = m_maskTable->currentColumn();
+
+	if ( true == m_mask[row].at(column).isEnabled )
+	{
+		m_cellEnable->setChecked(true);
+	}
+	else
+	{
+		m_cellEnable->setChecked(false);
+	}
+
+	if ( true == m_mask[row].at(column).isCentral )
+	{
+		m_cellCentral->setChecked(true);
+	}
+	else
+	{
+		m_cellCentral->setChecked(false);
+	}
+
+	m_cellMenu->exec(m_maskTable->viewport()->mapToGlobal(t_point));
 }
 
 // User pressed "OK" button

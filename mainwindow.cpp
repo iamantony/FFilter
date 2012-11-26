@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+
 	m_progrBar = NULL;
 	m_settings = NULL;
 	m_maskTable = NULL;
@@ -56,13 +57,23 @@ void MainWindow::SetModeActionGroup()
 	m_modeGroup->setExclusive(true);
 
 	QList<QAction *> listGray = this->findChildren<QAction *>("actionGrayscale_images");
-	if ( false == listGray.isEmpty() )
+	if ( true == listGray.isEmpty() )
+	{
+		qDebug() << "MainWindow::SetModeActionGroup(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_modeGroup->addAction(listGray.at(0));
 	}
 
 	QList<QAction *> listColor = this->findChildren<QAction *>("actionColor_images");
-	if ( false == listColor.isEmpty() )
+	if ( true == listColor.isEmpty() )
+	{
+		qDebug() << "MainWindow::SetModeActionGroup(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_modeGroup->addAction(listColor.at(0));
 	}
@@ -75,37 +86,67 @@ void MainWindow::SetModeActionGroup()
 void MainWindow::FindGUIElements()
 {
 	QList<QProgressBar *> progrBarList = this->findChildren<QProgressBar *>("progressBar");
-	if ( false == progrBarList.isEmpty() )
+	if ( true == progrBarList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_progrBar = progrBarList.at(0);
 	}
 
 	QList<QSlider *> sliderList = this->findChildren<QSlider *>("noiseLeveler");
-	if ( false == sliderList.isEmpty() )
+	if ( true == sliderList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_noiseLeveler = sliderList.at(0);
 	}
 
 	QList<QPushButton *> noiseBtnList = this->findChildren<QPushButton *>("NoiseButton");
-	if ( false == noiseBtnList.isEmpty() )
+	if ( true == noiseBtnList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_noiseBtn = noiseBtnList.at(0);
 	}
 
 	QList<QPushButton *> filterBtnList = this->findChildren<QPushButton *>("FilterButton");
-	if ( false == filterBtnList.isEmpty() )
+	if ( true == filterBtnList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_filterBtn = filterBtnList.at(0);
 	}
 
 	QList<QLineEdit *> lineSKOList = this->findChildren<QLineEdit *>("lineSKO");
-	if ( false == lineSKOList.isEmpty() )
+	if ( true == lineSKOList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_lineSKO = lineSKOList.at(0);
 	}
 
 	QList<QLabel *> noiseLblList = this->findChildren<QLabel *>("labelNoisePrc");
-	if ( false == noiseLblList.isEmpty() )
+	if ( true == noiseLblList.isEmpty() )
+	{
+		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
+		this->close();
+	}
+	else
 	{
 		m_noiseLbl = noiseLblList.at(0);
 	}
