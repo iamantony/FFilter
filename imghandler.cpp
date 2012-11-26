@@ -129,7 +129,7 @@ QImage ImgHandler::PerfFiltration()
 	PowerFilter filter;
 	filter.Init(m_maskStruct.GetMask(), m_aggrOpHandler.GetAggrOperator());
 	connect(&filter, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
-	connect(&filter, SIGNAL(SignalFiltrationFinished()), &m_maskStruct, SLOT(SlotFiltrationDone));
+	connect(&filter, SIGNAL(SignalFiltrationFinished()), &m_maskStruct, SLOT(SlotFiltrationDone()));
 
 	QImage filteredImg = filter.FilterImg(m_imgMass[TARGET_IMG]);
 	if ( true == filteredImg.isNull() )
