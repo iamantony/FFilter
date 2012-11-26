@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'maskdialog.ui'
 **
-** Created: Mon 26. Nov 10:34:20 2012
+** Created: Mon 26. Nov 14:31:59 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -60,7 +60,7 @@ public:
 
     void retranslateUi(QDialog *MaskDialog)
     {
-        MaskDialog->setWindowTitle(QApplication::translate("MaskDialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        MaskDialog->setWindowTitle(QApplication::translate("MaskDialog", "Mask settings", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

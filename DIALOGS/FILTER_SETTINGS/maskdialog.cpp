@@ -159,19 +159,13 @@ void MaskDialog::FillCels()
 					type = ACTIVE_SIMPLE;
 				}
 			}
-			else
+
+			bool hasNewCell = ChangeCell(item, type);
+			if ( false == hasNewCell )
 			{
-				// Disable editing for this item
-				Qt::ItemFlags flags = item->flags();
-				flags = flags & ~Qt::ItemIsEditable;
-				item->setFlags(flags);
-//				item->setFlags(Qt::ItemIsEditable);
+				qDebug() << "MaskDialog::FillCels(): Error - can't set new cell";
+				reject();
 			}
-
-			QBrush cellColor = SetCellColor(type);
-			item->setBackground(cellColor);
-
-			// TODO: can't add action to QTableWidgetItem. Should I change it to LineEdit?
 
 			m_maskTable->setItem(row, col, item);
 		}
@@ -204,58 +198,132 @@ QBrush MaskDialog::SetCellColor(CellType t_type)
 	return brush;
 }
 
-void MaskDialog::ChangeCellState(const int &t_row,
-								 const int &t_column,
+void MaskDialog::ChangeCellState(const unsigned int &t_row,
+								 const unsigned int &t_column,
 								 const bool &t_state)
 {
-	if ( (t_row < 0) || (t_column < 0) )
+	if ( (m_rowsInMask <= t_row) || (m_columsInMask <= t_column) )
 	{
 		qDebug() << "MaskDialog::ChangeCellState(): Error - index out of range";
-		return;
+		reject();
 	}
 
 	QTableWidgetItem *cellItem = m_maskTable->item(t_row, t_column);
 	if ( NULL == cellItem )
 	{
 		qDebug() << "MaskDialog::ChangeCellState(): Error - item is NULL (" << t_row << t_column << ")";
-		return;
+		reject();
 	}
 
-	// Change color of the cell
-	QBrush cellColor;
+	CellType type = DEFAULT_LAST;
 	if ( true == t_state )
 	{
-		cellColor = SetCellColor(ACTIVE_SIMPLE);
+		type = ACTIVE_SIMPLE;
 	}
 	else
 	{
-		cellColor = SetCellColor(UNACTIVE);
+		type = UNACTIVE;
 	}
 
-	cellItem->setBackground(cellColor);
-
-	// Change cell edit property
-	Qt::ItemFlags flags = cellItem->flags();
-	if ( true == t_state )
+	bool stateChanged = ChangeCell(cellItem, type);
+	if ( false == stateChanged )
 	{
-		flags |= Qt::ItemIsEditable;
+		qDebug() << "MaskDialog::ChangeCellState(): Error - can't change state of cell";
+		reject();
 	}
-	else
-	{
-		flags &= ~Qt::ItemIsEditable;
-	}
-
-	cellItem->setFlags(flags);
-
 
 	// Change state of pixel in mask
 	m_mask[t_row][t_column].isEnabled = t_state;
 }
 
-//void MaskDialog::ChangeCentralCell(const int &t_row, const int &t_column)
-//{
+void MaskDialog::ChangeCentralCell(const unsigned int &t_row, const unsigned int &t_column)
+{
+	if ( (m_rowsInMask <= t_row) || (m_columsInMask <= t_column) )
+	{
+		qDebug() << "MaskDialog::ChangeCentralCell(): Error - index out of range";
+		reject();
+	}
 
-//}
+	// Lets deactivate our current central cell
+	for (unsigned int row = 0; row < m_rowsInMask; row++)
+	{
+		for (unsigned int column = 0; column < m_columsInMask; column++)
+		{
+			if ( true == m_mask[row][column].isCentral )
+			{
+				QTableWidgetItem *oldCentralItem = m_maskTable->item(row, column);
+				if ( NULL == oldCentralItem )
+				{
+					qDebug() << "MaskDialog::ChangeCentralCell(): Error - old central item is NULL";
+					reject();
+				}
+
+				bool cellDeactivated = ChangeCell(oldCentralItem, ACTIVE_SIMPLE);
+				if ( false == cellDeactivated )
+				{
+					qDebug() << "MaskDialog::ChangeCentralCell(): Error - can't deactivate central cell";
+					reject();
+				}
+
+				m_mask[row][column].isCentral = false;
+			}
+		}
+	}
+
+	// And activate new central cell
+	QTableWidgetItem *newCentralItem = m_maskTable->item(t_row, t_column);
+	if ( NULL == newCentralItem )
+	{
+		qDebug() << "MaskDialog::ChangeCentralCell(): Error - new central item is NULL";
+		reject();
+	}
+
+	bool hasNewCentralCell = ChangeCell(newCentralItem, ACTIVE_CENTRAL);
+	if ( false == hasNewCentralCell )
+	{
+		qDebug() << "MaskDialog::ChangeCentralCell(): Error - can't set new central cell";
+		reject();
+	}
+
+	m_mask[t_row][t_column].isCentral = true;
+	m_mask[t_row][t_column].isEnabled = true;
+}
+
+bool MaskDialog::ChangeCell(QTableWidgetItem *t_item, CellType t_type)
+{
+	if ( (NULL == t_item) || ( t_type >= DEFAULT_LAST) )
+	{
+		qDebug() << "MaskDialog::ChangeCell(): Error - invalid arguments";
+		return false;
+	}
+
+	Qt::ItemFlags cellFlags = t_item->flags();
+
+	switch(t_type)
+	{
+		case ACTIVE_SIMPLE:
+		case ACTIVE_CENTRAL:
+			cellFlags |= Qt::ItemIsEditable;
+			break;
+
+		case UNACTIVE:
+			cellFlags &= ~Qt::ItemIsEditable;
+			break;
+
+		default:
+		{
+			qDebug() << "MaskDialog::ChangeCell(): Error - invalid cell type";
+			return false;
+		}
+	}
+
+	t_item->setFlags(cellFlags);
+
+	QBrush backgroundColor = SetCellColor(t_type);
+	t_item->setBackground(backgroundColor);
+
+	return true;
+}
 
 void MaskDialog::SlotRecieveMask(QMap< unsigned int, QList<Mask::MasksPixel> > t_mask)
 {
@@ -275,11 +343,8 @@ void MaskDialog::SlotRecieveMask(QMap< unsigned int, QList<Mask::MasksPixel> > t
 
 void MaskDialog::SlotActivateCell()
 {
-//	qDebug() << "SlotActivateCell()";
-//	qDebug() << "Row =" << m_maskTable->currentRow() << "; Colum =" << m_maskTable->currentColumn();
-
-	int row = m_maskTable->currentRow();
-	int column = m_maskTable->currentColumn();
+	unsigned int row = (unsigned int)m_maskTable->currentRow();
+	unsigned int column = (unsigned int)m_maskTable->currentColumn();
 	bool state = m_cellEnable->isChecked();
 
 	ChangeCellState(row, column, state);
@@ -287,8 +352,10 @@ void MaskDialog::SlotActivateCell()
 
 void MaskDialog::SlotCenterCell()
 {
-	qDebug() << "SlotCenterCell()";
-	qDebug() << "Row =" << m_maskTable->currentRow() << "; Colum =" << m_maskTable->currentColumn();
+	unsigned int row = (unsigned int)m_maskTable->currentRow();
+	unsigned int column = (unsigned int)m_maskTable->currentColumn();
+
+	ChangeCentralCell(row, column);
 }
 
 void MaskDialog::SlotShowContextMenu(const QPoint &t_point)

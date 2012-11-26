@@ -58,11 +58,12 @@ private:
 	void GetMaskSize();
 	void FillCels();
 	QBrush SetCellColor(CellType t_type);
-	void ChangeCellState(const int &t_row,
-						 const int &t_column,
+	void ChangeCellState(const unsigned int &t_row,
+						 const unsigned int &t_column,
 						 const bool &t_state);
 
-	void ChangeCentralCell(const int &t_row, const int &t_column);
+	void ChangeCentralCell(const unsigned int &t_row, const unsigned int &t_column);
+	bool ChangeCell(QTableWidgetItem *t_item, CellType t_type);
 
 signals:
 	void SignalGetMask();
