@@ -127,8 +127,9 @@ double ImgHandler::GetImgsSKO()
 QImage ImgHandler::PerfFiltration()
 {
 	PowerFilter filter;
-	filter.Init(&m_maskStruct, m_aggrOpHandler.GetAggrOperator());
+	filter.Init(m_maskStruct.GetMask(), m_aggrOpHandler.GetAggrOperator());
 	connect(&filter, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
+	connect(&filter, SIGNAL(SignalFiltrationFinished()), &m_maskStruct, SLOT(SlotFiltrationDone));
 
 	QImage filteredImg = filter.FilterImg(m_imgMass[TARGET_IMG]);
 	if ( true == filteredImg.isNull() )
@@ -199,4 +200,15 @@ void ImgHandler::SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func)
 void ImgHandler::SlotTransmitMask()
 {
 	emit SignalSendMask(m_maskStruct.GetMaskStructure());
+}
+
+void ImgHandler::SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask)
+{
+	if ( true == t_mask.isEmpty() )
+	{
+		qDebug() << "ImgHandler::SlotRecieveMask(): Error - invalid arguments";
+		return;
+	}
+
+	m_maskStruct.SetMaskStructure(t_mask);
 }

@@ -17,7 +17,7 @@ void PowerFilter::SetDefaults()
 	m_aggregOperator = NULL;
 }
 
-void PowerFilter::Init(MaskStructure *t_mask, DefaultAggregOperator *t_aggrOp)
+void PowerFilter::Init(ActiveMask *t_mask, DefaultAggregOperator *t_aggrOp)
 {
 	if ( (NULL == t_mask) || (NULL == t_aggrOp) )
 	{
@@ -31,7 +31,7 @@ void PowerFilter::Init(MaskStructure *t_mask, DefaultAggregOperator *t_aggrOp)
 
 QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
 {
-	if ( (NULL == m_mask) || ( NULL == m_aggregOperator ) )
+	if ( (NULL == m_mask) || (NULL == m_aggregOperator) )
 	{
 		qDebug() << "PowerFilter::FilterImg(): Error - filter is not initialised";
 		return t_noisyImg;
@@ -79,6 +79,8 @@ QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
 			emit SignalProcProgressPrc(progressPrc);
 		}
 	}
+
+	emit SignalFiltrationFinished();
 
 	return filteredImg;
 }

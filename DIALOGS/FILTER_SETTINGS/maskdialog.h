@@ -9,6 +9,7 @@
 #include <QColor>
 #include <QMenu>
 #include <QAction>
+#include <QMessageBox>
 #include <QDebug>
 #include "DEFINES/common.h"
 #include "DEFINES/mask.h"
@@ -64,6 +65,8 @@ private:
 
 	void ChangeCentralCell(const unsigned int &t_row, const unsigned int &t_column);
 	bool ChangeCell(QTableWidgetItem *t_item, CellType t_type);
+	bool RebuildMask();
+	long double GetWeightFromCell(QTableWidgetItem *t_item);
 
 signals:
 	void SignalGetMask();
@@ -78,9 +81,11 @@ private slots:
 	void SlotCenterCell();
 	void SlotShowContextMenu(const QPoint &t_point);
 	// User pressed "OK" button
-	void on_buttonBox_accepted();
+	void on_okBtn_clicked();
 	// User pressed "Cancel" button
-	void on_buttonBox_rejected();
+	void on_cancelBtn_clicked();
+	virtual void accept();
+	virtual void reject();
 };
 
 #endif // MASKDIALOG_H

@@ -64,6 +64,7 @@ public slots:
 	void SlotAggrOpPowerChanged(double t_power);
 	void SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func);
 	void SlotTransmitMask();
+	void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 };
 
 #endif // IMGHANDLER_H

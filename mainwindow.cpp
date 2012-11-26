@@ -339,11 +339,11 @@ void MainWindow::on_actionMask_settings_triggered()
 
 	// Mask transfer
 	connect(m_maskTable, SIGNAL(SignalGetMask()), &m_imgHandler, SLOT(SlotTransmitMask()));
-	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> >)),
-			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int,QList<Mask::MasksPixel> >)));
+	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
+			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 
-//	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
-//			&m_imgHandler, SLOT());
+	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
+			&m_imgHandler, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 
 	// Show window when ready
 	connect(m_maskTable, SIGNAL(SignalReadyToShow()), m_maskTable, SLOT(show()));

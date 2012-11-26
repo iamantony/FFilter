@@ -70,20 +70,22 @@ void MaskStructure::SetDefaultMask()
 	if ( false == maskIsGood )
 	{
 		qDebug() << "MaskStructure::SetDefaultMask(): Critical error - can't form proper default mask";
-
 		m_mask.clear();
-		m_activeMask.clear();
 
 		return;
 	}
+}
 
-	FormActiveMask();
+ActiveMask* MaskStructure::GetMask()
+{
+	m_activeMask = new ActiveMask (FormActiveMask());
+	return m_activeMask;
 }
 
 // Form list of only activated pixels in mask
-void MaskStructure::FormActiveMask()
+QList<Mask::MasksPixel> MaskStructure::FormActiveMask()
 {
-	m_activeMask.clear();
+	QList<Mask::MasksPixel> activeMask;
 
 	// Get list of all keys in full mask
 	QList<unsigned int> linesInMask = m_mask.keys();
@@ -98,10 +100,12 @@ void MaskStructure::FormActiveMask()
 			// And add to list only active (enabled) pixels
 			if ( true == pixelsInLine->at(pixel).isEnabled )
 			{
-				m_activeMask.append(pixelsInLine->at(pixel));
+				activeMask.append(pixelsInLine->at(pixel));
 			}
 		}
 	}
+
+	return activeMask;
 }
 
 // Check if mask structure is valid
@@ -154,46 +158,6 @@ bool MaskStructure::CheckMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mas
 	return true;
 }
 
-// Get list of active pixel in mask for defined pixel from image t_img
-QList<long double> MaskStructure::FormPixelMask(const QImage &t_img,
-												const unsigned int &t_pixelCoordX,
-												const unsigned int &t_pixelCoordY)
-{
-	if ( true == t_img.isNull() )
-	{
-		qDebug() << "MaskStructure::FormPixelMask(): Error - invalid arguments";
-		QList<long double> emptyList;
-		return emptyList;
-	}
-
-	QList<long double> pixelsInMask;
-
-	for (int i = 0; i < m_activeMask.size(); i++)
-	{
-		m_maskPixelCoordX = t_pixelCoordX;
-		m_maskPixelCoordY = t_pixelCoordY;
-
-		if ( false == m_activeMask.at(i).isCentral )
-		{
-			m_maskPixelCoordX += m_activeMask.at(i).posX;
-			m_maskPixelCoordY += m_activeMask.at(i).posY;
-		}
-
-		if ( false == t_img.valid(m_maskPixelCoordX, m_maskPixelCoordY) )
-		{
-			continue;
-		}
-
-		m_pixel = t_img.pixel(m_maskPixelCoordX, m_maskPixelCoordY);
-
-		m_weightedPixel = m_activeMask.at(i).weight * (long double)m_pixel.red();
-
-		pixelsInMask.append(m_weightedPixel);
-	}
-
-	return pixelsInMask;
-}
-
 // Send current mask
 QMap<unsigned int, QList<Mask::MasksPixel> > MaskStructure::GetMaskStructure()
 {
@@ -218,6 +182,9 @@ void MaskStructure::SetMaskStructure(QMap<unsigned int, QList<Mask::MasksPixel> 
 
 	m_mask.clear();
 	m_mask = t_mask;
+}
 
-	FormActiveMask();
+void MaskStructure::SlotFiltrationDone()
+{
+	delete m_activeMask;
 }
