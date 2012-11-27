@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue 20. Nov 10:49:04 2012
+** Created: Tue 27. Nov 09:58:29 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -37,6 +37,8 @@ public:
     QAction *actionGrayscale_images;
     QAction *actionColor_images;
     QAction *actionSettings;
+    QAction *actionMask_settings;
+    QAction *actionNoise_settings;
     QWidget *centralWidget;
     QPushButton *FilterButton;
     QLabel *originalImg;
@@ -52,6 +54,7 @@ public:
     QMenu *menuFile;
     QMenu *menuFilter;
     QMenu *menuMode;
+    QMenu *menuNoise;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -85,6 +88,10 @@ public:
         actionColor_images->setCheckable(true);
         actionSettings = new QAction(MainWindow);
         actionSettings->setObjectName(QString::fromUtf8("actionSettings"));
+        actionMask_settings = new QAction(MainWindow);
+        actionMask_settings->setObjectName(QString::fromUtf8("actionMask_settings"));
+        actionNoise_settings = new QAction(MainWindow);
+        actionNoise_settings->setObjectName(QString::fromUtf8("actionNoise_settings"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         FilterButton = new QPushButton(centralWidget);
@@ -138,16 +145,21 @@ public:
         menuFilter->setObjectName(QString::fromUtf8("menuFilter"));
         menuMode = new QMenu(menuBar);
         menuMode->setObjectName(QString::fromUtf8("menuMode"));
+        menuNoise = new QMenu(menuBar);
+        menuNoise->setObjectName(QString::fromUtf8("menuNoise"));
         MainWindow->setMenuBar(menuBar);
 
         menuBar->addAction(menuFile->menuAction());
+        menuBar->addAction(menuNoise->menuAction());
         menuBar->addAction(menuFilter->menuAction());
         menuBar->addAction(menuMode->menuAction());
         menuFile->addAction(actionOpen);
         menuFile->addAction(actionExit);
         menuFilter->addAction(actionSettings);
+        menuFilter->addAction(actionMask_settings);
         menuMode->addAction(actionGrayscale_images);
         menuMode->addAction(actionColor_images);
+        menuNoise->addAction(actionNoise_settings);
 
         retranslateUi(MainWindow);
         QObject::connect(actionExit, SIGNAL(triggered()), MainWindow, SLOT(close()));
@@ -164,7 +176,9 @@ public:
         actionMean->setText(QApplication::translate("MainWindow", "Mean-square", 0, QApplication::UnicodeUTF8));
         actionGrayscale_images->setText(QApplication::translate("MainWindow", "Grayscale images", 0, QApplication::UnicodeUTF8));
         actionColor_images->setText(QApplication::translate("MainWindow", "Color images", 0, QApplication::UnicodeUTF8));
-        actionSettings->setText(QApplication::translate("MainWindow", "Settings", 0, QApplication::UnicodeUTF8));
+        actionSettings->setText(QApplication::translate("MainWindow", "Settings for aggreg filter", 0, QApplication::UnicodeUTF8));
+        actionMask_settings->setText(QApplication::translate("MainWindow", "Mask settings", 0, QApplication::UnicodeUTF8));
+        actionNoise_settings->setText(QApplication::translate("MainWindow", "Noise settings", 0, QApplication::UnicodeUTF8));
         FilterButton->setText(QApplication::translate("MainWindow", "Filter", 0, QApplication::UnicodeUTF8));
         originalImg->setText(QString());
         resultImg->setText(QString());
@@ -175,6 +189,7 @@ public:
         menuFile->setTitle(QApplication::translate("MainWindow", "File", 0, QApplication::UnicodeUTF8));
         menuFilter->setTitle(QApplication::translate("MainWindow", "Filter", 0, QApplication::UnicodeUTF8));
         menuMode->setTitle(QApplication::translate("MainWindow", "Mode", 0, QApplication::UnicodeUTF8));
+        menuNoise->setTitle(QApplication::translate("MainWindow", "Noise", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -1,6 +1,7 @@
 #ifndef MEDAGGREGOPERATOR_H
 #define MEDAGGREGOPERATOR_H
 
+#include <math.h>
 #include <QList>
 #include <QDebug>
 #include "defaultaggregoperator.h"
@@ -11,16 +12,17 @@ class MedAggregOperator : public DefaultAggregOperator
 {
 	// == DATA ==
 private:
-	QList<int> m_listOfValues;
+	QList<long double> m_listOfValues;
 	int m_numOfValues;
 	int m_modulo;
 	int m_mean;
+	long double m_summ;
 	int m_result;
 
 	// == METHODS ==
 public:
 	MedAggregOperator();
-	int GetWorthlyValue(const QList<int> &t_list, int t_position = ERROR);
+	int GetWorthlyValue(const QList<long double> &t_list);
 
 protected:
 	void ResetValues();

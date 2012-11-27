@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsdialog.ui'
 **
-** Created: Tue 20. Nov 10:49:04 2012
+** Created: Tue 27. Nov 09:58:29 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -16,7 +16,6 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QComboBox>
 #include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -27,28 +26,22 @@ QT_BEGIN_NAMESPACE
 class Ui_SettingsDialog
 {
 public:
-    QDialogButtonBox *buttonBox;
     QLabel *aggrOpLbl;
     QComboBox *aggrOpCB;
     QLabel *powerLbl;
     QLineEdit *powerLE;
     QLabel *funcLbl;
     QComboBox *funcCB;
-    QPushButton *setWeightBtn;
-    QLabel *label_2;
+    QPushButton *cancelBtn;
+    QPushButton *okBtn;
 
     void setupUi(QDialog *SettingsDialog)
     {
         if (SettingsDialog->objectName().isEmpty())
             SettingsDialog->setObjectName(QString::fromUtf8("SettingsDialog"));
-        SettingsDialog->resize(339, 176);
+        SettingsDialog->resize(339, 137);
         SettingsDialog->setFocusPolicy(Qt::TabFocus);
         SettingsDialog->setModal(true);
-        buttonBox = new QDialogButtonBox(SettingsDialog);
-        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(60, 140, 271, 32));
-        buttonBox->setOrientation(Qt::Horizontal);
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         aggrOpLbl = new QLabel(SettingsDialog);
         aggrOpLbl->setObjectName(QString::fromUtf8("aggrOpLbl"));
         aggrOpLbl->setGeometry(QRect(10, 10, 191, 20));
@@ -67,16 +60,14 @@ public:
         funcCB = new QComboBox(SettingsDialog);
         funcCB->setObjectName(QString::fromUtf8("funcCB"));
         funcCB->setGeometry(QRect(220, 70, 111, 22));
-        setWeightBtn = new QPushButton(SettingsDialog);
-        setWeightBtn->setObjectName(QString::fromUtf8("setWeightBtn"));
-        setWeightBtn->setGeometry(QRect(240, 100, 91, 23));
-        label_2 = new QLabel(SettingsDialog);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(10, 105, 141, 16));
+        cancelBtn = new QPushButton(SettingsDialog);
+        cancelBtn->setObjectName(QString::fromUtf8("cancelBtn"));
+        cancelBtn->setGeometry(QRect(250, 100, 75, 23));
+        okBtn = new QPushButton(SettingsDialog);
+        okBtn->setObjectName(QString::fromUtf8("okBtn"));
+        okBtn->setGeometry(QRect(170, 100, 75, 23));
 
         retranslateUi(SettingsDialog);
-        QObject::connect(buttonBox, SIGNAL(accepted()), SettingsDialog, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), SettingsDialog, SLOT(reject()));
 
         aggrOpCB->setCurrentIndex(-1);
 
@@ -90,8 +81,8 @@ public:
         aggrOpLbl->setText(QApplication::translate("SettingsDialog", "Aggregation Operator type:", 0, QApplication::UnicodeUTF8));
         powerLbl->setText(QApplication::translate("SettingsDialog", "Power:", 0, QApplication::UnicodeUTF8));
         funcLbl->setText(QApplication::translate("SettingsDialog", "Function type:", 0, QApplication::UnicodeUTF8));
-        setWeightBtn->setText(QApplication::translate("SettingsDialog", "Set weights", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("SettingsDialog", "Set mask:", 0, QApplication::UnicodeUTF8));
+        cancelBtn->setText(QApplication::translate("SettingsDialog", "Cancel", 0, QApplication::UnicodeUTF8));
+        okBtn->setText(QApplication::translate("SettingsDialog", "OK", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

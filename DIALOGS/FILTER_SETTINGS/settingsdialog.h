@@ -7,7 +7,6 @@
 #include <QMap>
 #include <QString>
 #include <QDebug>
-#include "maskweightsdialog.h"
 #include "DEFINES/common.h"
 #include "DEFINES/enums.h"
 
@@ -36,7 +35,6 @@ private:
 	QComboBox *m_aggrOpTypes;
 	QComboBox *m_funcType;
 	QLineEdit *m_power;
-	QPushButton *m_weightsBtn;
 
 	QMap<AggregOperatorType::AggrOpType, QString> m_aggrOpTypesMap;
 	QMap<AggregOperatorFunc::AggrOpFunc, QString> m_aggrOpFuncsMap;
@@ -44,7 +42,6 @@ private:
 	AggregOperatorType::AggrOpType m_currAggrOpType;
 	AggregOperatorFunc::AggrOpFunc m_currAggrOpFunc;
 	double m_currAggrOpPower;
-	QList<double> m_weights;
 
 	int m_posOfFuncAggrOp;
 	int m_posOfMeanAggrOp;
@@ -90,9 +87,11 @@ private slots:
 	// User changed value of power
 	void on_powerLE_editingFinished();
 	// User pressed "OK" button
-	void on_buttonBox_accepted();
+	void on_okBtn_clicked();
 	// User pressed "Cancel" button
-	void on_buttonBox_rejected();
+	void on_cancelBtn_clicked();
+	virtual void accept();
+	virtual void reject();
 };
 
 #endif // SETTINGSDIALOG_H

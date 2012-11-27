@@ -4,7 +4,7 @@ MinAggregOperator::MinAggregOperator()
 {
 }
 
-int MinAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
+int MinAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 {
 	if ( true == t_list.isEmpty() )
 	{
@@ -17,10 +17,21 @@ int MinAggregOperator::GetWorthlyValue(const QList<int> &t_list, int t_position)
 	m_listOfValues = t_list;
 	qSort(m_listOfValues);
 
-	return m_listOfValues.first();
+	m_result = (int)floor(m_listOfValues.first() + 0.5);
+	if ( m_result < 0 )
+	{
+		m_result = 0;
+	}
+	else if ( 255 < m_result )
+	{
+		m_result = 255;
+	}
+
+	return m_result;
 }
 
 void MinAggregOperator::ResetValues()
 {
 	m_listOfValues.clear();
+	m_result = 0;
 }

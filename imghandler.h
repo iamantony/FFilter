@@ -6,6 +6,7 @@
 #include <QMap>
 #include "imgservice.h"
 #include "FILTERS/powerfilter.h"
+#include "MASKS/maskstructure.h"
 #include "AGGR_OP/aggrophandler.h"
 #include "DEFINES/common.h"
 #include "DEFINES/enums.h"
@@ -22,6 +23,7 @@ private:
 	QImage m_imgMass[2];
 	unsigned int m_noiseLvlPercent;
 	ImageMode::ImgMode m_imgMode;
+	MaskStructure m_maskStruct;
 	AggrOpHandler m_aggrOpHandler;
 
 	// == METHODS ==
@@ -54,13 +56,15 @@ signals:
 	void SignalUIProgrBarValue(int t_value);
 	void SignalUIResetProgrBar();
 	void SignalUISetSKO(double t_sko);
+	void SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> > t_mask);
 
 public slots:
 	void SlotProcProgressPrc(int t_value);
-
 	void SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType t_type);
 	void SlotAggrOpPowerChanged(double t_power);
 	void SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func);
+	void SlotTransmitMask();
+	void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 };
 
 #endif // IMGHANDLER_H

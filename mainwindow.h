@@ -14,6 +14,8 @@
 #include <QPushButton>
 #include <QDebug>
 #include "DIALOGS/FILTER_SETTINGS/settingsdialog.h"
+#include "DIALOGS/FILTER_SETTINGS/maskdialog.h"
+#include "DIALOGS/NOISE_SETTINGS/noisedialog.h"
 #include "imghandler.h"
 #include "DEFINES/common.h"
 #include "DEFINES/enums.h"
@@ -35,6 +37,7 @@ class MainWindow : public QMainWindow
 	// == DATA ==
 private:
 	SettingsDialog *m_settings;
+	MaskDialog *m_maskTable;
 	ImgHandler m_imgHandler;
 	QLabel m_origImgLbl;
 	QLabel m_resultImgLbl;
@@ -89,6 +92,12 @@ private slots:
 	void on_FilterButton_clicked();
 	// Construct Settings window
 	void on_actionSettings_triggered();
+	// Slot for destroing Settings for Aggreg Operators window on close
+	void SlotAggrOpSettingsClosed();
+	// Construct Mask Settings window
+	void on_actionMask_settings_triggered();
+	// Slot for destroing Mask Settings dialog
+	void SlotMaskSettingsClosed();
 
 private:
 	Ui::MainWindow *ui;

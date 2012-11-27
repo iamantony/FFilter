@@ -3,31 +3,52 @@
 PowerFilter::PowerFilter(QObject *parent) :
 	QObject(parent)
 {
+	SetDefaults();
 }
 
-QImage PowerFilter::FilterImg(QImage t_noisyImg, DefaultAggregOperator *t_aggrOp)
+PowerFilter::~PowerFilter()
 {
-	if ( (true == t_noisyImg.isNull()) || (NULL == t_aggrOp) )
+	SetDefaults();
+}
+
+void PowerFilter::SetDefaults()
+{
+	m_mask = NULL;
+	m_aggregOperator = NULL;
+}
+
+void PowerFilter::Init(ActiveMask *t_mask, DefaultAggregOperator *t_aggrOp)
+{
+	if ( (NULL == t_mask) || (NULL == t_aggrOp) )
 	{
-		qDebug() << "FilterImg(): Error - invalid arguments";
+		qDebug() << "PowerFilter::Init(): Error - invalid arguments";
+		return;
+	}
+
+	m_mask = t_mask;
+	m_aggregOperator = t_aggrOp;
+}
+
+QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
+{
+	if ( (NULL == m_mask) || (NULL == m_aggregOperator) )
+	{
+		qDebug() << "PowerFilter::FilterImg(): Error - filter is not initialised";
+		return t_noisyImg;
+	}
+
+	if ( true == t_noisyImg.isNull() )
+	{
+		qDebug() << "PowerFilter::FilterImg(): Error - invalid arguments";
 		return t_noisyImg;
 	}
 
 	QImage filteredImg = t_noisyImg;
-	int imgW = t_noisyImg.width();
-	int imgH = t_noisyImg.height();
+	unsigned int imgW = (unsigned int)t_noisyImg.width();
+	unsigned int imgH = (unsigned int)t_noisyImg.height();
 
-	int maskMinX = 0;
-	int maskMaxX = 0;
-	int maskMinY = 0;
-	int maskMaxY = 0;
-	const int maskOffset = 1;
-	const int lastPixelOnX = imgW - 1;
-	const int lastPixelOnY = imgH - 1;
-
-	QList<int> listOfPixels;
+	QList<long double> pixelsInMask;
 	int resultLum = 0;
-	QColor pixel;
 	QRgb newPixel;
 
 	const int onePercent = imgW/100;
@@ -35,28 +56,14 @@ QImage PowerFilter::FilterImg(QImage t_noisyImg, DefaultAggregOperator *t_aggrOp
 	int counter = 0;
 
 	// For each pixel in image
-	for (int w = 0; w < imgW; w++)
+	for (unsigned int w = 0; w < imgW; w++)
 	{
-		for (int h = 0; h < imgH; h++)
+		for (unsigned int h = 0; h < imgH; h++)
 		{
 			// Get list of pixels in mask
-			listOfPixels.clear();
-
-			maskMinX = qMax( (w - maskOffset), 0 );
-			maskMaxX = qMin( lastPixelOnX, (w + maskOffset) );
-			maskMinY = qMax( (h - maskOffset), 0 );
-			maskMaxY = qMin( lastPixelOnY, (h + maskOffset) );
-
-			for (int x = maskMinX; x <= maskMaxX; x++)
-			{
-				for (int y = maskMinY; y <= maskMaxY; y++)
-				{
-					pixel = t_noisyImg.pixel(x, y);
-					listOfPixels.append(pixel.red());
-				}
-			}
-
-			resultLum = t_aggrOp->GetWorthlyValue(listOfPixels);
+			pixelsInMask.clear();
+			pixelsInMask = m_mask->FormPixelMask(t_noisyImg, w, h);
+			resultLum = m_aggregOperator->GetWorthlyValue(pixelsInMask);
 			if ( ERROR != resultLum )
 			{
 				newPixel = qRgb(resultLum, resultLum, resultLum);
@@ -72,6 +79,8 @@ QImage PowerFilter::FilterImg(QImage t_noisyImg, DefaultAggregOperator *t_aggrOp
 			emit SignalProcProgressPrc(progressPrc);
 		}
 	}
+
+	emit SignalFiltrationFinished();
 
 	return filteredImg;
 }

@@ -23,6 +23,8 @@ void SettingsDialog::Init()
 	SetAggrOpFuncList();
 	FindMeanAgOp();
 	FindFunctionalAgOp();
+
+	this->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 void SettingsDialog::SetDefaults()
@@ -30,7 +32,6 @@ void SettingsDialog::SetDefaults()
 	m_currAggrOpType = AggregOperatorType::MIN;
 	m_currAggrOpFunc = AggregOperatorFunc::EXP;
 	m_currAggrOpPower = 1;
-	m_weights.append(1);
 
 	m_posOfFuncAggrOp = ERROR;
 	m_posOfMeanAggrOp = ERROR;
@@ -39,27 +40,36 @@ void SettingsDialog::SetDefaults()
 void SettingsDialog::FindGUIElements()
 {
 	QList<QComboBox *> agrrOpTypeList = this->findChildren<QComboBox *>("aggrOpCB");
-	if ( false == agrrOpTypeList.isEmpty() )
+	if ( true == agrrOpTypeList.isEmpty() )
+	{
+		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find list of arrgeg operators types";
+		emit rejected();
+	}
+	else
 	{
 		m_aggrOpTypes = agrrOpTypeList.at(0);
 	}
 
 	QList<QLineEdit *> powerLEList = this->findChildren<QLineEdit *>("powerLE");
-	if ( false == powerLEList.isEmpty() )
+	if ( true == powerLEList.isEmpty() )
+	{
+		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find line for power value";
+		emit rejected();
+	}
+	else
 	{
 		m_power = powerLEList.at(0);
 	}
 
 	QList<QComboBox *> aggrOpFuncList = this->findChildren<QComboBox *>("funcCB");
-	if ( false == aggrOpFuncList.isEmpty() )
+	if ( true == aggrOpFuncList.isEmpty() )
+	{
+		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find list of functions types";
+		emit rejected();
+	}
+	else
 	{
 		m_funcType = aggrOpFuncList.at(0);
-	}
-
-	QList<QPushButton *> setWieghtBtn = this->findChildren<QPushButton *>("setWeightBtn");
-	if ( false == setWieghtBtn.isEmpty() )
-	{
-		m_weightsBtn = setWieghtBtn.at(0);
 	}
 }
 
@@ -83,6 +93,7 @@ void SettingsDialog::FillAggrOpCB()
 	if ( true == m_aggrOpTypesMap.isEmpty() )
 	{
 		qDebug() << "FillAggrOpCB(): Error - map is empty";
+		emit rejected();
 	}
 
 	QList<QString> listOfTypes = m_aggrOpTypesMap.values();
@@ -107,6 +118,7 @@ void SettingsDialog::FillAggrOpFuncsCB()
 	if ( true == m_aggrOpFuncsMap.isEmpty() )
 	{
 		qDebug() << "FillAggrOpFuncsCB(): Error - map is empty";
+		emit rejected();
 	}
 
 	QList<QString> listOfFuncs = m_aggrOpFuncsMap.values();
@@ -123,6 +135,7 @@ void SettingsDialog::FindMeanAgOp()
 	if ( ERROR == position )
 	{
 		qDebug() << "FindFunctionalAgOp(): Error - can't find position of" << STR_MEAN;
+		emit rejected();
 	}
 	else
 	{
@@ -137,6 +150,7 @@ void SettingsDialog::FindFunctionalAgOp()
 	if ( ERROR == position )
 	{
 		qDebug() << "FindFunctionalAgOp(): Error - can't find position of" << STR_FUNC;
+		emit rejected();
 	}
 	else
 	{
@@ -150,7 +164,8 @@ void SettingsDialog::SetCurrAggrOp(AggregOperatorType::AggrOpType t_type)
 	int posOfType = m_aggrOpTypes->findText(typeName);
 	if ( ERROR == posOfType )
 	{
-		qDebug() << "SetCurrAggrOp(): Error - can't type of aggreg operator:" << t_type;
+		qDebug() << "SetCurrAggrOp(): Error - can't find type of aggreg operator:" << t_type;
+		emit rejected();
 	}
 	else
 	{
@@ -171,7 +186,8 @@ void SettingsDialog::SetCurrAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_func)
 	int posOfFunc = m_funcType->findText(funcName);
 	if ( ERROR == posOfFunc )
 	{
-		qDebug() << "SetCurrAggrOpFunc(): Error - can't type of function:" << t_func;
+		qDebug() << "SetCurrAggrOpFunc(): Error - can't find type of function:" << t_func;
+		emit rejected();
 	}
 	else
 	{
@@ -249,15 +265,27 @@ void SettingsDialog::on_powerLE_editingFinished()
 }
 
 // User pressed "OK" button
-void SettingsDialog::on_buttonBox_accepted()
+void SettingsDialog::on_okBtn_clicked()
 {
 	emit SignalAggrOpType(m_currAggrOpType);
 	emit SignalAggrOpPower(m_currAggrOpPower);
 	emit SignalAggrOpFunc(m_currAggrOpFunc);
+
+	accept();
 }
 
 // User pressed "Cancel" button
-void SettingsDialog::on_buttonBox_rejected()
+void SettingsDialog::on_cancelBtn_clicked()
 {
+	reject();
+}
 
+void SettingsDialog::accept()
+{
+	this->done(QDialog::Accepted);
+}
+
+void SettingsDialog::reject()
+{
+	this->done(QDialog::Rejected);
 }
