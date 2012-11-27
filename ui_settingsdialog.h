@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsdialog.ui'
 **
-** Created: Tue 27. Nov 11:36:13 2012
+** Created: Tue 27. Nov 14:30:43 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -47,13 +47,13 @@ public:
         aggrOpLbl->setGeometry(QRect(10, 10, 191, 20));
         aggrOpCB = new QComboBox(SettingsDialog);
         aggrOpCB->setObjectName(QString::fromUtf8("aggrOpCB"));
-        aggrOpCB->setGeometry(QRect(220, 10, 111, 20));
+        aggrOpCB->setGeometry(QRect(220, 10, 111, 22));
         powerLbl = new QLabel(SettingsDialog);
         powerLbl->setObjectName(QString::fromUtf8("powerLbl"));
         powerLbl->setGeometry(QRect(10, 45, 46, 13));
         powerLE = new QLineEdit(SettingsDialog);
         powerLE->setObjectName(QString::fromUtf8("powerLE"));
-        powerLE->setGeometry(QRect(220, 40, 111, 20));
+        powerLE->setGeometry(QRect(220, 40, 111, 22));
         funcLbl = new QLabel(SettingsDialog);
         funcLbl->setObjectName(QString::fromUtf8("funcLbl"));
         funcLbl->setGeometry(QRect(10, 75, 171, 16));

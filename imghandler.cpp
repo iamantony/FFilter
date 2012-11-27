@@ -162,6 +162,16 @@ AggregOperatorFunc::AggrOpFunc ImgHandler::GetAggrOpFunc()
 	return m_aggrOpHandler.GetAggrOpFunc();
 }
 
+Noise::NoiseType ImgHandler::GetNoiseType()
+{
+	return m_noise.GetNoiseType();
+}
+
+int ImgHandler::GetNoiseAmp()
+{
+	return m_noise.GetNoiseAmplitude();
+}
+
 void ImgHandler::SlotProcProgressPrc(int t_value)
 {
 	int progressValue = ERROR;
@@ -211,4 +221,14 @@ void ImgHandler::SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_
 	}
 
 	m_maskStruct.SetMaskStructure(t_mask);
+}
+
+void ImgHandler::SlotRecieveNoiseType(Noise::NoiseType t_type)
+{
+	m_noise.SetNoiseType(t_type);
+}
+
+void ImgHandler::SlotRecieveNoiseAmp(int t_amp)
+{
+	m_noise.SetNoiseAmplitude(t_amp);
 }

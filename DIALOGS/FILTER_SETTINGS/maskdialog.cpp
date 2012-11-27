@@ -27,7 +27,7 @@ void MaskDialog::FindGUIElements()
 	if ( true == tableList.isEmpty() )
 	{
 		qDebug() << "MaskDialog::FindGUIElements(): Error - can't find mask table!";
-		emit rejected();
+		reject();
 	}
 	else
 	{

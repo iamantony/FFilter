@@ -320,8 +320,6 @@ void MainWindow::on_actionSettings_triggered()
 	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
 			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
 
-//	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
-//	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
 	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
 	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
 
@@ -361,4 +359,29 @@ void MainWindow::on_actionMask_settings_triggered()
 void MainWindow::SlotMaskSettingsClosed()
 {
 	delete m_maskTable;
+}
+
+// Construct Noise Settings window
+void MainWindow::on_actionNoise_settings_triggered()
+{
+	m_noise = new NoiseDialog(this);
+	m_noise->SetNoiseParams(m_imgHandler.GetNoiseType(), m_imgHandler.GetNoiseAmp());
+
+	// Noise params transfer
+	connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::NoiseType)),
+			&m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::NoiseType)));
+
+	connect(m_noise, SIGNAL(SignalNewNoiseAmp(int)), &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
+
+	// What we should do when user close Noise Settings Dialog
+	connect(m_noise, SIGNAL(accepted()), this, SLOT(SlotNoiseSettingsClosed()));
+	connect(m_noise, SIGNAL(rejected()), this, SLOT(SlotNoiseSettingsClosed()));
+
+	m_noise->show();
+}
+
+// Slot for destroing Noise Settings dialog
+void MainWindow::SlotNoiseSettingsClosed()
+{
+	delete m_noise;
 }
