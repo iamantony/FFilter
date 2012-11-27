@@ -24,6 +24,7 @@ public:
 	Noise::NoiseType GetNoiseType();
 	void SetNoiseAmplitude(const int &t_amp);
 	int GetNoiseAmplitude();
+	void SetNoiseLevel(const unsigned int &t_level);
 
 signals:
 

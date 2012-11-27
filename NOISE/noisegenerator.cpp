@@ -27,3 +27,15 @@ int NoiseGenerator::GetNoiseAmplitude()
 {
 	return m_noiseAmp;
 }
+
+void NoiseGenerator::SetNoiseLevel(const unsigned int &t_level)
+{
+	if ( 100 < t_level )
+	{
+		m_noiseLvlPercent = 100;
+	}
+	else
+	{
+		m_noiseLvlPercent = t_level;
+	}
+}

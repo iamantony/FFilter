@@ -3,7 +3,6 @@
 ImgHandler::ImgHandler(QObject *parent) :
 	QObject(parent)
 {
-	m_noiseLvlPercent = 0;
 	m_imgMode = ImageMode::GRAYSCALE;
 }
 
@@ -70,18 +69,7 @@ void ImgHandler::SetImgMode(ImageMode::ImgMode t_mode)
 
 void ImgHandler::SetNoiseLevelPrc(int t_noiseLvlPrc)
 {
-	if ( (t_noiseLvlPrc < 0) )
-	{
-		m_noiseLvlPercent = 0;
-	}
-	else if ( 100 < t_noiseLvlPrc )
-	{
-		m_noiseLvlPercent = 100;
-	}
-	else
-	{
-		m_noiseLvlPercent = (unsigned int)t_noiseLvlPrc;
-	}
+	m_noise.SetNoiseLevel( (unsigned int)t_noiseLvlPrc );
 }
 
 // Apply noise to original image and save result as target image
@@ -97,7 +85,10 @@ QImage ImgHandler::GetNoisyImg()
 	connect(&imgService, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
 
 	QImage sourceImg = m_imgMass[ORIGINAL_IMG];
-	QImage noisyImg = imgService.SetNoiseToImg(sourceImg, m_noiseLvlPercent);
+
+	// TODO: get noised image from NoiseGenerator!
+
+	QImage noisyImg = imgService.SetNoiseToImg(sourceImg, 10);
 	if ( true == noisyImg.isNull() )
 	{
 		return m_imgMass[ORIGINAL_IMG];

@@ -22,7 +22,6 @@ class ImgHandler : public QObject
 	// == DATA ==
 private:
 	QImage m_imgMass[2];
-	unsigned int m_noiseLvlPercent;
 	ImageMode::ImgMode m_imgMode;
 	NoiseGenerator m_noise;
 	MaskStructure m_maskStruct;
