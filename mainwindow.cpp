@@ -320,6 +320,8 @@ void MainWindow::on_actionSettings_triggered()
 	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
 			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
 
+//	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
+//	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
 	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
 	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
 

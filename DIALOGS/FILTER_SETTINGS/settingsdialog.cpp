@@ -23,6 +23,8 @@ void SettingsDialog::Init()
 	SetAggrOpFuncList();
 	FindMeanAgOp();
 	FindFunctionalAgOp();
+
+	this->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 void SettingsDialog::SetDefaults()
@@ -263,15 +265,27 @@ void SettingsDialog::on_powerLE_editingFinished()
 }
 
 // User pressed "OK" button
-void SettingsDialog::on_buttonBox_accepted()
+void SettingsDialog::on_okBtn_clicked()
 {
 	emit SignalAggrOpType(m_currAggrOpType);
 	emit SignalAggrOpPower(m_currAggrOpPower);
 	emit SignalAggrOpFunc(m_currAggrOpFunc);
+
+	accept();
 }
 
 // User pressed "Cancel" button
-void SettingsDialog::on_buttonBox_rejected()
+void SettingsDialog::on_cancelBtn_clicked()
 {
+	reject();
+}
 
+void SettingsDialog::accept()
+{
+	this->done(QDialog::Accepted);
+}
+
+void SettingsDialog::reject()
+{
+	this->done(QDialog::Rejected);
 }

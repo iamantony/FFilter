@@ -29,10 +29,10 @@ SOURCES += main.cpp\
 	AGGR_OP/medaggregoperator.cpp \
 	AGGR_OP/funcaggregoperator.cpp \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.cpp \
-    MASKS/maskstructure.cpp \
-    DIALOGS/FILTER_SETTINGS/maskdialog.cpp \
-    DIALOGS/NOISE_SETTINGS/noisedialog.cpp \
-    MASKS/activemask.cpp
+	MASKS/maskstructure.cpp \
+	DIALOGS/FILTER_SETTINGS/maskdialog.cpp \
+	DIALOGS/NOISE_SETTINGS/noisedialog.cpp \
+	MASKS/activemask.cpp
 
 HEADERS  += mainwindow.h \
 	imghandler.h \
@@ -51,12 +51,12 @@ HEADERS  += mainwindow.h \
 	DEFINES/enums.h \
 	DEFINES/mask.h \
 	DIALOGS/FILTER_SETTINGS/settingsdialog.h \
-    MASKS/maskstructure.h \
-    DIALOGS/FILTER_SETTINGS/maskdialog.h \
-    DIALOGS/NOISE_SETTINGS/noisedialog.h \
-    MASKS/activemask.h
+	MASKS/maskstructure.h \
+	DIALOGS/FILTER_SETTINGS/maskdialog.h \
+	DIALOGS/NOISE_SETTINGS/noisedialog.h \
+	MASKS/activemask.h
 
 FORMS    += mainwindow.ui \
-	settingsdialog.ui \
-    DIALOGS/FILTER_SETTINGS/maskdialog.ui \
-    DIALOGS/NOISE_SETTINGS/noisedialog.ui
+	DIALOGS/FILTER_SETTINGS/maskdialog.ui \
+	DIALOGS/NOISE_SETTINGS/noisedialog.ui \
+	DIALOGS/FILTER_SETTINGS/settingsdialog.ui

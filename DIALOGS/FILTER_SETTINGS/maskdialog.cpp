@@ -12,6 +12,8 @@ MaskDialog::MaskDialog(QWidget *parent) :
 	FindGUIElements();
 	SetDefaults();
 	CreateCellMenu();
+
+	this->setAttribute(Qt::WA_DeleteOnClose);
 }
 
 MaskDialog::~MaskDialog()

@@ -87,9 +87,11 @@ private slots:
 	// User changed value of power
 	void on_powerLE_editingFinished();
 	// User pressed "OK" button
-	void on_buttonBox_accepted();
+	void on_okBtn_clicked();
 	// User pressed "Cancel" button
-	void on_buttonBox_rejected();
+	void on_cancelBtn_clicked();
+	virtual void accept();
+	virtual void reject();
 };
 
 #endif // SETTINGSDIALOG_H
