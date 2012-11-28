@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     NOISE/noisegenerator.cpp \
     NOISE/absrandnoise.cpp \
     NOISE/defaultnoise.cpp \
-    NOISE/randnoise.cpp
+    NOISE/randnoise.cpp \
+    NOISE/constnoise.cpp
 
 HEADERS  += mainwindow.h \
 	imghandler.h \
@@ -62,7 +63,8 @@ HEADERS  += mainwindow.h \
     NOISE/noisegenerator.h \
     NOISE/defaultnoise.h \
     NOISE/absrandnoise.h \
-    NOISE/randnoise.h
+    NOISE/randnoise.h \
+    NOISE/constnoise.h
 
 FORMS    += mainwindow.ui \
 	DIALOGS/FILTER_SETTINGS/maskdialog.ui \
