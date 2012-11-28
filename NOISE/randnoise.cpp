@@ -1,10 +1,16 @@
-#include "absrandnoise.h"
+#include "randnoise.h"
 
-QImage AbsRandNoise::GetNoisedImage()
+QImage RandNoise::GetNoisedImage()
 {
 	if ( true == m_imgToNoise.isNull() )
 	{
 		qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
+		return m_imgToNoise;
+	}
+
+	// Noise without amplitude is not the noise at all
+	if ( 0 == m_noiseAmplitude )
+	{
 		return m_imgToNoise;
 	}
 
@@ -14,7 +20,8 @@ QImage AbsRandNoise::GetNoisedImage()
 	int imgW = m_imgToNoise.width();
 	int imgH = m_imgToNoise.height();
 	int pixelLum = 0;
-	QRgb pixel;
+	QRgb newPixel;
+	QColor oldPixel;
 
 	int onePercent = ( imgW * imgH ) / 100;
 	int progressPrc = 0;
@@ -28,11 +35,21 @@ QImage AbsRandNoise::GetNoisedImage()
 			if ( (m_needToNoise == m_pixelsToChange[w][h]) &&
 				 ( noisedPixelNum < pixelsToNoise ) )
 			{
-				pixelLum = noiseForPixels.at(noisedPixelNum);
+				oldPixel = m_imgToNoise.pixel(w, h);
+				pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
 				noisedPixelNum++;
 
-				pixel = qRgb(pixelLum, pixelLum, pixelLum);
-				m_imgToNoise.setPixel(w, h, pixel);
+				if ( 255 < pixelLum )
+				{
+					pixelLum = 255;
+				}
+				else if ( pixelLum < 0 )
+				{
+					pixelLum = 0;
+				}
+
+				newPixel = qRgb(pixelLum, pixelLum, pixelLum);
+				m_imgToNoise.setPixel(w, h, newPixel);
 			}
 
 			counter++;
@@ -48,16 +65,23 @@ QImage AbsRandNoise::GetNoisedImage()
 	return m_imgToNoise;
 }
 
-QList<int> AbsRandNoise::GenerateNoise()
+QList<int> RandNoise::GenerateNoise()
 {
 	srand(time(NULL));
 	int randLuminance = 0;
-	const int maxLuminance = 256;
+	const int maxDeviation = qAbs(m_noiseAmplitude);
+	int sign = 1;
+	if ( m_noiseAmplitude < 0 )
+	{
+		sign = -1;
+	}
+
 	QList<int> listOfNoise;
 
 	for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
 	{
-		randLuminance = rand() % maxLuminance;
+		randLuminance = rand() % maxDeviation;
+		randLuminance *= sign;
 		listOfNoise.append(randLuminance);
 	}
 

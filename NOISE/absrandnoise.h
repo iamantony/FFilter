@@ -21,9 +21,6 @@ public:
 
 protected:
 	QList<int> GenerateNoise();
-
-signals:
-//	void SignalProcProgressPrc(int t_progress);
 };
 
 #endif // ABSRANDNOISE_H

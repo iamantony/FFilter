@@ -8,10 +8,8 @@ DefaultNoise::DefaultNoise(const QImage &t_img,
 	if ( true == t_img.isNull() )
 	{
 		qDebug() << "DefaultNoise(): Error - invalid arguments";
-
 		m_noiseAmplitude = 0;
 		m_noiseLevelPercent = 0;
-
 		return;
 	}
 
@@ -26,6 +24,9 @@ DefaultNoise::DefaultNoise(const QImage &t_img,
 		m_noiseLevelPercent = t_noiseLvl;
 	}
 
+	m_noiseAmplitude = t_noiseAmp;
+	this->setParent(parent);
+
 	// If noiseLvl > 50% we invert an algorith. What does it mean? Well, in usual way (noiseLvl < 50%) we choose
 	// noiseLvl% of pixels and add noise to them. But when noiseLvl > 50% this algorithm is quite slow. It's easier
 	// to choose noiseLvl% of pixels and DON'T noise them.
@@ -36,11 +37,16 @@ DefaultNoise::DefaultNoise(const QImage &t_img,
 		m_needToNoise = false;
 	}
 
-	m_pixelsToNoise = ( m_noiseLevelPercent * m_imgToNoise.width() * m_imgToNoise.height()) / 100;
-
-	m_noiseAmplitude = t_noiseAmp;
-
-	this->setParent(parent);
+	unsigned int numOfPixelsInImg = m_imgToNoise.width() * m_imgToNoise.height();
+	m_numPixToChange = ( m_noiseLevelPercent * numOfPixelsInImg) / 100;
+	if ( true == m_needToNoise )
+	{
+		m_pixelsToNoise = m_numPixToChange;
+	}
+	else
+	{
+		m_pixelsToNoise = numOfPixelsInImg - m_numPixToChange;
+	}
 
 	m_pixelsToChange = NULL;
 
@@ -96,7 +102,7 @@ void DefaultNoise::CreateImgNoiseMap()
 	// - if noiseLvl > 50%, then they value will be saved (and unchoosed will be noised)
 	int wRand = 0;
 	int hRand = 0;
-	for ( unsigned int pix = 0; pix < m_pixelsToNoise; pix++ )
+	for ( unsigned int pix = 0; pix < m_numPixToChange; pix++ )
 	{
 		do
 		{

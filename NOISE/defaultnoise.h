@@ -15,6 +15,7 @@ protected:
 	int m_noiseAmplitude;
 	unsigned int m_noiseLevelPercent;
 	unsigned int m_pixelsToNoise;
+	unsigned int m_numPixToChange;
 	bool m_needToNoise;
 	bool **m_pixelsToChange;
 
