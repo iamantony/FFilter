@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'noisedialog.ui'
 **
-** Created: Tue 27. Nov 09:58:29 2012
+** Created: Wed 28. Nov 12:39:58 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,31 +14,50 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
 #include <QtGui/QDialog>
-#include <QtGui/QDialogButtonBox>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_NoiseDialog
 {
 public:
-    QDialogButtonBox *buttonBox;
+    QLabel *noiseTypeLabel;
+    QComboBox *noiseTypeCB;
+    QLabel *ampLabel;
+    QLineEdit *ampLE;
+    QPushButton *okBtn;
+    QPushButton *cancelBtn;
 
     void setupUi(QDialog *NoiseDialog)
     {
         if (NoiseDialog->objectName().isEmpty())
             NoiseDialog->setObjectName(QString::fromUtf8("NoiseDialog"));
-        NoiseDialog->resize(400, 300);
-        buttonBox = new QDialogButtonBox(NoiseDialog);
-        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(30, 240, 341, 32));
-        buttonBox->setOrientation(Qt::Horizontal);
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+        NoiseDialog->resize(269, 112);
+        noiseTypeLabel = new QLabel(NoiseDialog);
+        noiseTypeLabel->setObjectName(QString::fromUtf8("noiseTypeLabel"));
+        noiseTypeLabel->setGeometry(QRect(10, 15, 101, 16));
+        noiseTypeCB = new QComboBox(NoiseDialog);
+        noiseTypeCB->setObjectName(QString::fromUtf8("noiseTypeCB"));
+        noiseTypeCB->setGeometry(QRect(150, 10, 111, 22));
+        ampLabel = new QLabel(NoiseDialog);
+        ampLabel->setObjectName(QString::fromUtf8("ampLabel"));
+        ampLabel->setGeometry(QRect(10, 45, 81, 16));
+        ampLE = new QLineEdit(NoiseDialog);
+        ampLE->setObjectName(QString::fromUtf8("ampLE"));
+        ampLE->setGeometry(QRect(150, 40, 111, 22));
+        okBtn = new QPushButton(NoiseDialog);
+        okBtn->setObjectName(QString::fromUtf8("okBtn"));
+        okBtn->setGeometry(QRect(100, 80, 75, 23));
+        cancelBtn = new QPushButton(NoiseDialog);
+        cancelBtn->setObjectName(QString::fromUtf8("cancelBtn"));
+        cancelBtn->setGeometry(QRect(180, 80, 75, 23));
 
         retranslateUi(NoiseDialog);
-        QObject::connect(buttonBox, SIGNAL(accepted()), NoiseDialog, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), NoiseDialog, SLOT(reject()));
 
         QMetaObject::connectSlotsByName(NoiseDialog);
     } // setupUi
@@ -46,6 +65,10 @@ public:
     void retranslateUi(QDialog *NoiseDialog)
     {
         NoiseDialog->setWindowTitle(QApplication::translate("NoiseDialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        noiseTypeLabel->setText(QApplication::translate("NoiseDialog", "Noise type:", 0, QApplication::UnicodeUTF8));
+        ampLabel->setText(QApplication::translate("NoiseDialog", "Amplitude:", 0, QApplication::UnicodeUTF8));
+        okBtn->setText(QApplication::translate("NoiseDialog", "OK", 0, QApplication::UnicodeUTF8));
+        cancelBtn->setText(QApplication::translate("NoiseDialog", "Cancel", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

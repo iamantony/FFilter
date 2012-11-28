@@ -58,6 +58,14 @@ void MaskStructure::SetDefaultMask()
 				pixel.posX = x - centralPixelX;
 				pixel.posY = y - centralPixelY;
 				pixel.weight = 0;
+
+				// Form mask 3x3
+				if ( ( (1 == qAbs(pixel.posX)) || (0 == pixel.posX) ) &&
+					 ( (1 == qAbs(pixel.posY)) || (0 == pixel.posY)) )
+				{
+					pixel.isEnabled = true;
+					pixel.weight = 1;
+				}
 			}
 
 			newLine.append(pixel);

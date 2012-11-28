@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow
 private:
 	SettingsDialog *m_settings;
 	MaskDialog *m_maskTable;
+	NoiseDialog *m_noise;
 	ImgHandler m_imgHandler;
 	QLabel m_origImgLbl;
 	QLabel m_resultImgLbl;
@@ -98,6 +99,10 @@ private slots:
 	void on_actionMask_settings_triggered();
 	// Slot for destroing Mask Settings dialog
 	void SlotMaskSettingsClosed();
+	// Construct Noise Settings window
+	void on_actionNoise_settings_triggered();
+	// Slot for destroing Noise Settings dialog
+	void SlotNoiseSettingsClosed();
 
 private:
 	Ui::MainWindow *ui;

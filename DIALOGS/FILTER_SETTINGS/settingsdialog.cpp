@@ -43,7 +43,7 @@ void SettingsDialog::FindGUIElements()
 	if ( true == agrrOpTypeList.isEmpty() )
 	{
 		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find list of arrgeg operators types";
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -54,7 +54,7 @@ void SettingsDialog::FindGUIElements()
 	if ( true == powerLEList.isEmpty() )
 	{
 		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find line for power value";
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -65,7 +65,7 @@ void SettingsDialog::FindGUIElements()
 	if ( true == aggrOpFuncList.isEmpty() )
 	{
 		qDebug() << "SettingsDialog::FindGUIElements(): Error - can't find list of functions types";
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -92,8 +92,8 @@ void SettingsDialog::FillAggrOpCB()
 {
 	if ( true == m_aggrOpTypesMap.isEmpty() )
 	{
-		qDebug() << "FillAggrOpCB(): Error - map is empty";
-		emit rejected();
+		qDebug() << "SettingsDialog::FillAggrOpCB(): Error - map is empty";
+		reject();
 	}
 
 	QList<QString> listOfTypes = m_aggrOpTypesMap.values();
@@ -118,7 +118,7 @@ void SettingsDialog::FillAggrOpFuncsCB()
 	if ( true == m_aggrOpFuncsMap.isEmpty() )
 	{
 		qDebug() << "FillAggrOpFuncsCB(): Error - map is empty";
-		emit rejected();
+		reject();
 	}
 
 	QList<QString> listOfFuncs = m_aggrOpFuncsMap.values();
@@ -135,7 +135,7 @@ void SettingsDialog::FindMeanAgOp()
 	if ( ERROR == position )
 	{
 		qDebug() << "FindFunctionalAgOp(): Error - can't find position of" << STR_MEAN;
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -150,7 +150,7 @@ void SettingsDialog::FindFunctionalAgOp()
 	if ( ERROR == position )
 	{
 		qDebug() << "FindFunctionalAgOp(): Error - can't find position of" << STR_FUNC;
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -165,7 +165,7 @@ void SettingsDialog::SetCurrAggrOp(AggregOperatorType::AggrOpType t_type)
 	if ( ERROR == posOfType )
 	{
 		qDebug() << "SetCurrAggrOp(): Error - can't find type of aggreg operator:" << t_type;
-		emit rejected();
+		reject();
 	}
 	else
 	{
@@ -187,7 +187,7 @@ void SettingsDialog::SetCurrAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_func)
 	if ( ERROR == posOfFunc )
 	{
 		qDebug() << "SetCurrAggrOpFunc(): Error - can't find type of function:" << t_func;
-		emit rejected();
+		reject();
 	}
 	else
 	{

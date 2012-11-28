@@ -3,7 +3,6 @@
 ImgHandler::ImgHandler(QObject *parent) :
 	QObject(parent)
 {
-	m_noiseLvlPercent = 0;
 	m_imgMode = ImageMode::GRAYSCALE;
 }
 
@@ -70,18 +69,7 @@ void ImgHandler::SetImgMode(ImageMode::ImgMode t_mode)
 
 void ImgHandler::SetNoiseLevelPrc(int t_noiseLvlPrc)
 {
-	if ( (t_noiseLvlPrc < 0) )
-	{
-		m_noiseLvlPercent = 0;
-	}
-	else if ( 100 < t_noiseLvlPrc )
-	{
-		m_noiseLvlPercent = 100;
-	}
-	else
-	{
-		m_noiseLvlPercent = (unsigned int)t_noiseLvlPrc;
-	}
+	m_noise.SetNoiseLevel( (unsigned int)t_noiseLvlPrc );
 }
 
 // Apply noise to original image and save result as target image
@@ -93,11 +81,15 @@ QImage ImgHandler::GetNoisyImg()
 		return nullImg;
 	}
 
-	ImgService imgService;
-	connect(&imgService, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
+	// Set connection for progress bar (on main window)
+	connect(&m_noise, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
 
 	QImage sourceImg = m_imgMass[ORIGINAL_IMG];
-	QImage noisyImg = imgService.SetNoiseToImg(sourceImg, m_noiseLvlPercent);
+	QImage noisyImg = m_noise.SetNoiseToImg(sourceImg);
+
+	// Process ended, so we no more need connection with progress bar
+	m_noise.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+
 	if ( true == noisyImg.isNull() )
 	{
 		return m_imgMass[ORIGINAL_IMG];
@@ -162,6 +154,16 @@ AggregOperatorFunc::AggrOpFunc ImgHandler::GetAggrOpFunc()
 	return m_aggrOpHandler.GetAggrOpFunc();
 }
 
+Noise::NoiseType ImgHandler::GetNoiseType()
+{
+	return m_noise.GetNoiseType();
+}
+
+int ImgHandler::GetNoiseAmp()
+{
+	return m_noise.GetNoiseAmplitude();
+}
+
 void ImgHandler::SlotProcProgressPrc(int t_value)
 {
 	int progressValue = ERROR;
@@ -211,4 +213,14 @@ void ImgHandler::SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_
 	}
 
 	m_maskStruct.SetMaskStructure(t_mask);
+}
+
+void ImgHandler::SlotRecieveNoiseType(Noise::NoiseType t_type)
+{
+	m_noise.SetNoiseType(t_type);
+}
+
+void ImgHandler::SlotRecieveNoiseAmp(int t_amp)
+{
+	m_noise.SetNoiseAmplitude(t_amp);
 }

@@ -33,4 +33,14 @@ namespace AggregOperatorFunc
 	};
 }
 
+namespace Noise
+{
+	enum NoiseType {
+		CONSTANT = 0,
+		RANDOM,
+		ABS_RANDOM,
+		DEFAULT_LAST
+	};
+}
+
 #endif // ENUMS_H

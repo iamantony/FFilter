@@ -18,15 +18,12 @@ class ImgService : public QObject
 	// == METHODS ==
 public:
 	explicit ImgService(QObject *parent = 0);
+
 	QImage TransColorImgToGrayImg(const QImage &t_img);
-	QImage SetNoiseToImg(const QImage &img, const unsigned int &t_noiseLvl);
 	double CalcImgsSKO(const QImage &t_firstImg, const QImage &t_secondImg);
 
 signals:
 	void SignalProcProgressPrc(int t_progress);
-
-public slots:
-
 };
 
 #endif // IMGSERVICE_H

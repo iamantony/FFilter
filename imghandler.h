@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QMap>
 #include "imgservice.h"
+#include "NOISE/noisegenerator.h"
 #include "FILTERS/powerfilter.h"
 #include "MASKS/maskstructure.h"
 #include "AGGR_OP/aggrophandler.h"
@@ -21,8 +22,8 @@ class ImgHandler : public QObject
 	// == DATA ==
 private:
 	QImage m_imgMass[2];
-	unsigned int m_noiseLvlPercent;
 	ImageMode::ImgMode m_imgMode;
+	NoiseGenerator m_noise;
 	MaskStructure m_maskStruct;
 	AggrOpHandler m_aggrOpHandler;
 
@@ -48,6 +49,9 @@ public:
 	double GetAggrOpPower();
 	AggregOperatorFunc::AggrOpFunc GetAggrOpFunc();
 
+	Noise::NoiseType GetNoiseType();
+	int GetNoiseAmp();
+
 private:
 	// Set (save) image in memory
 	void SetImg(QImage t_img, const int &t_imgType);
@@ -65,6 +69,8 @@ public slots:
 	void SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc t_func);
 	void SlotTransmitMask();
 	void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
+	void SlotRecieveNoiseType(Noise::NoiseType t_type);
+	void SlotRecieveNoiseAmp(int t_amp);
 };
 
 #endif // IMGHANDLER_H
