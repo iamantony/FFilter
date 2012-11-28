@@ -81,14 +81,15 @@ QImage ImgHandler::GetNoisyImg()
 		return nullImg;
 	}
 
-	ImgService imgService;
-	connect(&imgService, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
+	// Set connection for progress bar (on main window)
+	connect(&m_noise, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
 
 	QImage sourceImg = m_imgMass[ORIGINAL_IMG];
+	QImage noisyImg = m_noise.SetNoiseToImg(sourceImg);
 
-	// TODO: get noised image from NoiseGenerator!
+	// Process ended, so we no more need connection with progress bar
+	m_noise.disconnect(SIGNAL(SignalProcProgressPrc(int)));
 
-	QImage noisyImg = imgService.SetNoiseToImg(sourceImg, 10);
 	if ( true == noisyImg.isNull() )
 	{
 		return m_imgMass[ORIGINAL_IMG];

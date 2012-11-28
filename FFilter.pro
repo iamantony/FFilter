@@ -33,7 +33,9 @@ SOURCES += main.cpp\
 	DIALOGS/FILTER_SETTINGS/maskdialog.cpp \
 	DIALOGS/NOISE_SETTINGS/noisedialog.cpp \
 	MASKS/activemask.cpp \
-    NOISE/noisegenerator.cpp
+    NOISE/noisegenerator.cpp \
+    NOISE/absrandnoise.cpp \
+    NOISE/defaultnoise.cpp
 
 HEADERS  += mainwindow.h \
 	imghandler.h \
@@ -56,7 +58,9 @@ HEADERS  += mainwindow.h \
 	DIALOGS/FILTER_SETTINGS/maskdialog.h \
 	DIALOGS/NOISE_SETTINGS/noisedialog.h \
 	MASKS/activemask.h \
-    NOISE/noisegenerator.h
+    NOISE/noisegenerator.h \
+    NOISE/defaultnoise.h \
+    NOISE/absrandnoise.h
 
 FORMS    += mainwindow.ui \
 	DIALOGS/FILTER_SETTINGS/maskdialog.ui \
