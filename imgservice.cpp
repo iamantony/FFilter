@@ -49,7 +49,7 @@ QImage ImgService::TransColorImgToGrayImg(const QImage &t_img)
 		for (int y = 0; y < height; y++)
 		{
 			pixel = t_img.pixel(x, y);
-			grayPixel = 0.299 * pixel.red() + 0.587 * pixel.green() + 0.114 * pixel.blue();
+			grayPixel = 0.2126 * pixel.red() + 0.7152 * pixel.green() + 0.0722 * pixel.blue();
 			resultLuminance = (int)floor(grayPixel + 0.5);
 
 			if( resultLuminance < 0 )
