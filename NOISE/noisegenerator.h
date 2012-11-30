@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QDebug>
 #include "defaultnoise.h"
+#include "constnoise.h"
 #include "randnoise.h"
 #include "absrandnoise.h"
 #include "DEFINES/common.h"

@@ -17,7 +17,6 @@ private:
 	int m_modulo;
 	int m_mean;
 	long double m_summ;
-	int m_result;
 
 	// == METHODS ==
 public:

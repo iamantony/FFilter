@@ -14,7 +14,6 @@ class MeanAggregOperator : public DefaultAggregOperator
 private:
 	long double m_power;
 	long double m_summ;
-	int m_result;
 	int m_numOfValues;
 
 	// == METHODS ==

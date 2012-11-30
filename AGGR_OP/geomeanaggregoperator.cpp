@@ -48,16 +48,8 @@ int GeoMeanAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 		m_rootedProduct = pow(m_product, m_power);
 	}
 
-	// Round result to the nearest integer number
-	m_result = (int)floor(m_rootedProduct + 0.5);
-	if ( m_result < 0 )
-	{
-		m_result = 0;
-	}
-	else if ( 255 < m_result )
-	{
-		m_result = 255;
-	}
+	FormResult(m_rootedProduct);
+	CheckResult();
 
 	return m_result;
 }

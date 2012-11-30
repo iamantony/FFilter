@@ -16,7 +16,6 @@ private:
 	long double (*m_inverseFunc) (long double);
 	int m_numOfValues;
 	long double m_summ;
-	int m_result;
 
 	// == METHODS ==
 public:

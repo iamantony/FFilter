@@ -17,7 +17,6 @@ private:
 	int m_startValue;
 	long double m_power;
 	long double m_rootedProduct;
-	int m_result;
 
 	// == METHODS ==
 public:

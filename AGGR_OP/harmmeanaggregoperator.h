@@ -14,7 +14,6 @@ class HarmMeanAggregOperator : public DefaultAggregOperator
 private:
 	int m_numOfValues;
 	long double m_summ;
-	int m_result;
 
 	// == METHODS ==
 public:

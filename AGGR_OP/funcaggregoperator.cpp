@@ -46,15 +46,8 @@ int FuncAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
 	m_summ *= (long double)1/m_numOfValues;
 	m_summ = m_inverseFunc(m_summ);
 
-	m_result = (int)floor(m_summ + 0.5);
-	if ( m_result < 0 )
-	{
-		m_result = 0;
-	}
-	else if ( 255 < m_result )
-	{
-		m_result = 255;
-	}
+	FormResult(m_summ);
+	CheckResult();
 
 	return m_result;
 }

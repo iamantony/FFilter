@@ -2,10 +2,14 @@
 #define DEFAULTAGGREGOPERATOR_H
 
 #include <QObject>
+#include <math.h>
 
 class DefaultAggregOperator : public QObject
 {
 	Q_OBJECT
+	// == DATA ==
+protected:
+	int m_result;
 
 	// == METHODS ==
 public:
@@ -14,6 +18,8 @@ public:
 
 protected:
 	virtual void ResetValues() = 0;
+	void CheckResult();
+	void FormResult(const long double &t_result);
 };
 
 #endif // DEFAULTAGGREGOPERATOR_H

@@ -12,7 +12,6 @@ class MinAggregOperator : public DefaultAggregOperator
 	// == DATA ==
 private:
 	QList<long double> m_listOfValues;
-	int m_result;
 
 	// == METHODS ==
 public:

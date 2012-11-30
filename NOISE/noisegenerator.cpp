@@ -51,13 +51,20 @@ QImage NoiseGenerator::SetNoiseToImg(const QImage &t_img)
 	switch(m_noiseType)
 	{
 		case Noise::CONSTANT:
-//			break;
-		case Noise::RANDOM:
 		{
-			m_noiseGenerator = new RandNoise( t_img,
+			m_noiseGenerator = new ConstNoise(t_img,
 											  m_noiseLvlPercent,
 											  m_noiseAmp,
-											  this );
+											  this);
+
+			break;
+		}
+		case Noise::RANDOM:
+		{
+			m_noiseGenerator = new RandNoise(t_img,
+											 m_noiseLvlPercent,
+											 m_noiseAmp,
+											 this);
 
 			break;
 		}
