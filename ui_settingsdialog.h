@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsdialog.ui'
 **
-** Created: Wed 28. Nov 12:39:58 2012
+** Created: Thu 6. Dec 10:15:27 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -77,7 +77,7 @@ public:
 
     void retranslateUi(QDialog *SettingsDialog)
     {
-        SettingsDialog->setWindowTitle(QApplication::translate("SettingsDialog", "Settings", 0, QApplication::UnicodeUTF8));
+        SettingsDialog->setWindowTitle(QApplication::translate("SettingsDialog", "Filter Settings", 0, QApplication::UnicodeUTF8));
         aggrOpLbl->setText(QApplication::translate("SettingsDialog", "Aggregation Operator type:", 0, QApplication::UnicodeUTF8));
         powerLbl->setText(QApplication::translate("SettingsDialog", "Power:", 0, QApplication::UnicodeUTF8));
         funcLbl->setText(QApplication::translate("SettingsDialog", "Function type:", 0, QApplication::UnicodeUTF8));

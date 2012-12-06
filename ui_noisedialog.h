@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'noisedialog.ui'
 **
-** Created: Wed 28. Nov 12:39:58 2012
+** Created: Thu 6. Dec 10:15:27 2012
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -64,7 +64,7 @@ public:
 
     void retranslateUi(QDialog *NoiseDialog)
     {
-        NoiseDialog->setWindowTitle(QApplication::translate("NoiseDialog", "Dialog", 0, QApplication::UnicodeUTF8));
+        NoiseDialog->setWindowTitle(QApplication::translate("NoiseDialog", "Noise Settings", 0, QApplication::UnicodeUTF8));
         noiseTypeLabel->setText(QApplication::translate("NoiseDialog", "Noise type:", 0, QApplication::UnicodeUTF8));
         ampLabel->setText(QApplication::translate("NoiseDialog", "Amplitude:", 0, QApplication::UnicodeUTF8));
         okBtn->setText(QApplication::translate("NoiseDialog", "OK", 0, QApplication::UnicodeUTF8));

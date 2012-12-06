@@ -14,7 +14,7 @@
    <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Settings</string>
+   <string>Filter Settings</string>
   </property>
   <property name="modal">
    <bool>true</bool>
