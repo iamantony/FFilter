@@ -28,12 +28,15 @@ FuncAggregOperator::FuncAggregOperator(AggregOperatorFunc::AggrOpFunc t_func)
 			m_inverseFunc = &logl;
 			break;
 		}
+
 		case AggregOperatorFunc::LOG_NATURAL:
 		{
 			m_directFunc = &logl;
 			m_inverseFunc = &expl;
 			break;
 		}
+
+		case AggregOperatorFunc::DEFAULT_LAST:
 		default:
 		{
 			qDebug() << "FuncAggregOperator(): Error - undefined function type. Using defaults";

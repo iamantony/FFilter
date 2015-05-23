@@ -205,12 +205,16 @@ QBrush MaskDialog::SetCellColor(CellType t_type)
 		case ACTIVE_SIMPLE:
 			brush.setColor(Qt::white);
 			break;
+
 		case ACTIVE_CENTRAL:
 			brush.setColor(Qt::red);
 			break;
+
 		case UNACTIVE:
 			brush.setColor(Qt::gray);
 			break;
+
+		case DEFAULT_LAST:
 		default:
 		{
 			qDebug() << "MaskDialog::SetCellColor(): Error - invalid cell type";
@@ -334,6 +338,7 @@ bool MaskDialog::ChangeCell(QTableWidgetItem *t_item, CellType t_type)
 			cellFlags &= ~Qt::ItemIsEditable;
 			break;
 
+		case DEFAULT_LAST:
 		default:
 		{
 			qDebug() << "MaskDialog::ChangeCell(): Error - invalid cell type";

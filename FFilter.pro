@@ -1,18 +1,13 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-10-18T19:18:11
-#
-#-------------------------------------------------
-
-QT       += core gui
-CONFIG += warn_on
-QMAKE_CXXFLAGS_WARN_ON += -Wall -Wextra -Werror
-
+QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += warn_on
+QMAKE_CXXFLAGS_WARN_ON += -Werror -Wformat=2 -Wuninitialized -Winit-self \
+		-Wmissing-include-dirs -Wswitch-enum -Wundef -Wpointer-arith \
+		-Wdisabled-optimization -Wcast-align -Wcast-qual
 
 TARGET = FFilter
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
 		mainwindow.cpp \

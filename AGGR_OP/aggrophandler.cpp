@@ -62,24 +62,32 @@ void AggrOpHandler::SetNewAggrOp()
 		case AggregOperatorType::MIN:
 			m_aggrOperator = new MinAggregOperator();
 			break;
+
 		case AggregOperatorType::MAX:
 			m_aggrOperator = new MaxAggregOperator();
 			break;
+
 		case AggregOperatorType::MEAN:
 			m_aggrOperator = new MeanAggregOperator(m_power);
 			break;
+
 		case AggregOperatorType::GEOMETRIC_MEAN:
 			m_aggrOperator = new GeoMeanAggregOperator();
 			break;
+
 		case AggregOperatorType::HARMONC_MAEN:
 			m_aggrOperator = new HarmMeanAggregOperator();
 			break;
+
 		case AggregOperatorType::MEDIAN:
 			m_aggrOperator = new MedAggregOperator();
 			break;
+
 		case AggregOperatorType::FUNCTIONAL:
 			m_aggrOperator = new FuncAggregOperator(m_aggrOpFunc);
 			break;
+
+		case AggregOperatorType::DEFAULT_LAST:
 		default:
 		{
 			qDebug() << "SetNewAggrOp(): undefined aggregation operator type. Min operator set.";
@@ -108,5 +116,3 @@ void AggrOpHandler::SlotSetAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_funcType)
 {
 	m_aggrOpFunc = t_funcType;
 }
-
-
