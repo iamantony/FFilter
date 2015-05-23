@@ -19,6 +19,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QDebug>
+
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_settings = NULL;
 	m_maskTable = NULL;
 
-	Init();
+//	Init();
 }
 
 MainWindow::~MainWindow()
@@ -274,75 +276,75 @@ void MainWindow::on_noiseLeveler_valueChanged(int value)
 	m_noiseLbl->setText(strNoise);
 }
 
-// Set type of original image: grayscale
-void MainWindow::on_actionGrayscale_images_triggered()
-{
-	m_imgHandler.SetImgMode(ImageMode::GRAYSCALE);
-}
+//// Set type of original image: grayscale
+//void MainWindow::on_actionGrayscale_images_triggered()
+//{
+//	m_imgHandler.SetImgMode(ImageMode::GRAYSCALE);
+//}
 
-// Set type of original image: color
-void MainWindow::on_actionColor_images_triggered()
-{
-	// Because we don't have color image filtration functionality, we set grayscale filtration
-	QList<QAction *> list = this->findChildren<QAction *>("actionGrayscale_images");
-	if ( false == list.isEmpty() )
-	{
-		list.at(0)->setChecked(true);
-		on_actionGrayscale_images_triggered();
-	}
+//// Set type of original image: color
+//void MainWindow::on_actionColor_images_triggered()
+//{
+//	// Because we don't have color image filtration functionality, we set grayscale filtration
+//	QList<QAction *> list = this->findChildren<QAction *>("actionGrayscale_images");
+//	if ( false == list.isEmpty() )
+//	{
+//		list.at(0)->setChecked(true);
+//		on_actionGrayscale_images_triggered();
+//	}
 
-	// Just kidding
-	QMessageBox::warning(this, "Sorry...", "This functionality is not accessable in free version",
-						 QMessageBox::Ok, QMessageBox::NoButton);
-}
+//	// Just kidding
+//	QMessageBox::warning(this, "Sorry...", "This functionality is not accessable in free version",
+//						 QMessageBox::Ok, QMessageBox::NoButton);
+//}
 
-// Apply noise to result image
-void MainWindow::on_NoiseButton_clicked()
-{
-	DisableUI();
+//// Apply noise to result image
+//void MainWindow::on_NoiseButton_clicked()
+//{
+//	DisableUI();
 
-	QImage noisyImg = m_imgHandler.GetNoisyImg();
-	SetImgOnResultLbl(noisyImg);
-	m_imgHandler.GetImgsSKO();
+//	QImage noisyImg = m_imgHandler.GetNoisyImg();
+//	SetImgOnResultLbl(noisyImg);
+//	m_imgHandler.GetImgsSKO();
 
-	EnableUI();
-}
+//	EnableUI();
+//}
 
-// Start filtration
-void MainWindow::on_FilterButton_clicked()
-{
-	DisableUI();
+//// Start filtration
+//void MainWindow::on_FilterButton_clicked()
+//{
+//	DisableUI();
 
-	// SKO calculated automatically!
-	QImage filteredImg = m_imgHandler.PerfFiltration();
-	SetImgOnResultLbl(filteredImg);
+//	// SKO calculated automatically!
+//	QImage filteredImg = m_imgHandler.PerfFiltration();
+//	SetImgOnResultLbl(filteredImg);
 
-	EnableUI();
-}
+//	EnableUI();
+//}
 
-// Construct Settings window
-void MainWindow::on_actionSettings_triggered()
-{
-	m_settings = new SettingsDialog(this);
+//// Construct Settings window
+//void MainWindow::on_actionSettings_triggered()
+//{
+//	m_settings = new SettingsDialog(this);
 
-	m_settings->SetCurrAggrOp(m_imgHandler.GetAggrOpType());
-	m_settings->SetCurrAggrOpFunc(m_imgHandler.GetAggrOpFunc());
-	m_settings->SetCurrAggrOpPower(m_imgHandler.GetAggrOpPower());
+//	m_settings->SetCurrAggrOp(m_imgHandler.GetAggrOpType());
+//	m_settings->SetCurrAggrOpFunc(m_imgHandler.GetAggrOpFunc());
+//	m_settings->SetCurrAggrOpPower(m_imgHandler.GetAggrOpPower());
 
-	connect(m_settings, SIGNAL(SignalAggrOpType(AggregOperatorType::AggrOpType)),
-			&m_imgHandler, SLOT(SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType)));
+//	connect(m_settings, SIGNAL(SignalAggrOpType(AggregOperatorType::AggrOpType)),
+//			&m_imgHandler, SLOT(SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType)));
 
-	connect(m_settings, SIGNAL(SignalAggrOpPower(double)),
-			&m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
+//	connect(m_settings, SIGNAL(SignalAggrOpPower(double)),
+//			&m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
 
-	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
-			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
+//	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
+//			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
 
-	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
-	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
+//	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
+//	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
 
-	m_settings->show();
-}
+//	m_settings->show();
+//}
 
 // Slot for destroing Settings for Aggreg Operators window on close
 void MainWindow::SlotAggrOpSettingsClosed()
@@ -350,28 +352,28 @@ void MainWindow::SlotAggrOpSettingsClosed()
 	delete m_settings;
 }
 
-// Construct Mask Settings window
-void MainWindow::on_actionMask_settings_triggered()
-{
-	m_maskTable = new MaskDialog(this);
+//// Construct Mask Settings window
+//void MainWindow::on_actionMask_settings_triggered()
+//{
+//	m_maskTable = new MaskDialog(this);
 
-	// Mask transfer
-	connect(m_maskTable, SIGNAL(SignalGetMask()), &m_imgHandler, SLOT(SlotTransmitMask()));
-	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
-			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
+//	// Mask transfer
+//	connect(m_maskTable, SIGNAL(SignalGetMask()), &m_imgHandler, SLOT(SlotTransmitMask()));
+//	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
+//			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 
-	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
-			&m_imgHandler, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
+//	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
+//			&m_imgHandler, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 
-	// Show window when ready
-	connect(m_maskTable, SIGNAL(SignalReadyToShow()), m_maskTable, SLOT(show()));
+//	// Show window when ready
+//	connect(m_maskTable, SIGNAL(SignalReadyToShow()), m_maskTable, SLOT(show()));
 
-	// What we should do when user close Mask Settings Dialog
-	connect(m_maskTable, SIGNAL(accepted()), this, SLOT(SlotMaskSettingsClosed()));
-	connect(m_maskTable, SIGNAL(rejected()), this, SLOT(SlotMaskSettingsClosed()));
+//	// What we should do when user close Mask Settings Dialog
+//	connect(m_maskTable, SIGNAL(accepted()), this, SLOT(SlotMaskSettingsClosed()));
+//	connect(m_maskTable, SIGNAL(rejected()), this, SLOT(SlotMaskSettingsClosed()));
 
-	m_maskTable->DefineSettings();
-}
+//	m_maskTable->DefineSettings();
+//}
 
 // Slot for destroing Mask Settings dialog
 void MainWindow::SlotMaskSettingsClosed()

@@ -30,7 +30,7 @@
 #include <QProgressBar>
 #include <QSlider>
 #include <QPushButton>
-#include <QDebug>
+
 #include "DIALOGS/FILTER_SETTINGS/settingsdialog.h"
 #include "DIALOGS/FILTER_SETTINGS/maskdialog.h"
 #include "DIALOGS/NOISE_SETTINGS/noisedialog.h"
@@ -101,20 +101,20 @@ private slots:
 	void on_actionOpen_triggered();
 	// Private slot for changing noise level. Called by MainWindow
 	void on_noiseLeveler_valueChanged(int value);
-	// Set type of original image: grayscale
-	void on_actionGrayscale_images_triggered();
-	// Set type of original image: color
-	void on_actionColor_images_triggered();
-	// Apply noise to result image
-	void on_NoiseButton_clicked();
-	// Start filtration
-	void on_FilterButton_clicked();
-	// Construct Settings window
-	void on_actionSettings_triggered();
+//	// Set type of original image: grayscale
+//	void on_actionGrayscale_images_triggered();
+//	// Set type of original image: color
+//	void on_actionColor_images_triggered();
+//	// Apply noise to result image
+//	void on_NoiseButton_clicked();
+//	// Start filtration
+//	void on_FilterButton_clicked();
+//	// Construct Settings window
+//	void on_actionSettings_triggered();
 	// Slot for destroing Settings for Aggreg Operators window on close
 	void SlotAggrOpSettingsClosed();
-	// Construct Mask Settings window
-	void on_actionMask_settings_triggered();
+//	// Construct Mask Settings window
+//	void on_actionMask_settings_triggered();
 	// Slot for destroing Mask Settings dialog
 	void SlotMaskSettingsClosed();
 	// Construct Noise Settings window
