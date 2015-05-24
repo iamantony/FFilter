@@ -89,7 +89,7 @@
      </layout>
     </item>
     <item>
-     <widget class="Line" name="line">
+     <widget class="Line" name="line_1">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -202,7 +202,7 @@
          <enum>QLayout::SetMinimumSize</enum>
         </property>
         <item>
-         <widget class="QLabel" name="labelNoise">
+         <widget class="QLabel" name="noiseLevelLbl">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
             <horstretch>0</horstretch>
@@ -264,7 +264,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="labelNoisePrc">
+         <widget class="QLabel" name="noisePrcLbl">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
             <horstretch>0</horstretch>
@@ -296,7 +296,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QLabel" name="labelSKO">
+       <widget class="QLabel" name="sdLbl">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
@@ -402,31 +402,10 @@
      </widget>
     </item>
    </layout>
-   <zorder>filterPB</zorder>
-   <zorder>originalImgLbl</zorder>
-   <zorder>resultImgLbl</zorder>
-   <zorder>sdLE</zorder>
-   <zorder>labelSKO</zorder>
-   <zorder>noiseLeveler</zorder>
-   <zorder>labelNoisePrc</zorder>
-   <zorder>labelNoise</zorder>
    <zorder>progressBar</zorder>
-   <zorder>addNoisePB</zorder>
-   <zorder>horizontalSpacer</zorder>
-   <zorder>line</zorder>
+   <zorder>line_1</zorder>
    <zorder></zorder>
-   <zorder>openImgPB</zorder>
-   <zorder>saveNoisedImgPB</zorder>
-   <zorder>saveFilteredImgPB</zorder>
-   <zorder>horizontalSpacer_6</zorder>
-   <zorder>horizontalSpacer_7</zorder>
-   <zorder>horizontalSpacer_8</zorder>
-   <zorder>horizontalSpacer_9</zorder>
-   <zorder>label</zorder>
-   <zorder>saveFilteredImgPB</zorder>
    <zorder>line_2</zorder>
-   <zorder>horizontalSpacer_2</zorder>
-   <zorder>horizontalSpacer_3</zorder>
    <zorder>line_3</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -462,7 +441,7 @@
     <property name="title">
      <string>Noise</string>
     </property>
-    <addaction name="actionNoise_settings"/>
+    <addaction name="actionNoiseSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuNoise"/>
@@ -478,28 +457,6 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionAverage">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Averaging</string>
-   </property>
-  </action>
-  <action name="actionMean">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Mean-square</string>
    </property>
   </action>
   <action name="actionGrayscaleImages">
@@ -531,7 +488,7 @@
     <string>Filter mask settings</string>
    </property>
   </action>
-  <action name="actionNoise_settings">
+  <action name="actionNoiseSettings">
    <property name="text">
     <string>Noise settings</string>
    </property>

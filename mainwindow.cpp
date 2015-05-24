@@ -1,33 +1,23 @@
-/* === This file is part of FFilter ===
- *
- *	Copyright 2012, Antony Cherepanov <antony.cherepanov@gmail.com>
- *
- *	FFilter is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation, either version 3 of the License, or
- *	(at your option) any later version.
- *
- *	FFilter is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with FFilter. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QPixmap>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSlider>
+#include <QProgressBar>
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QDebug>
 
+#include "DEFINES/common.h"
+#include "DEFINES/enums.h"
+
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
-	ui(new Ui::MainWindow)
+	QMainWindow(parent), ui(new Ui::MainWindow), m_modeGroup(this)
 {
 	ui->setupUi(this);
 
-	m_progrBar = NULL;
 	m_settings = NULL;
 	m_maskTable = NULL;
 
@@ -43,7 +33,6 @@ void MainWindow::Init()
 {
 	SetLabels();
 	SetModeActionGroup();
-	FindGUIElements();
 
 	SetConnections();
 
@@ -70,119 +59,28 @@ void MainWindow::SetLabels()
 	m_resultImgLbl.show();
 }
 
-// Creating exclusive group of actions, which defines mode of input image: gray or color
+// Creating exclusive group of actions, which defines mode of input image:
+// gray or color
 void MainWindow::SetModeActionGroup()
 {
-	m_modeGroup = new QActionGroup(this);
-	m_modeGroup->setExclusive(true);
+	m_modeGroup.setExclusive(true);
+	m_modeGroup.addAction(ui->actionGrayscaleImages);
+	m_modeGroup.addAction(ui->actionColorImages);
 
-	QList<QAction *> listGray = this->findChildren<QAction *>("actionGrayscale_images");
-	if ( true == listGray.isEmpty() )
-	{
-		qDebug() << "MainWindow::SetModeActionGroup(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_modeGroup->addAction(listGray.at(0));
-	}
-
-	QList<QAction *> listColor = this->findChildren<QAction *>("actionColor_images");
-	if ( true == listColor.isEmpty() )
-	{
-		qDebug() << "MainWindow::SetModeActionGroup(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_modeGroup->addAction(listColor.at(0));
-	}
-
-	// By default working with gray images
-	listGray.at(0)->setChecked(true);
+	ui->actionGrayscaleImages->setChecked(true);
 }
 
-// Find GUI elements, which could be enabled/disabled/changed
-void MainWindow::FindGUIElements()
-{
-	QList<QProgressBar *> progrBarList = this->findChildren<QProgressBar *>("progressBar");
-	if ( true == progrBarList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_progrBar = progrBarList.at(0);
-	}
-
-	QList<QSlider *> sliderList = this->findChildren<QSlider *>("noiseLeveler");
-	if ( true == sliderList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_noiseLeveler = sliderList.at(0);
-	}
-
-	QList<QPushButton *> noiseBtnList = this->findChildren<QPushButton *>("NoiseButton");
-	if ( true == noiseBtnList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_noiseBtn = noiseBtnList.at(0);
-	}
-
-	QList<QPushButton *> filterBtnList = this->findChildren<QPushButton *>("FilterButton");
-	if ( true == filterBtnList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_filterBtn = filterBtnList.at(0);
-	}
-
-	QList<QLineEdit *> lineSKOList = this->findChildren<QLineEdit *>("lineSKO");
-	if ( true == lineSKOList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_lineSKO = lineSKOList.at(0);
-	}
-
-	QList<QLabel *> noiseLblList = this->findChildren<QLabel *>("labelNoisePrc");
-	if ( true == noiseLblList.isEmpty() )
-	{
-		qDebug() << "MainWindow::FindGUIElements(): Error - can't find window item";
-		this->close();
-	}
-	else
-	{
-		m_noiseLbl = noiseLblList.at(0);
-	}
-}
-
+// Set connections to GUI elements
 void MainWindow::SetConnections()
 {
-	// Connections for Progress bar on MainWindow
 	connect(&m_imgHandler, SIGNAL(SignalUIProgrBarValue(int)),
-			m_progrBar, SLOT(setValue(int)));
+			ui->progressBar, SLOT(setValue(int)));
 
-	connect(&m_imgHandler, SIGNAL(SignalUIResetProgrBar()), m_progrBar, SLOT(reset()));
-	connect(this, SIGNAL(SignalResetProgrBar()), m_progrBar, SLOT(reset()));
+	connect(&m_imgHandler, SIGNAL(SignalUIResetProgrBar()),
+			ui->progressBar, SLOT(reset()));
 
-	// Connection for LineEdit SKO on MainWindow
-	connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)), this, SLOT(SlotSetSKO(double)));
+	connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
+			this, SLOT(SlotSetSKO(double)));
 }
 
 void MainWindow::EnableUI()
@@ -195,14 +93,14 @@ void MainWindow::DisableUI()
 	SetUIMode(false);
 }
 
-// Enable/disable functional UI elements (such as button for adding noise to img, etc.)
+// Enable/disable UI elements
 void MainWindow::SetUIMode(const bool &t_mode)
 {
-	m_noiseLeveler->setEnabled(t_mode);
-	m_noiseBtn->setEnabled(t_mode);
-	m_filterBtn->setEnabled(t_mode);
+	ui->noiseLeveler->setEnabled(t_mode);
+	ui->addNoisePB->setEnabled(t_mode);
+	ui->filterPB->setEnabled(t_mode);
 
-	emit SignalResetProgrBar();
+	ui->progressBar->reset();
 }
 
 void MainWindow::SetImgOnOrigLbl(const QImage &t_origImg)
@@ -227,11 +125,10 @@ void MainWindow::SetImgOnResultLbl(const QImage &t_resultImg)
 	m_resultImgLbl.setPixmap(QPixmap::fromImage(img));
 }
 
-// Set value to LineEdit SKO
+// Slot to set Standart Deviation value
 void MainWindow::SlotSetSKO(const double &t_sko)
 {
-	QString strSKO = QString::number(t_sko);
-	m_lineSKO->setText(strSKO);
+	ui->sdLE->setText( QString::number(t_sko) );
 }
 
 // Slot for opening original image
@@ -266,14 +163,13 @@ void MainWindow::on_actionOpen_triggered()
 	EnableUI();
 }
 
-// Private slot for changing noise level. Called by MainWindow
+// Slot for changing noise level
 void MainWindow::on_noiseLeveler_valueChanged(int value)
 {
 	m_imgHandler.SetNoiseLevelPrc(value);
 
-	QString strNoise = QString::number(value);
-	strNoise.append("%");
-	m_noiseLbl->setText(strNoise);
+	QString strNoiseLvl = QString::number(value) + "%";
+	ui->sdLbl->setText( strNoiseLvl );
 }
 
 //// Set type of original image: grayscale
