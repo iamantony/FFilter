@@ -115,7 +115,7 @@ void MainWindow::on_openImgPB_clicked()
 void MainWindow::on_noiseLeveler_valueChanged(int value)
 {
     QString strNoiseLvl = QString::number(value) + "%";
-    ui->sdLbl->setText( strNoiseLvl );
+    ui->noisePrcLbl->setText(strNoiseLvl);
 
     m_imgHandler.SetNoiseLevelPrc(value);
     SetOriginalImg( m_imgHandler.GetNoisyImg() );
