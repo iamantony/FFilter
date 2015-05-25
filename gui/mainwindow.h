@@ -4,9 +4,9 @@
 #include <QMainWindow>
 #include <QImage>
 
-#include "DIALOGS/FILTER_SETTINGS/settingsdialog.h"
-#include "DIALOGS/FILTER_SETTINGS/maskdialog.h"
-#include "DIALOGS/NOISE_SETTINGS/noisedialog.h"
+#include "gui/settingsdialog.h"
+#include "gui/maskdialog.h"
+#include "gui/noisedialog.h"
 #include "imghandler.h"
 
 namespace Ui {

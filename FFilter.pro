@@ -10,7 +10,6 @@ TARGET = FFilter
 TEMPLATE = app
 
 SOURCES += main.cpp\
-		mainwindow.cpp \
 	imghandler.cpp \
 	imgservice.cpp \
 	FILTERS/powerfilter.cpp \
@@ -23,18 +22,19 @@ SOURCES += main.cpp\
 	AGGR_OP/harmmeanaggregoperator.cpp \
 	AGGR_OP/medaggregoperator.cpp \
 	AGGR_OP/funcaggregoperator.cpp \
-	DIALOGS/FILTER_SETTINGS/settingsdialog.cpp \
 	MASKS/maskstructure.cpp \
-	DIALOGS/FILTER_SETTINGS/maskdialog.cpp \
-	DIALOGS/NOISE_SETTINGS/noisedialog.cpp \
 	MASKS/activemask.cpp \
     NOISE/noisegenerator.cpp \
     NOISE/absrandnoise.cpp \
     NOISE/defaultnoise.cpp \
     NOISE/randnoise.cpp \
-    NOISE/constnoise.cpp
+    NOISE/constnoise.cpp \
+    gui/mainwindow.cpp \
+    gui/maskdialog.cpp \
+    gui/noisedialog.cpp \
+    gui/settingsdialog.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
 	imghandler.h \
 	imgservice.h \
 	FILTERS/powerfilter.h \
@@ -50,18 +50,20 @@ HEADERS  += mainwindow.h \
 	DEFINES/common.h \
 	DEFINES/enums.h \
 	DEFINES/mask.h \
-	DIALOGS/FILTER_SETTINGS/settingsdialog.h \
 	MASKS/maskstructure.h \
-	DIALOGS/FILTER_SETTINGS/maskdialog.h \
-	DIALOGS/NOISE_SETTINGS/noisedialog.h \
 	MASKS/activemask.h \
     NOISE/noisegenerator.h \
     NOISE/defaultnoise.h \
     NOISE/absrandnoise.h \
     NOISE/randnoise.h \
-    NOISE/constnoise.h
+    NOISE/constnoise.h \
+    gui/mainwindow.h \
+    gui/maskdialog.h \
+    gui/noisedialog.h \
+    gui/settingsdialog.h
 
-FORMS    += mainwindow.ui \
-	DIALOGS/FILTER_SETTINGS/maskdialog.ui \
-	DIALOGS/NOISE_SETTINGS/noisedialog.ui \
-	DIALOGS/FILTER_SETTINGS/settingsdialog.ui
+FORMS    += \
+    gui/mainwindow.ui \
+    gui/maskdialog.ui \
+    gui/noisedialog.ui \
+    gui/settingsdialog.ui
