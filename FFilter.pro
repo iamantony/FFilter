@@ -32,7 +32,7 @@ SOURCES += main.cpp\
     gui/mainwindow.cpp \
     gui/maskdialog.cpp \
     gui/noisedialog.cpp \
-    gui/settingsdialog.cpp
+    gui/aggregfiltersettingsdialog.cpp
 
 HEADERS  += \
 	imghandler.h \
@@ -60,10 +60,10 @@ HEADERS  += \
     gui/mainwindow.h \
     gui/maskdialog.h \
     gui/noisedialog.h \
-    gui/settingsdialog.h
+    gui/aggregfiltersettingsdialog.h
 
 FORMS    += \
     gui/mainwindow.ui \
     gui/maskdialog.ui \
     gui/noisedialog.ui \
-    gui/settingsdialog.ui
+    gui/aggregfiltersettingsdialog.ui
