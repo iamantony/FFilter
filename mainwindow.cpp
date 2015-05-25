@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QLabel>
 #include <QPixmap>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSlider>
 #include <QProgressBar>
-#include <QMessageBox>
 #include <QFileDialog>
 #include <QDebug>
 
@@ -14,209 +14,122 @@
 #include "DEFINES/enums.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent), ui(new Ui::MainWindow), m_modeGroup(this)
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	m_settings = NULL;
-	m_maskTable = NULL;
+    m_settings = NULL;
+    m_maskTable = NULL;
 
-//	Init();
+    Init();
 }
 
 MainWindow::~MainWindow()
 {
-	delete ui;
+    delete ui;
 }
 
 void MainWindow::Init()
 {
-	SetLabels();
-	SetModeActionGroup();
-
-	SetConnections();
-
-	DisableUI();
+    SetConnections();
+    EnableGUI(false);
 }
 
-// Put on mainscreen labels for images
-void MainWindow::SetLabels()
-{
-	m_origImgLbl.setParent(this);
-	m_origImgLbl.setGeometry(X_OFFSET_IMG, Y_OFFSET_IMG, W_IMG, H_IMG);
-	QPixmap origPm(W_IMG, H_IMG);
-	origPm.fill(Qt::red);
-	m_origImgLbl.setPixmap(origPm);
-	m_origImgLbl.show();
-
-	m_resultImgLbl.setParent(this);
-	m_resultImgLbl.setGeometry(X_OFFSET_IMG + W_IMG + X_OFFSET_BTW_IMGS,
-							   Y_OFFSET_IMG, W_IMG, H_IMG);
-
-	QPixmap targPm(W_IMG, H_IMG);
-	targPm.fill(Qt::blue);
-	m_resultImgLbl.setPixmap(targPm);
-	m_resultImgLbl.show();
-}
-
-// Creating exclusive group of actions, which defines mode of input image:
-// gray or color
-void MainWindow::SetModeActionGroup()
-{
-	m_modeGroup.setExclusive(true);
-	m_modeGroup.addAction(ui->actionGrayscaleImages);
-	m_modeGroup.addAction(ui->actionColorImages);
-
-	ui->actionGrayscaleImages->setChecked(true);
-}
-
-// Set connections to GUI elements
+// Set up connections to GUI elements
 void MainWindow::SetConnections()
 {
-	connect(&m_imgHandler, SIGNAL(SignalUIProgrBarValue(int)),
-			ui->progressBar, SLOT(setValue(int)));
+    connect(&m_imgHandler, SIGNAL(SignalUIProgrBarValue(int)),
+            ui->progressBar, SLOT(setValue(int)));
 
-	connect(&m_imgHandler, SIGNAL(SignalUIResetProgrBar()),
-			ui->progressBar, SLOT(reset()));
+    connect(&m_imgHandler, SIGNAL(SignalUIResetProgrBar()),
+            ui->progressBar, SLOT(reset()));
 
-	connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
-			this, SLOT(SlotSetSKO(double)));
+    connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
+            this, SLOT(SlotSetSD(double)));
 }
 
-void MainWindow::EnableUI()
+// Enable/disable functional UI elements
+void MainWindow::EnableGUI(const bool &t_mode)
 {
-	SetUIMode(true);
+    ui->noiseLeveler->setEnabled(t_mode);
+    ui->filterPB->setEnabled(t_mode);
+
+    ui->progressBar->reset();
 }
 
-void MainWindow::DisableUI()
+// Set original image on label
+void MainWindow::SetOriginalImg(const QImage &t_origImg)
 {
-	SetUIMode(false);
+    if ( t_origImg.isNull() )
+    {
+        return;
+    }
+
+    ui->originalImgLbl->setPixmap( QPixmap::fromImage(t_origImg) );
 }
 
-// Enable/disable UI elements
-void MainWindow::SetUIMode(const bool &t_mode)
+// Set result (filtered) image on label
+void MainWindow::SetResultImg(const QImage &t_resultImg)
 {
-	ui->noiseLeveler->setEnabled(t_mode);
-	ui->addNoisePB->setEnabled(t_mode);
-	ui->filterPB->setEnabled(t_mode);
+    if ( t_resultImg.isNull() )
+    {
+        return;
+    }
 
-	ui->progressBar->reset();
-}
-
-void MainWindow::SetImgOnOrigLbl(const QImage &t_origImg)
-{
-	if ( true == t_origImg.isNull() )
-	{
-		return;
-	}
-
-	QImage img = t_origImg.scaled(W_IMG, H_IMG, Qt::KeepAspectRatio);
-	m_origImgLbl.setPixmap(QPixmap::fromImage(img));
-}
-
-void MainWindow::SetImgOnResultLbl(const QImage &t_resultImg)
-{
-	if ( true == t_resultImg.isNull() )
-	{
-		return;
-	}
-
-	QImage img = t_resultImg.scaled(W_IMG, H_IMG, Qt::KeepAspectRatio);
-	m_resultImgLbl.setPixmap(QPixmap::fromImage(img));
+    ui->resultImgLbl->setPixmap( QPixmap::fromImage(t_resultImg) );
 }
 
 // Slot to set Standart Deviation value
-void MainWindow::SlotSetSKO(const double &t_sko)
+void MainWindow::SlotSetSD(const double &t_sko)
 {
-	ui->sdLE->setText( QString::number(t_sko) );
+    ui->sdLE->setText( QString::number(t_sko) );
 }
 
 // Slot for opening original image
-void MainWindow::on_actionOpen_triggered()
+void MainWindow::on_openImgPB_clicked()
 {
-	DisableUI();
+    QString fName = QFileDialog::getOpenFileName(this,
+                                       "Open image",
+                                       QDir::currentPath(),
+                                       "IMG files (*.png *.jpg *.jpeg *.bmp)");
 
-	QString fName = QFileDialog::getOpenFileName(this, "Open target image...", QDir::currentPath(),
-														  "IMG files (*.png *.jpg *.bmp)");
+    if( fName.isEmpty())
+    {
+        return;
+    }
 
-	if( true == fName.isEmpty())
-	{
-		// User didn't choose an image
-		return;
-	}
+    QImage origImg(fName);
+    m_imgHandler.SetOriginalImg(origImg);
+    m_imgHandler.SetTargetImg(origImg);
 
-	// Save this image in memory
-	QImage origImg(fName);
-	m_imgHandler.SetOriginalImg(origImg);
-	m_imgHandler.SetTargetImg(origImg);
+    SetOriginalImg( m_imgHandler.GetOriginalImg() );
+    SetResultImg( m_imgHandler.GetTargetImg() );
 
-	// Because it's the original image, we put it on both labels: original and result
-	QImage newOrigImg = m_imgHandler.GetOriginalImg();
-	QImage resultImg = m_imgHandler.GetTargetImg();
+    // Set initial SD
+    SlotSetSD(0.0);
 
-	SetImgOnOrigLbl(newOrigImg);
-	SetImgOnResultLbl(resultImg);
-
-	// Because images are same, SKO between them is ZERO
-	SlotSetSKO(0);
-
-	EnableUI();
+    EnableGUI(true);
 }
 
 // Slot for changing noise level
 void MainWindow::on_noiseLeveler_valueChanged(int value)
 {
-	m_imgHandler.SetNoiseLevelPrc(value);
+    QString strNoiseLvl = QString::number(value) + "%";
+    ui->sdLbl->setText( strNoiseLvl );
 
-	QString strNoiseLvl = QString::number(value) + "%";
-	ui->sdLbl->setText( strNoiseLvl );
+    m_imgHandler.SetNoiseLevelPrc(value);
+    SetOriginalImg( m_imgHandler.GetNoisyImg() );
 }
 
-//// Set type of original image: grayscale
-//void MainWindow::on_actionGrayscale_images_triggered()
-//{
-//	m_imgHandler.SetImgMode(ImageMode::GRAYSCALE);
-//}
+// Start filtration
+void MainWindow::on_filterPB_clicked()
+{
+    EnableGUI(false);
 
-//// Set type of original image: color
-//void MainWindow::on_actionColor_images_triggered()
-//{
-//	// Because we don't have color image filtration functionality, we set grayscale filtration
-//	QList<QAction *> list = this->findChildren<QAction *>("actionGrayscale_images");
-//	if ( false == list.isEmpty() )
-//	{
-//		list.at(0)->setChecked(true);
-//		on_actionGrayscale_images_triggered();
-//	}
+    SetResultImg( m_imgHandler.PerfFiltration() );
 
-//	// Just kidding
-//	QMessageBox::warning(this, "Sorry...", "This functionality is not accessable in free version",
-//						 QMessageBox::Ok, QMessageBox::NoButton);
-//}
-
-//// Apply noise to result image
-//void MainWindow::on_NoiseButton_clicked()
-//{
-//	DisableUI();
-
-//	QImage noisyImg = m_imgHandler.GetNoisyImg();
-//	SetImgOnResultLbl(noisyImg);
-//	m_imgHandler.GetImgsSKO();
-
-//	EnableUI();
-//}
-
-//// Start filtration
-//void MainWindow::on_FilterButton_clicked()
-//{
-//	DisableUI();
-
-//	// SKO calculated automatically!
-//	QImage filteredImg = m_imgHandler.PerfFiltration();
-//	SetImgOnResultLbl(filteredImg);
-
-//	EnableUI();
-//}
+    EnableGUI(true);
+}
 
 //// Construct Settings window
 //void MainWindow::on_actionSettings_triggered()
@@ -245,7 +158,7 @@ void MainWindow::on_noiseLeveler_valueChanged(int value)
 // Slot for destroing Settings for Aggreg Operators window on close
 void MainWindow::SlotAggrOpSettingsClosed()
 {
-	delete m_settings;
+    delete m_settings;
 }
 
 //// Construct Mask Settings window
@@ -274,30 +187,30 @@ void MainWindow::SlotAggrOpSettingsClosed()
 // Slot for destroing Mask Settings dialog
 void MainWindow::SlotMaskSettingsClosed()
 {
-	delete m_maskTable;
+    delete m_maskTable;
 }
 
 // Construct Noise Settings window
 void MainWindow::on_actionNoise_settings_triggered()
 {
-	m_noise = new NoiseDialog(this);
-	m_noise->SetNoiseParams(m_imgHandler.GetNoiseType(), m_imgHandler.GetNoiseAmp());
+    m_noise = new NoiseDialog(this);
+    m_noise->SetNoiseParams(m_imgHandler.GetNoiseType(), m_imgHandler.GetNoiseAmp());
 
-	// Noise params transfer
-	connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::NoiseType)),
-			&m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::NoiseType)));
+    // Noise params transfer
+    connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::NoiseType)),
+            &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::NoiseType)));
 
-	connect(m_noise, SIGNAL(SignalNewNoiseAmp(int)), &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
+    connect(m_noise, SIGNAL(SignalNewNoiseAmp(int)), &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
 
-	// What we should do when user close Noise Settings Dialog
-	connect(m_noise, SIGNAL(accepted()), this, SLOT(SlotNoiseSettingsClosed()));
-	connect(m_noise, SIGNAL(rejected()), this, SLOT(SlotNoiseSettingsClosed()));
+    // What we should do when user close Noise Settings Dialog
+    connect(m_noise, SIGNAL(accepted()), this, SLOT(SlotNoiseSettingsClosed()));
+    connect(m_noise, SIGNAL(rejected()), this, SLOT(SlotNoiseSettingsClosed()));
 
-	m_noise->show();
+    m_noise->show();
 }
 
 // Slot for destroing Noise Settings dialog
 void MainWindow::SlotNoiseSettingsClosed()
 {
-	delete m_noise;
+    delete m_noise;
 }

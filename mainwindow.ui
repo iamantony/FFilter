@@ -44,10 +44,13 @@
          <enum>QFrame::Box</enum>
         </property>
         <property name="text">
-         <string/>
+         <string>Original (noised) image</string>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -79,10 +82,13 @@
          <enum>QFrame::Box</enum>
         </property>
         <property name="text">
-         <string/>
+         <string>Filtered image</string>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -158,41 +164,6 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QPushButton" name="addNoisePB">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Add Noise to image</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="spacing">
@@ -430,13 +401,6 @@
     <addaction name="actionAggregFilterSettings"/>
     <addaction name="actionMaskFilterSettings"/>
    </widget>
-   <widget class="QMenu" name="menuMode">
-    <property name="title">
-     <string>Mode</string>
-    </property>
-    <addaction name="actionGrayscaleImages"/>
-    <addaction name="actionColorImages"/>
-   </widget>
    <widget class="QMenu" name="menuNoise">
     <property name="title">
      <string>Noise</string>
@@ -446,7 +410,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuNoise"/>
    <addaction name="menuFilter"/>
-   <addaction name="menuMode"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
@@ -457,25 +420,6 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionGrayscaleImages">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Grayscale images</string>
-   </property>
-  </action>
-  <action name="actionColorImages">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Color images</string>
    </property>
   </action>
   <action name="actionAggregFilterSettings">
