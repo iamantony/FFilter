@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QLabel>
-#include <QPixmap>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QSlider>
-#include <QProgressBar>
 #include <QFileDialog>
 #include <QDebug>
 
@@ -18,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_settings = NULL;
     m_maskTable = NULL;
 
     Init();
@@ -46,6 +39,19 @@ void MainWindow::SetConnections()
 
     connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
             this, SLOT(SlotSetSD(double)));
+
+    connect(&m_aggregFilterSettings,
+            SIGNAL(SignalAggrOpType(AggregOperatorType::AggrOpType)),
+            &m_imgHandler,
+            SLOT(SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType)));
+
+    connect(&m_aggregFilterSettings, SIGNAL(SignalAggrOpPower(double)),
+            &m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
+
+    connect(&m_aggregFilterSettings,
+            SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
+            &m_imgHandler,
+            SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
 }
 
 // Enable/disable functional UI elements
@@ -131,34 +137,14 @@ void MainWindow::on_filterPB_clicked()
     EnableGUI(true);
 }
 
-//// Construct Settings window
-//void MainWindow::on_actionSettings_triggered()
-//{
-//	m_settings = new SettingsDialog(this);
-
-//	m_settings->SetCurrAggrOp(m_imgHandler.GetAggrOpType());
-//	m_settings->SetCurrAggrOpFunc(m_imgHandler.GetAggrOpFunc());
-//	m_settings->SetCurrAggrOpPower(m_imgHandler.GetAggrOpPower());
-
-//	connect(m_settings, SIGNAL(SignalAggrOpType(AggregOperatorType::AggrOpType)),
-//			&m_imgHandler, SLOT(SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType)));
-
-//	connect(m_settings, SIGNAL(SignalAggrOpPower(double)),
-//			&m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
-
-//	connect(m_settings, SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
-//			&m_imgHandler, SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
-
-//	connect(m_settings, SIGNAL(accepted()), this, SLOT(SlotAggrOpSettingsClosed()));
-//	connect(m_settings, SIGNAL(rejected()), this, SLOT(SlotAggrOpSettingsClosed()));
-
-//	m_settings->show();
-//}
-
-// Slot for destroing Settings for Aggreg Operators window on close
-void MainWindow::SlotAggrOpSettingsClosed()
+// Show Agrreg Filter Settings dialog
+void MainWindow::on_actionAggregFilterSettings_triggered()
 {
-    delete m_settings;
+    m_aggregFilterSettings.SetCurrAggrOp( m_imgHandler.GetAggrOpType() );
+    m_aggregFilterSettings.SetCurrAggrOpFunc( m_imgHandler.GetAggrOpFunc() );
+    m_aggregFilterSettings.SetCurrAggrOpPower( m_imgHandler.GetAggrOpPower() );
+
+    m_aggregFilterSettings.exec();
 }
 
 //// Construct Mask Settings window
@@ -213,4 +199,16 @@ void MainWindow::on_actionNoise_settings_triggered()
 void MainWindow::SlotNoiseSettingsClosed()
 {
     delete m_noise;
+}
+
+// TODO
+void MainWindow::on_saveNoisedImgPB_clicked()
+{
+
+}
+
+// TODO
+void MainWindow::on_saveFilteredImgPB_clicked()
+{
+
 }

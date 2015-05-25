@@ -4,12 +4,13 @@
 #include <QMainWindow>
 #include <QImage>
 
-#include "gui/settingsdialog.h"
+#include "gui/aggregfiltersettingsdialog.h"
 #include "gui/maskdialog.h"
 #include "gui/noisedialog.h"
 #include "imghandler.h"
 
-namespace Ui {
+namespace Ui
+{
     class MainWindow;
 }
 
@@ -44,10 +45,8 @@ private slots:
     void on_noiseLeveler_valueChanged(int value);
     // Start filtration
     void on_filterPB_clicked();
-//	// Construct Settings window
-//	void on_actionSettings_triggered();
-    // Slot for destroing Settings for Aggreg Operators window on close
-    void SlotAggrOpSettingsClosed();
+    // Show Agrreg Filter Settings dialog
+    void on_actionAggregFilterSettings_triggered();
 //	// Construct Mask Settings window
 //	void on_actionMask_settings_triggered();
     // Slot for destroing Mask Settings dialog
@@ -56,11 +55,13 @@ private slots:
     void on_actionNoise_settings_triggered();
     // Slot for destroing Noise Settings dialog
     void SlotNoiseSettingsClosed();
+    void on_saveNoisedImgPB_clicked();
+    void on_saveFilteredImgPB_clicked();
 
     // == DATA ==
 private:
     Ui::MainWindow *ui;
-    SettingsDialog *m_settings;
+    AggregFilterSettingsDialog m_aggregFilterSettings;
     MaskDialog *m_maskTable;
     NoiseDialog *m_noise;
     ImgHandler m_imgHandler;
