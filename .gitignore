@@ -32,4 +32,4 @@ build-*
 
 # Project
 FFilter
-
+*.gdb-index

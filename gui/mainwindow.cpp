@@ -137,7 +137,7 @@ void MainWindow::on_filterPB_clicked()
 // Show Agrreg Filter Settings dialog
 void MainWindow::on_actionAggregFilterSettings_triggered()
 {
-    m_aggregFilterSettings.SetCurrAggrOp( m_imgHandler.GetAggrOpType() );
+    m_aggregFilterSettings.SetCurrAggrOpType( m_imgHandler.GetAggrOpType() );
     m_aggregFilterSettings.SetCurrAggrOpFunc( m_imgHandler.GetAggrOpFunc() );
     m_aggregFilterSettings.SetCurrAggrOpPower( m_imgHandler.GetAggrOpPower() );
 

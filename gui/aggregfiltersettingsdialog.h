@@ -2,21 +2,9 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
-#include <QMap>
 #include <QString>
 
 #include "aggreg_operators/aggreg_operators.h"
-
-#define STR_MIN "Min"
-#define STR_MAX "Max"
-#define STR_MEAN "Mean"
-#define STR_GEOM_MEAN "Geometric Mean"
-#define STR_HARM_MEAN "Harmonic Mean"
-#define STR_MEDIAN "Median"
-#define STR_FUNC "Functional"
-
-#define STR_EXP "Exponential"
-#define STR_LN "Logarithm"
 
 namespace Ui
 {
@@ -32,25 +20,18 @@ public:
     explicit AggregFilterSettingsDialog(QWidget *parent = 0);
     ~AggregFilterSettingsDialog();
 
-    void SetCurrAggrOp(const AggregOperator::Type::Type &t_type);
+    // Set active aggregation operator type
+    void SetCurrAggrOpType(const AggregOperator::Type::Type &t_type);
+    // Set aggregation operator power
     void SetCurrAggrOpPower(const double &t_power);
-    void SetCurrAggrOpFunc(const AggregOperator::Func::Type &t_func);
+    // Set active aggregation operator function type
+    void SetCurrAggrOpFunc(const AggregOperator::Func::Type &t_type);
 
 private:
-    void Init();
-    void SetDefaults();
-    // Fill list of aggregation operators types
-    void SetAggrOpList();
-    // Fill list of functions for functional aggregation operator
-    void SetAggrOpFuncList();
     // Fill ComboBox for aggregation operators types
     void FillAggrOpCB();
     // Fill ComboBox for functions for functional aggregation operator
     void FillAggrOpFuncsCB();
-    // Find position of mean agrreg. operator in ComboBox
-    void FindMeanAgOp();
-    // Find position of functional agrreg. operator in ComboBox
-    void FindFunctionalAgOp();
 
 signals:
     void SignalAggrOpType(AggregOperator::Type::Type t_type);
@@ -58,30 +39,17 @@ signals:
     void SignalAggrOpFunc(AggregOperator::Func::Type t_func);
 
 private slots:
-    // User changed type of aggreg. operator and we need to enable/disable some UI elements
+    // Slot that will be called on change of aggregation operator type
     void on_aggrOpCB_currentIndexChanged(int index);
-    // User changed type of aggreg. operator
-    void on_aggrOpCB_currentIndexChanged(const QString &arg1);
-    // User changed type of function for functional aggreg. operator
-    void on_funcCB_currentIndexChanged(const QString &arg1);
-    // User changed value of power
+    // Slot that will be called on change of power value
     void on_powerLE_editingFinished();
-    // User pressed "OK" button
-    void on_buttonBox_accepted();
+    // Slot that will be called on change of functional aggregation operator
+    // type
+    void on_funcTypeCB_currentIndexChanged(int index);
 
     // == DATA ==
 private:
     Ui::AggregFilterSettingsDialog *ui;
-
-    QMap<AggregOperator::Type::Type, QString> m_aggrOpTypesMap;
-    QMap<AggregOperator::Func::Type, QString> m_aggrOpFuncsMap;
-
-    AggregOperator::Type::Type m_currAggrOpType;
-    AggregOperator::Func::Type m_currAggrOpFunc;
-    double m_currAggrOpPower;
-
-    int m_posOfFuncAggrOp;
-    int m_posOfMeanAggrOp;
 };
 
 #endif // SETTINGSDIALOG_H
