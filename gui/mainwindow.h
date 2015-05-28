@@ -7,7 +7,7 @@
 #include "gui/aggregfiltersettingsdialog.h"
 #include "gui/maskdialog.h"
 #include "gui/noisedialog.h"
-#include "imghandler.h"
+#include "image/imghandler.h"
 
 namespace Ui
 {

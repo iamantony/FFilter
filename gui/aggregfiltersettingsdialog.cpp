@@ -3,9 +3,10 @@
 
 #include <QDebug>
 
+#include "common/common.h"
+
 AggregFilterSettingsDialog::AggregFilterSettingsDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::AggregFilterSettingsDialog)
+    QDialog(parent), ui(new Ui::AggregFilterSettingsDialog)
 {
     ui->setupUi(this);
 
@@ -28,8 +29,8 @@ void AggregFilterSettingsDialog::Init()
 
 void AggregFilterSettingsDialog::SetDefaults()
 {
-    m_currAggrOpType = AggregOperatorType::MIN;
-    m_currAggrOpFunc = AggregOperatorFunc::EXP;
+    m_currAggrOpType = AggregOperator::Type::MIN;
+    m_currAggrOpFunc = AggregOperator::Func::EXP;
     m_currAggrOpPower = 1;
 
     m_posOfFuncAggrOp = ERROR;
@@ -39,13 +40,13 @@ void AggregFilterSettingsDialog::SetDefaults()
 // Fill list of aggregation operators types
 void AggregFilterSettingsDialog::SetAggrOpList()
 {
-    m_aggrOpTypesMap.insert(AggregOperatorType::MIN, STR_MIN);
-    m_aggrOpTypesMap.insert(AggregOperatorType::MAX, STR_MAX);
-    m_aggrOpTypesMap.insert(AggregOperatorType::MEAN, STR_MEAN);
-    m_aggrOpTypesMap.insert(AggregOperatorType::GEOMETRIC_MEAN, STR_GEOM_MEAN);
-    m_aggrOpTypesMap.insert(AggregOperatorType::HARMONC_MAEN, STR_HARM_MEAN);
-    m_aggrOpTypesMap.insert(AggregOperatorType::MEDIAN, STR_MEDIAN);
-    m_aggrOpTypesMap.insert(AggregOperatorType::FUNCTIONAL, STR_FUNC);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::MIN, STR_MIN);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::MAX, STR_MAX);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::MEAN, STR_MEAN);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::GEOMETRIC_MEAN, STR_GEOM_MEAN);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::HARMONC_MAEN, STR_HARM_MEAN);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::MEDIAN, STR_MEDIAN);
+    m_aggrOpTypesMap.insert(AggregOperator::Type::FUNCTIONAL, STR_FUNC);
 
     FillAggrOpCB();
 }
@@ -69,8 +70,8 @@ void AggregFilterSettingsDialog::FillAggrOpCB()
 // Fill list of functions for functional aggregation operator
 void AggregFilterSettingsDialog::SetAggrOpFuncList()
 {
-    m_aggrOpFuncsMap.insert(AggregOperatorFunc::EXP, STR_EXP);
-    m_aggrOpFuncsMap.insert(AggregOperatorFunc::LOG_NATURAL, STR_LN);
+    m_aggrOpFuncsMap.insert(AggregOperator::Func::EXP, STR_EXP);
+    m_aggrOpFuncsMap.insert(AggregOperator::Func::LOG_NATURAL, STR_LN);
 
     FillAggrOpFuncsCB();
 }
@@ -121,13 +122,16 @@ void AggregFilterSettingsDialog::FindFunctionalAgOp()
     }
 }
 
-void AggregFilterSettingsDialog::SetCurrAggrOp(AggregOperatorType::AggrOpType t_type)
+void AggregFilterSettingsDialog::SetCurrAggrOp(
+        const AggregOperator::Type::Type &t_type)
 {
     QString typeName = m_aggrOpTypesMap.value(t_type);
     int posOfType = ui->aggrOpCB->findText(typeName);
     if ( ERROR == posOfType )
     {
-        qDebug() << "SetCurrAggrOp(): Error - can't find type of aggreg operator:" << t_type;
+        qDebug() <<
+            "SetCurrAggrOp(): Error - can't find type of aggreg operator:" <<
+            t_type;
         reject();
     }
     else
@@ -143,13 +147,16 @@ void AggregFilterSettingsDialog::SetCurrAggrOpPower(const double &t_power)
     ui->powerLE->setText(QString::number(m_currAggrOpPower));
 }
 
-void AggregFilterSettingsDialog::SetCurrAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_func)
+void AggregFilterSettingsDialog::SetCurrAggrOpFunc(
+        const AggregOperator::Func::Type &t_func)
 {
     QString funcName = m_aggrOpFuncsMap.value(t_func);
     int posOfFunc = ui->funcTypeCB->findText(funcName);
     if ( ERROR == posOfFunc )
     {
-        qDebug() << "SetCurrAggrOpFunc(): Error - can't find type of function:" << t_func;
+        qDebug() <<
+            "SetCurrAggrOpFunc(): Error - can't find type of function:" <<
+            t_func;
         reject();
     }
     else

@@ -1,95 +1,77 @@
-/* === This file is part of FFilter ===
- *
- *	Copyright 2012, Antony Cherepanov <antony.cherepanov@gmail.com>
- *
- *	FFilter is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation, either version 3 of the License, or
- *	(at your option) any later version.
- *
- *	FFilter is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with FFilter. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "constnoise.h"
 
 QImage ConstNoise::GetNoisedImage()
 {
-	if ( true == m_imgToNoise.isNull() )
-	{
-		qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
-		return m_imgToNoise;
-	}
+    if ( true == m_imgToNoise.isNull() )
+    {
+        qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
+        return m_imgToNoise;
+    }
 
-	// Noise without amplitude is not the noise at all
-	if ( 0 == m_noiseAmplitude )
-	{
-		return m_imgToNoise;
-	}
+    // Noise without amplitude is not the noise at all
+    if ( 0 == m_noiseAmplitude )
+    {
+        return m_imgToNoise;
+    }
 
-	QList<int> noiseForPixels = GenerateNoise();
-	int pixelsToNoise = noiseForPixels.size();
-	int noisedPixelNum = 0;
-	int imgW = m_imgToNoise.width();
-	int imgH = m_imgToNoise.height();
-	int pixelLum = 0;
-	QRgb newPixel;
-	QColor oldPixel;
+    QList<int> noiseForPixels = GenerateNoise();
+    int pixelsToNoise = noiseForPixels.size();
+    int noisedPixelNum = 0;
+    int imgW = m_imgToNoise.width();
+    int imgH = m_imgToNoise.height();
+    int pixelLum = 0;
+    QRgb newPixel;
+    QColor oldPixel;
 
-	int onePercent = ( imgW * imgH ) / 100;
-	int progressPrc = 0;
-	int counter = 0;
+    int onePercent = ( imgW * imgH ) / 100;
+    int progressPrc = 0;
+    int counter = 0;
 
-	// Start algorith
-	for ( int w = 0; w < imgW; w++ )
-	{
-		for ( int h = 0; h < imgH; h++ )
-		{
-			if ( (m_needToNoise == m_pixelsToChange[w][h]) &&
-				 ( noisedPixelNum < pixelsToNoise ) )
-			{
-				oldPixel = m_imgToNoise.pixel(w, h);
-				pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
-				noisedPixelNum++;
+    // Start algorith
+    for ( int w = 0; w < imgW; w++ )
+    {
+        for ( int h = 0; h < imgH; h++ )
+        {
+            if ( (m_needToNoise == m_pixelsToChange[w][h]) &&
+                 ( noisedPixelNum < pixelsToNoise ) )
+            {
+                oldPixel = m_imgToNoise.pixel(w, h);
+                pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
+                noisedPixelNum++;
 
-				if ( 255 < pixelLum )
-				{
-					pixelLum = 255;
-				}
-				else if ( pixelLum < 0 )
-				{
-					pixelLum = 0;
-				}
+                if ( 255 < pixelLum )
+                {
+                    pixelLum = 255;
+                }
+                else if ( pixelLum < 0 )
+                {
+                    pixelLum = 0;
+                }
 
-				newPixel = qRgb(pixelLum, pixelLum, pixelLum);
-				m_imgToNoise.setPixel(w, h, newPixel);
-			}
+                newPixel = qRgb(pixelLum, pixelLum, pixelLum);
+                m_imgToNoise.setPixel(w, h, newPixel);
+            }
 
-			counter++;
-			if ( counter == onePercent )
-			{
-				counter = 0;
-				progressPrc++;
-				emit SignalProcProgressPrc(progressPrc);
-			}
-		}
-	}
+            counter++;
+            if ( counter == onePercent )
+            {
+                counter = 0;
+                progressPrc++;
+                emit SignalProcProgressPrc(progressPrc);
+            }
+        }
+    }
 
-	return m_imgToNoise;
+    return m_imgToNoise;
 }
 
 QList<int> ConstNoise::GenerateNoise()
 {
-	QList<int> listOfNoise;
-	for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
-	{
-		listOfNoise.append(m_noiseAmplitude);
-	}
+    QList<int> listOfNoise;
+    for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
+    {
+        listOfNoise.append(m_noiseAmplitude);
+    }
 
-	return listOfNoise;
+    return listOfNoise;
 }

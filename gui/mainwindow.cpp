@@ -4,9 +4,6 @@
 #include <QFileDialog>
 #include <QDebug>
 
-#include "DEFINES/common.h"
-#include "DEFINES/enums.h"
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -41,17 +38,17 @@ void MainWindow::SetConnections()
             this, SLOT(SlotSetSD(double)));
 
     connect(&m_aggregFilterSettings,
-            SIGNAL(SignalAggrOpType(AggregOperatorType::AggrOpType)),
+            SIGNAL(SignalAggrOpType(AggregOperator::Type::Type)),
             &m_imgHandler,
-            SLOT(SlotAggrOpTypeChanged(AggregOperatorType::AggrOpType)));
+            SLOT(SlotAggrOpTypeChanged(AggregOperator::Type::Type)));
 
     connect(&m_aggregFilterSettings, SIGNAL(SignalAggrOpPower(double)),
             &m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
 
     connect(&m_aggregFilterSettings,
-            SIGNAL(SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc)),
+            SIGNAL(SignalAggrOpFunc(AggregOperator::Func::Type)),
             &m_imgHandler,
-            SLOT(SlotAggrOpFuncChanged(AggregOperatorFunc::AggrOpFunc)));
+            SLOT(SlotAggrOpFuncChanged(AggregOperator::Func::Type)));
 }
 
 // Enable/disable functional UI elements
@@ -183,8 +180,8 @@ void MainWindow::on_actionNoise_settings_triggered()
     m_noise->SetNoiseParams(m_imgHandler.GetNoiseType(), m_imgHandler.GetNoiseAmp());
 
     // Noise params transfer
-    connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::NoiseType)),
-            &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::NoiseType)));
+    connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::Type)),
+            &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::Type)));
 
     connect(m_noise, SIGNAL(SignalNewNoiseAmp(int)), &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
 

@@ -5,8 +5,7 @@
 #include <QMap>
 #include <QString>
 
-#include "DEFINES/common.h"
-#include "DEFINES/enums.h"
+#include "aggreg_operators/aggreg_operators.h"
 
 #define STR_MIN "Min"
 #define STR_MAX "Max"
@@ -33,9 +32,9 @@ public:
     explicit AggregFilterSettingsDialog(QWidget *parent = 0);
     ~AggregFilterSettingsDialog();
 
-    void SetCurrAggrOp(AggregOperatorType::AggrOpType t_type);
+    void SetCurrAggrOp(const AggregOperator::Type::Type &t_type);
     void SetCurrAggrOpPower(const double &t_power);
-    void SetCurrAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_func);
+    void SetCurrAggrOpFunc(const AggregOperator::Func::Type &t_func);
 
 private:
     void Init();
@@ -54,9 +53,9 @@ private:
     void FindFunctionalAgOp();
 
 signals:
-    void SignalAggrOpType(AggregOperatorType::AggrOpType t_type);
+    void SignalAggrOpType(AggregOperator::Type::Type t_type);
     void SignalAggrOpPower(double t_power);
-    void SignalAggrOpFunc(AggregOperatorFunc::AggrOpFunc t_func);
+    void SignalAggrOpFunc(AggregOperator::Func::Type t_func);
 
 private slots:
     // User changed type of aggreg. operator and we need to enable/disable some UI elements
@@ -74,11 +73,11 @@ private slots:
 private:
     Ui::AggregFilterSettingsDialog *ui;
 
-    QMap<AggregOperatorType::AggrOpType, QString> m_aggrOpTypesMap;
-    QMap<AggregOperatorFunc::AggrOpFunc, QString> m_aggrOpFuncsMap;
+    QMap<AggregOperator::Type::Type, QString> m_aggrOpTypesMap;
+    QMap<AggregOperator::Func::Type, QString> m_aggrOpFuncsMap;
 
-    AggregOperatorType::AggrOpType m_currAggrOpType;
-    AggregOperatorFunc::AggrOpFunc m_currAggrOpFunc;
+    AggregOperator::Type::Type m_currAggrOpType;
+    AggregOperator::Func::Type m_currAggrOpFunc;
     double m_currAggrOpPower;
 
     int m_posOfFuncAggrOp;
