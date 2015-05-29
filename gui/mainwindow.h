@@ -6,7 +6,7 @@
 
 #include "gui/aggregfiltersettingsdialog.h"
 #include "gui/maskdialog.h"
-#include "gui/noisedialog.h"
+#include "gui/noisesettingsdialog.h"
 #include "image/imghandler.h"
 
 namespace Ui
@@ -28,7 +28,6 @@ public slots:
     void SlotSetSD(const double &t_sko);
 
 private:
-    void Init();
     // Set up connections to GUI elements
     void SetConnections();
     // Enable/disable functional UI elements
@@ -47,14 +46,12 @@ private slots:
     void on_filterPB_clicked();
     // Show Agrreg Filter Settings dialog
     void on_actionAggregFilterSettings_triggered();
+    // Show Noise Settings dialog
+    void on_actionNoiseSettings_triggered();
 //	// Construct Mask Settings window
 //	void on_actionMask_settings_triggered();
     // Slot for destroing Mask Settings dialog
     void SlotMaskSettingsClosed();
-    // Construct Noise Settings window
-    void on_actionNoise_settings_triggered();
-    // Slot for destroing Noise Settings dialog
-    void SlotNoiseSettingsClosed();
     void on_saveNoisedImgPB_clicked();
     void on_saveFilteredImgPB_clicked();
 
@@ -63,7 +60,7 @@ private:
     Ui::MainWindow *ui;
     AggregFilterSettingsDialog m_aggregFilterSettings;
     MaskDialog *m_maskTable;
-    NoiseDialog *m_noise;
+    NoiseSettingsDialog m_noiseSettings;
     ImgHandler m_imgHandler;
 };
 

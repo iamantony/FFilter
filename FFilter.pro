@@ -31,8 +31,8 @@ SOURCES += main.cpp\
     noise/constnoise.cpp \
     gui/mainwindow.cpp \
     gui/maskdialog.cpp \
-    gui/noisedialog.cpp \
-    gui/aggregfiltersettingsdialog.cpp
+    gui/aggregfiltersettingsdialog.cpp \
+    gui/noisesettingsdialog.cpp
 
 HEADERS  += \
     image/imghandler.h \
@@ -58,14 +58,14 @@ HEADERS  += \
     noise/constnoise.h \
     gui/mainwindow.h \
     gui/maskdialog.h \
-    gui/noisedialog.h \
     gui/aggregfiltersettingsdialog.h \
     aggreg_operators/aggreg_operators.h \
     noise/noise.h \
-    image/image.h
+    image/image.h \
+    gui/noisesettingsdialog.h
 
 FORMS    += \
     gui/mainwindow.ui \
     gui/maskdialog.ui \
-    gui/noisedialog.ui \
-    gui/aggregfiltersettingsdialog.ui
+    gui/aggregfiltersettingsdialog.ui \
+    gui/noisesettingsdialog.ui

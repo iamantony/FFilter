@@ -2,6 +2,7 @@
 #include "ui_aggregfiltersettingsdialog.h"
 
 #include <QStringList>
+#include <QDoubleValidator>
 #include <QDebug>
 
 #include "common/common.h"
@@ -11,6 +12,7 @@ AggregFilterSettingsDialog::AggregFilterSettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->powerLE->setValidator(new QDoubleValidator());
     FillAggrOpCB();
     FillAggrOpFuncsCB();
 }
@@ -20,7 +22,7 @@ AggregFilterSettingsDialog::~AggregFilterSettingsDialog()
     delete ui;
 }
 
-// Fill ComboBox for aggregation operators types
+// Fill ComboBox with aggregation operators types
 void AggregFilterSettingsDialog::FillAggrOpCB()
 {
     QStringList items;
@@ -30,7 +32,7 @@ void AggregFilterSettingsDialog::FillAggrOpCB()
     ui->aggrOpCB->addItems( items );
 }
 
-// Fill ComboBox for functions for functional aggregation operator
+// Fill ComboBox with function types of functional aggregation operator
 void AggregFilterSettingsDialog::FillAggrOpFuncsCB()
 {
     QStringList items;

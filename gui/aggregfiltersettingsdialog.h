@@ -17,7 +17,7 @@ class AggregFilterSettingsDialog : public QDialog
     // == METHODS ==
 public:
     explicit AggregFilterSettingsDialog(QWidget *parent = 0);
-    ~AggregFilterSettingsDialog();
+    virtual ~AggregFilterSettingsDialog();
 
     // Set active aggregation operator type
     void SetCurrAggrOpType(const AggregOperator::Type::Type &t_type);
@@ -33,9 +33,9 @@ public:
     AggregOperator::Func::Type GetAggrOpFunc() const;
 
 private:
-    // Fill ComboBox for aggregation operators types
+    // Fill ComboBox with aggregation operators types
     void FillAggrOpCB();
-    // Fill ComboBox for functions for functional aggregation operator
+    // Fill ComboBox with function types of functional aggregation operator
     void FillAggrOpFuncsCB();
 
 signals:

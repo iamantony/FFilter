@@ -11,18 +11,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_maskTable = NULL;
 
-    Init();
+    SetConnections();
+    EnableGUI(false);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::Init()
-{
-    SetConnections();
-    EnableGUI(false);
 }
 
 // Set up connections to GUI elements
@@ -49,6 +44,12 @@ void MainWindow::SetConnections()
             SIGNAL(SignalAggrOpFunc(AggregOperator::Func::Type)),
             &m_imgHandler,
             SLOT(SlotAggrOpFuncChanged(AggregOperator::Func::Type)));
+
+    connect(&m_noiseSettings, SIGNAL(SignalNoiseType(Noise::Type)),
+            &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::Type)));
+
+    connect(&m_noiseSettings, SIGNAL(SignalNoiseAmplitude(int)),
+            &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
 }
 
 // Enable/disable functional UI elements
@@ -144,6 +145,15 @@ void MainWindow::on_actionAggregFilterSettings_triggered()
     m_aggregFilterSettings.exec();
 }
 
+// Show Noise Settings dialog
+void MainWindow::on_actionNoiseSettings_triggered()
+{
+    m_noiseSettings.SetNoiseParams(m_imgHandler.GetNoiseType(),
+                                   m_imgHandler.GetNoiseAmp());
+
+    m_noiseSettings.exec();
+}
+
 //// Construct Mask Settings window
 //void MainWindow::on_actionMask_settings_triggered()
 //{
@@ -171,31 +181,6 @@ void MainWindow::on_actionAggregFilterSettings_triggered()
 void MainWindow::SlotMaskSettingsClosed()
 {
     delete m_maskTable;
-}
-
-// Construct Noise Settings window
-void MainWindow::on_actionNoise_settings_triggered()
-{
-    m_noise = new NoiseDialog(this);
-    m_noise->SetNoiseParams(m_imgHandler.GetNoiseType(), m_imgHandler.GetNoiseAmp());
-
-    // Noise params transfer
-    connect(m_noise, SIGNAL(SignalNewNoiseType(Noise::Type)),
-            &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::Type)));
-
-    connect(m_noise, SIGNAL(SignalNewNoiseAmp(int)), &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
-
-    // What we should do when user close Noise Settings Dialog
-    connect(m_noise, SIGNAL(accepted()), this, SLOT(SlotNoiseSettingsClosed()));
-    connect(m_noise, SIGNAL(rejected()), this, SLOT(SlotNoiseSettingsClosed()));
-
-    m_noise->show();
-}
-
-// Slot for destroing Noise Settings dialog
-void MainWindow::SlotNoiseSettingsClosed()
-{
-    delete m_noise;
 }
 
 // TODO
