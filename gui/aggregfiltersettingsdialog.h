@@ -2,7 +2,6 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
-#include <QString>
 
 #include "aggreg_operators/aggreg_operators.h"
 
@@ -22,10 +21,16 @@ public:
 
     // Set active aggregation operator type
     void SetCurrAggrOpType(const AggregOperator::Type::Type &t_type);
+    // Get current aggregation operator type
+    AggregOperator::Type::Type GetAggrOpType() const;
     // Set aggregation operator power
     void SetCurrAggrOpPower(const double &t_power);
+    // Get current aggregation operator power value
+    double GetAggrOpPower() const;
     // Set active aggregation operator function type
     void SetCurrAggrOpFunc(const AggregOperator::Func::Type &t_type);
+    // Get current aggregation operator function type
+    AggregOperator::Func::Type GetAggrOpFunc() const;
 
 private:
     // Fill ComboBox for aggregation operators types

@@ -20,6 +20,7 @@ FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func::Type &t_func)
             break;
         }
 
+        case AggregOperator::Func::DEFAULT_LAST:
         default:
         {
             qDebug() << "FuncAggregOperator(): Error - undefined function type. Using defaults";

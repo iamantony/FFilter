@@ -79,6 +79,7 @@ QImage NoiseGenerator::SetNoiseToImg(const QImage &t_img)
             break;
         }
 
+        case Noise::DEFAULT_LAST:
         default:
         {
             QImage sameImg = t_img;

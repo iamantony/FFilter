@@ -13,7 +13,8 @@ namespace AggregOperator
             GEOMETRIC_MEAN,
             HARMONC_MAEN,
             MEDIAN,
-            FUNCTIONAL
+            FUNCTIONAL,
+            DEFAULT_LAST
         };
     }
 
@@ -22,7 +23,8 @@ namespace AggregOperator
         enum Type
         {
             EXP = 0,
-            LOG_NATURAL
+            LOG_NATURAL,
+            DEFAULT_LAST
         };
     }
 }

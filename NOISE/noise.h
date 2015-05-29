@@ -7,7 +7,8 @@ namespace Noise
     {
         CONSTANT = 0,
         RANDOM,
-        ABS_RANDOM
+        ABS_RANDOM,
+        DEFAULT_LAST
     };
 }
 

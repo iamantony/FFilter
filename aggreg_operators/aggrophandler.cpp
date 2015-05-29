@@ -69,6 +69,7 @@ void AggrOpHandler::SetNewAggrOp()
             m_aggrOperator = new FuncAggregOperator(m_aggrOpFunc);
             break;
 
+        case AggregOperator::Type::DEFAULT_LAST:
         default:
         {
             qDebug() << "SetNewAggrOp(): undefined aggregation operator type. Min operator set.";
