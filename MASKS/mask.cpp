@@ -7,8 +7,57 @@ Mask::Mask(const unsigned int t_rows, const unsigned int t_cols) :
 {
     if ( false == m_maskPixels.isEmpty() )
     {
-        m_maskPixels.front().SetCentral(true);
+        SetCentralPixel(0, 0);
     }
+}
+
+// Does mask have pixels
+// @output:
+// - bool - True if there are no pixels, False otherwise
+bool Mask::IsEmpty() const
+{
+    return m_maskPixels.isEmpty();
+}
+
+// Set position of central pixel
+// @input:
+// - t_row - row of central pixel
+// - t_col - column of central pixel
+// @output:
+// - bool - True if central pixel set, False otherwise
+bool Mask::SetCentralPixel(const unsigned int &t_row, const unsigned int &t_col)
+{
+    if ( IsIndexValid( GetPixelIndex(t_row, t_col) ) )
+    {
+        m_centralPixelRow = t_row;
+        m_centralPixelCol = t_col;
+
+        return true;
+    }
+
+    return false;
+}
+
+// Get index of pixel in pixels container
+// @input:
+// - t_row - row of pixel
+// - t_col - column of pixel
+// @output:
+// - int - index of pixel
+int Mask::GetPixelIndex(const unsigned int &t_row,
+                        const unsigned int &t_col) const
+{
+    return (t_row * m_cols) + t_col;
+}
+
+// Check if index of pixel is valid
+// @input:
+// - t_index - index of pixel
+// @output:
+// - bool - True if index if valid, False otherwise
+bool Mask::IsIndexValid(const unsigned int &t_index) const
+{
+    return t_index < static_cast<unsigned int>( m_maskPixels.size() );
 }
 
 // Set size of the mask
@@ -34,33 +83,39 @@ bool Mask::ResizeMask(const unsigned int &t_rows, const unsigned int &t_cols)
         return false;
     }
 
+    if ( t_rows == m_rows && t_cols == m_cols )
+    {
+        return true;
+    }
+
     if ( m_maskPixels.isEmpty() )
     {
         m_maskPixels.resize( t_rows * t_cols );
-        m_maskPixels.front().SetCentral(true);
+        SetCentralPixel(0, 0);
     }
     else
     {
+        m_maskPixels.resize( t_rows * m_cols );
 
+        if ( t_cols < m_cols )
+        {
+//            for ( unsigned int copyTo = t_cols, unsigned int copyFrom = ; i < t_rows * t_cols )
+//            {
+
+//            }
+        }
+        else if ( m_cols < t_cols )
+        {
+
+        }
     }
 
     return true;
 }
 
-int Mask::GetPixelIndex(const unsigned int &t_row,
-                        const unsigned int &t_col) const
-{
-    return (t_row * m_cols) + t_col;
-}
-
 int Mask::GetCentralPixelIndex() const
 {
     return 0;
-}
-
-bool Mask::IsEmpty() const
-{
-    return m_maskPixels.isEmpty();
 }
 
 // Check if mask structure is valid
