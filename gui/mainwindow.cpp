@@ -9,8 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_maskTable = NULL;
-
     SetConnections();
     EnableGUI(false);
 }
@@ -32,6 +30,7 @@ void MainWindow::SetConnections()
     connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
             this, SLOT(SlotSetSD(double)));
 
+    // Aggregation operators settings dialog connections
     connect(&m_aggregFilterSettings,
             SIGNAL(SignalAggrOpType(AggregOperator::Type::Type)),
             &m_imgHandler,
@@ -45,11 +44,26 @@ void MainWindow::SetConnections()
             &m_imgHandler,
             SLOT(SlotAggrOpFuncChanged(AggregOperator::Func::Type)));
 
+    // Noise settings dialog connections
     connect(&m_noiseSettings, SIGNAL(SignalNoiseType(Noise::Type)),
             &m_imgHandler, SLOT(SlotRecieveNoiseType(Noise::Type)));
 
     connect(&m_noiseSettings, SIGNAL(SignalNoiseAmplitude(int)),
             &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
+
+    // Mask settings dialog connections
+    connect(&m_maskSettings, SIGNAL(SignalGetMask()),
+            &m_imgHandler, SLOT(SlotTransmitMask()));
+
+    connect(&m_imgHandler,
+          SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
+          &m_maskSettings,
+          SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
+
+    connect(&m_maskSettings,
+          SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
+          &m_imgHandler,
+          SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 }
 
 // Enable/disable functional UI elements
@@ -154,33 +168,10 @@ void MainWindow::on_actionNoiseSettings_triggered()
     m_noiseSettings.exec();
 }
 
-//// Construct Mask Settings window
-//void MainWindow::on_actionMask_settings_triggered()
-//{
-//	m_maskTable = new MaskDialog(this);
-
-//	// Mask transfer
-//	connect(m_maskTable, SIGNAL(SignalGetMask()), &m_imgHandler, SLOT(SlotTransmitMask()));
-//	connect(&m_imgHandler, SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
-//			m_maskTable, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
-
-//	connect(m_maskTable, SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
-//			&m_imgHandler, SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
-
-//	// Show window when ready
-//	connect(m_maskTable, SIGNAL(SignalReadyToShow()), m_maskTable, SLOT(show()));
-
-//	// What we should do when user close Mask Settings Dialog
-//	connect(m_maskTable, SIGNAL(accepted()), this, SLOT(SlotMaskSettingsClosed()));
-//	connect(m_maskTable, SIGNAL(rejected()), this, SLOT(SlotMaskSettingsClosed()));
-
-//	m_maskTable->DefineSettings();
-//}
-
-// Slot for destroing Mask Settings dialog
-void MainWindow::SlotMaskSettingsClosed()
+// Show Mask Settings dialog
+void MainWindow::on_actionMaskFilterSettings_triggered()
 {
-    delete m_maskTable;
+    m_maskSettings.DefineSettings();
 }
 
 // TODO

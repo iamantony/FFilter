@@ -3,26 +3,21 @@
 
 #include <QObject>
 #include <QImage>
-#include <QColor>
-#include <QDebug>
-#include "MASKS/activemask.h"
+#include <QSharedPointer>
+
+#include "masks/mask.h"
 #include "aggreg_operators/defaultaggregoperator.h"
 
 class PowerFilter : public QObject
 {
     Q_OBJECT
 
-    // == DATA ==
-private:
-    ActiveMask *m_mask;
-    DefaultAggregOperator *m_aggregOperator;
-
     // == METHODS ==
 public:
     explicit PowerFilter(QObject *parent = 0);
     ~PowerFilter();
 
-    void Init(ActiveMask *t_mask, DefaultAggregOperator *t_aggrOp);
+    void Init(QSharedPointer<Mask> t_mask, DefaultAggregOperator *t_aggrOp);
     QImage FilterImg(const QImage &t_noisyImg);
 
 private:
@@ -31,6 +26,11 @@ private:
 signals:
     void SignalProcProgressPrc(int t_progress);
     void SignalFiltrationFinished();
+
+    // == DATA ==
+private:
+    QSharedPointer<Mask> m_mask;
+    DefaultAggregOperator *m_aggregOperator;
 };
 
 #endif // POWERFILTER_H

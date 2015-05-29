@@ -5,30 +5,28 @@
 #include <QList>
 #include <QMap>
 #include <QTableWidget>
-#include <QBrush>
-#include <QColor>
 #include <QMenu>
 #include <QAction>
-#include <QMessageBox>
+#include <QSharedPointer>
 
 #include "masks/mask.h"
 
-namespace Ui {
-    class MaskDialog;
+namespace Ui
+{
+    class MaskSettingsDialog;
 }
 
-class MaskDialog : public QDialog
+class MaskSettingsDialog : public QDialog
 {
     Q_OBJECT
 
     // == DATA ==
 private:
-    Ui::MaskDialog *ui;
+    Ui::MaskSettingsDialog *ui;
     QMenu *m_cellMenu;
     QAction *m_cellEnable;
     QAction *m_cellCentral;
-    QMap<unsigned int, QList<Mask::MasksPixel> > m_mask;
-    QTableWidget *m_maskTable;
+    QSharedPointer<Mask> m_mask;
     unsigned int m_rowsInMask;
     unsigned int m_columsInMask;
 
@@ -42,14 +40,13 @@ private:
 
     // == METHODS ==
 public:
-    explicit MaskDialog(QWidget *parent = 0);
-    ~MaskDialog();
+    explicit MaskSettingsDialog(QWidget *parent = 0);
+    virtual ~MaskSettingsDialog();
 
     // This signal send request to get mask
     void DefineSettings();
 
 private:
-    void FindGUIElements();
     void SetDefaults();
     void CreateCellMenu();
     void SetTableSize();
@@ -69,22 +66,17 @@ private:
 
 signals:
     void SignalGetMask();
-    void SignalReturnMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
-    void SignalReadyToShow();
+//    void SignalReturnMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 
 public slots:
-    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
+//    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 
 private slots:
     void SlotActivateCell();
     void SlotCenterCell();
     void SlotShowContextMenu(const QPoint &t_point);
     // User pressed "OK" button
-    void on_okBtn_clicked();
-    // User pressed "Cancel" button
-    void on_cancelBtn_clicked();
-    virtual void accept();
-    virtual void reject();
+    void on_buttonBox_accepted();
 };
 
 #endif // MASKDIALOG_H

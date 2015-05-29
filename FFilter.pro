@@ -22,17 +22,17 @@ SOURCES += main.cpp\
     aggreg_operators/harmmeanaggregoperator.cpp \
     aggreg_operators/medaggregoperator.cpp \
     aggreg_operators/funcaggregoperator.cpp \
-    masks/maskstructure.cpp \
-    masks/activemask.cpp \
     noise/noisegenerator.cpp \
     noise/absrandnoise.cpp \
     noise/defaultnoise.cpp \
     noise/randnoise.cpp \
     noise/constnoise.cpp \
     gui/mainwindow.cpp \
-    gui/maskdialog.cpp \
     gui/aggregfiltersettingsdialog.cpp \
-    gui/noisesettingsdialog.cpp
+    gui/noisesettingsdialog.cpp \
+    gui/masksettingsdialog.cpp \
+    masks/maskpixel.cpp \
+    masks/mask.cpp
 
 HEADERS  += \
     image/imghandler.h \
@@ -48,24 +48,23 @@ HEADERS  += \
     aggreg_operators/medaggregoperator.h \
     aggreg_operators/funcaggregoperator.h \
     common/common.h \
-    masks/mask.h \
-    masks/maskstructure.h \
-    masks/activemask.h \
     noise/noisegenerator.h \
     noise/defaultnoise.h \
     noise/absrandnoise.h \
     noise/randnoise.h \
     noise/constnoise.h \
     gui/mainwindow.h \
-    gui/maskdialog.h \
     gui/aggregfiltersettingsdialog.h \
     aggreg_operators/aggreg_operators.h \
     noise/noise.h \
     image/image.h \
-    gui/noisesettingsdialog.h
+    gui/noisesettingsdialog.h \
+    gui/masksettingsdialog.h \
+    masks/maskpixel.h \
+    masks/mask.h
 
 FORMS    += \
     gui/mainwindow.ui \
-    gui/maskdialog.ui \
     gui/aggregfiltersettingsdialog.ui \
-    gui/noisesettingsdialog.ui
+    gui/noisesettingsdialog.ui \
+    gui/masksettingsdialog.ui

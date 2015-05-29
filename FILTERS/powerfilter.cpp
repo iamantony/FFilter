@@ -1,5 +1,8 @@
 #include "powerfilter.h"
 
+#include <QColor>
+#include <QDebug>
+
 #include "common/common.h"
 
 PowerFilter::PowerFilter(QObject *parent) :
@@ -15,11 +18,10 @@ PowerFilter::~PowerFilter()
 
 void PowerFilter::SetDefaults()
 {
-    m_mask = NULL;
     m_aggregOperator = NULL;
 }
 
-void PowerFilter::Init(ActiveMask *t_mask, DefaultAggregOperator *t_aggrOp)
+void PowerFilter::Init(QSharedPointer<Mask> t_mask, DefaultAggregOperator *t_aggrOp)
 {
     if ( (NULL == t_mask) || (NULL == t_aggrOp) )
     {
@@ -49,9 +51,9 @@ QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
     unsigned int imgW = (unsigned int)t_noisyImg.width();
     unsigned int imgH = (unsigned int)t_noisyImg.height();
 
-    QList<long double> pixelsInMask;
-    int resultLum = 0;
-    QRgb newPixel;
+//    QList<long double> pixelsInMask;
+//    int resultLum = 0;
+//    QRgb newPixel;
 
     const int onePercent = imgW/100;
     int progressPrc = 0;
@@ -62,15 +64,15 @@ QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
     {
         for (unsigned int h = 0; h < imgH; h++)
         {
-            // Get list of pixels in mask
-            pixelsInMask.clear();
-            pixelsInMask = m_mask->FormPixelMask(t_noisyImg, w, h);
-            resultLum = m_aggregOperator->GetWorthlyValue(pixelsInMask);
-            if ( ERROR != resultLum )
-            {
-                newPixel = qRgb(resultLum, resultLum, resultLum);
-                filteredImg.setPixel(w, h, newPixel);
-            }
+//            // Get list of pixels in mask
+//            pixelsInMask.clear();
+//            pixelsInMask = m_mask->FormPixelMask(t_noisyImg, w, h);
+//            resultLum = m_aggregOperator->GetWorthlyValue(pixelsInMask);
+//            if ( ERROR != resultLum )
+//            {
+//                newPixel = qRgb(resultLum, resultLum, resultLum);
+//                filteredImg.setPixel(w, h, newPixel);
+//            }
         }
 
         counter++;

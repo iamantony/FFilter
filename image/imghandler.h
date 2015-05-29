@@ -4,10 +4,12 @@
 #include <QObject>
 #include <QImage>
 #include <QMap>
+#include <QSharedPointer>
+
 #include "imgservice.h"
-#include "NOISE/noisegenerator.h"
-#include "FILTERS/powerfilter.h"
-#include "MASKS/maskstructure.h"
+#include "noise/noisegenerator.h"
+#include "filters/powerfilter.h"
+#include "masks/mask.h"
 #include "noise/noise.h"
 #include "aggreg_operators/aggrophandler.h"
 #include "image/image.h"
@@ -18,14 +20,6 @@
 class ImgHandler : public QObject
 {
     Q_OBJECT
-
-    // == DATA ==
-private:
-    QImage m_imgMass[2];
-    Image::Mode m_imgMode;
-    NoiseGenerator m_noise;
-    MaskStructure m_maskStruct;
-    AggrOpHandler m_aggrOpHandler;
 
     // == METHODS ==
 public:
@@ -60,7 +54,7 @@ signals:
     void SignalUIProgrBarValue(int t_value);
     void SignalUIResetProgrBar();
     void SignalUISetSKO(double t_sko);
-    void SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> > t_mask);
+//    void SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> > t_mask);
 
 public slots:
     void SlotProcProgressPrc(int t_value);
@@ -68,9 +62,17 @@ public slots:
     void SlotAggrOpPowerChanged(double t_power);
     void SlotAggrOpFuncChanged(AggregOperator::Func::Type t_func);
     void SlotTransmitMask();
-    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
+//    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
     void SlotRecieveNoiseType(Noise::Type t_type);
     void SlotRecieveNoiseAmp(int t_amp);
+
+    // == DATA ==
+private:
+    QImage m_imgMass[2];
+    Image::Mode m_imgMode;
+    NoiseGenerator m_noise;
+    QSharedPointer<Mask> m_mask;
+    AggrOpHandler m_aggrOpHandler;
 };
 
 #endif // IMGHANDLER_H
