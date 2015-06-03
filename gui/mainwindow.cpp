@@ -27,7 +27,7 @@ void MainWindow::SetConnections()
     connect(&m_imgHandler, SIGNAL(SignalUIResetProgrBar()),
             ui->progressBar, SLOT(reset()));
 
-    connect(&m_imgHandler, SIGNAL(SignalUISetSKO(double)),
+    connect(&m_imgHandler, SIGNAL(SignalUISetSD(double)),
             this, SLOT(SlotSetSD(double)));
 
     // Aggregation operators settings dialog connections
@@ -52,18 +52,7 @@ void MainWindow::SetConnections()
             &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
 
     // Mask settings dialog connections
-    connect(&m_maskSettings, SIGNAL(SignalGetMask()),
-            &m_imgHandler, SLOT(SlotTransmitMask()));
 
-    connect(&m_imgHandler,
-          SIGNAL(SignalSendMask(QMap<unsigned int, QList<Mask::MasksPixel> >)),
-          &m_maskSettings,
-          SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
-
-    connect(&m_maskSettings,
-          SIGNAL(SignalReturnMask(QMap<uint,QList<Mask::MasksPixel> >)),
-          &m_imgHandler,
-          SLOT(SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> >)));
 }
 
 // Enable/disable functional UI elements
@@ -118,7 +107,6 @@ void MainWindow::on_openImgPB_clicked()
 
     QImage origImg(fName);
     m_imgHandler.SetOriginalImg(origImg);
-    m_imgHandler.SetTargetImg(origImg);
 
     SetOriginalImg( m_imgHandler.GetOriginalImg() );
     SetResultImg( m_imgHandler.GetTargetImg() );
@@ -144,7 +132,7 @@ void MainWindow::on_filterPB_clicked()
 {
     EnableGUI(false);
 
-    SetResultImg( m_imgHandler.PerfFiltration() );
+    SetResultImg( m_imgHandler.FilterTargetImg() );
 
     EnableGUI(true);
 }

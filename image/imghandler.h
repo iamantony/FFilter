@@ -2,20 +2,17 @@
 #define IMGHANDLER_H
 
 #include <QObject>
+#include <QList>
 #include <QImage>
 #include <QMap>
 #include <QSharedPointer>
 
 #include "imgservice.h"
 #include "noise/noisegenerator.h"
-#include "filters/powerfilter.h"
 #include "masks/mask.h"
 #include "noise/noise.h"
 #include "aggreg_operators/aggrophandler.h"
 #include "image/image.h"
-
-#define ORIGINAL_IMG 0
-#define TARGET_IMG 1
 
 class ImgHandler : public QObject
 {
@@ -25,50 +22,56 @@ class ImgHandler : public QObject
 public:
     explicit ImgHandler(QObject *parent = 0);
 
-    void SetOriginalImg(QImage t_img);
-    void SetTargetImg(QImage t_img);
+    // Set original image
+    bool SetOriginalImg(const QImage &t_img);
+    // Get original image
     QImage GetOriginalImg();
+    // Get target image
     QImage GetTargetImg();
-
-    void SetImgMode(Image::Mode t_mode);
-    void SetNoiseLevelPrc(int t_noiseLvlPrc);
-    // Apply noise to original image and save result as target image
+    // Set image mode
+    void SetImgMode(const Image::Mode &t_mode);
+    // Set percent of noise level
+    void SetNoiseLevelPrc(const unsigned int t_noiseLvlPrc);
+    // Apply noise to original image, set it as target image and then return it
     QImage GetNoisyImg();
-    // Calc SKO between original and target (noised) images
-    double GetImgsSKO();
-    // Start filtration
-    QImage PerfFiltration();
-
+    // Calc SD between original and target images
+    double CalcImgsSD();
+    // Start filtration of target image
+    QImage FilterTargetImg();
+    // Get current aggregation operator type
     AggregOperator::Type::Type GetAggrOpType();
+    // Get current power of aggregation operator
     double GetAggrOpPower();
+    // Get current function type of aggregation operator
     AggregOperator::Func::Type GetAggrOpFunc();
-
+    // Get current noise type
     Noise::Type GetNoiseType();
+    // Get current noise amplitude
     int GetNoiseAmp();
-
-private:
-    // Set (save) image in memory
-    void SetImg(QImage t_img, const int &t_imgType);
 
 signals:
     void SignalUIProgrBarValue(int t_value);
     void SignalUIResetProgrBar();
-    void SignalUISetSKO(double t_sko);
-//    void SignalSendMask(QMap<unsigned int,QList<Mask::MasksPixel> > t_mask);
+    void SignalUISetSD(double t_sko);
 
 public slots:
+    // Slot for transmitting process progress (0 - 100 percents)
     void SlotProcProgressPrc(int t_value);
+    // Slot to change aggregation operator type
     void SlotAggrOpTypeChanged(AggregOperator::Type::Type t_type);
+    // Slot to change aggregation operator power
     void SlotAggrOpPowerChanged(double t_power);
+    // Slot to change function type of aggregation operator
     void SlotAggrOpFuncChanged(AggregOperator::Func::Type t_func);
-    void SlotTransmitMask();
-//    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
+    // Slot to change noise type
     void SlotRecieveNoiseType(Noise::Type t_type);
+    // Slot to change noise amplitude
     void SlotRecieveNoiseAmp(int t_amp);
 
     // == DATA ==
 private:
-    QImage m_imgMass[2];
+    QImage m_originalImg;
+    QImage m_targetImg;
     Image::Mode m_imgMode;
     NoiseGenerator m_noise;
     QSharedPointer<Mask> m_mask;

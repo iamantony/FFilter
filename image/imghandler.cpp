@@ -1,174 +1,179 @@
 #include "imghandler.h"
 
-#include "common/common.h"
+#include <QDebug>
+
+#include "filters/powerfilter.h"
 
 ImgHandler::ImgHandler(QObject *parent) :
-    QObject(parent)
+    QObject(parent), m_mask(new Mask())
 {
     m_imgMode = Image::GRAYSCALE;
 }
 
-void ImgHandler::SetOriginalImg(QImage t_img)
+// Set original image
+// @input:
+// - t_img - valid image
+// @output:
+// - bool - True if image was set, False otherwise
+bool ImgHandler::SetOriginalImg(const QImage &t_img)
 {
-    SetImg(t_img, ORIGINAL_IMG);
-}
-
-void ImgHandler::SetTargetImg(QImage t_img)
-{
-    SetImg(t_img, TARGET_IMG);
-}
-
-// Set (save) image in memory
-void ImgHandler::SetImg(QImage t_img, const int &t_imgType)
-{
-    if ( (true == t_img.isNull()) ||
-         ( (ORIGINAL_IMG != t_imgType) &&
-           (TARGET_IMG != t_imgType) ) )
+    if ( t_img.isNull() )
     {
-        qDebug() << "SetImg(): Error - invalid arguments";
-        return;
+        qDebug() << __func__ << "Invalid arguments";
+        return false;
     }
 
-    // If app in grayscale mode and image is color, we need to transform it to grayscale
-    if ( (Image::GRAYSCALE == m_imgMode) && (false == t_img.isGrayscale()) )
+    if ( Image::GRAYSCALE == m_imgMode && false == t_img.isGrayscale() )
     {
         ImgService imgService;
-        connect(&imgService, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
-
         QImage grayImg = imgService.TransColorImgToGrayImg(t_img);
-        if ( true == grayImg.isNull() )
+        if ( grayImg.isNull() )
         {
-            qDebug() << "SetImg(): Error - transformation to grayscale image failed";
-            return;
+            qDebug() << __func__ << "Transformation to grayscale image failed";
+            return false;
         }
 
-        m_imgMass[t_imgType] = grayImg;
+        m_originalImg = grayImg;
     }
     else
     {
-        m_imgMass[t_imgType] = t_img;
+        m_originalImg = t_img;
     }
 
-    emit SignalUIResetProgrBar();
+    m_targetImg = m_originalImg;
+
+    return true;
 }
 
+// Get original image
+// @output:
+// - QImage - current original image
 QImage ImgHandler::GetOriginalImg()
 {
-    QImage origImg = m_imgMass[ORIGINAL_IMG];
-    return origImg;
+    return m_originalImg;
 }
 
+// Get target image
+// @output:
+// - QImage - current target image
 QImage ImgHandler::GetTargetImg()
 {
-    QImage targImg = m_imgMass[TARGET_IMG];
-    return targImg;
+    return m_targetImg;
 }
 
-void ImgHandler::SetImgMode(Image::Mode t_mode)
+// Set image mode
+// @input:
+// - t_mode - set image mode
+void ImgHandler::SetImgMode(const Image::Mode &t_mode)
 {
     m_imgMode = t_mode;
 }
 
-void ImgHandler::SetNoiseLevelPrc(int t_noiseLvlPrc)
+// Set percent of noise level
+// @input:
+// - t_noiseLvlPrc - percent of noise level
+void ImgHandler::SetNoiseLevelPrc(const unsigned int t_noiseLvlPrc)
 {
-    m_noise.SetNoiseLevel( (unsigned int)t_noiseLvlPrc );
+    m_noise.SetNoiseLevel( t_noiseLvlPrc );
 }
 
-// Apply noise to original image and save result as target image
+// Apply noise to original image, set it as target image and then return it
+// @output:
+// - QImage - noised image. Could be Null if process failed
 QImage ImgHandler::GetNoisyImg()
 {
-    if ( true == m_imgMass[ORIGINAL_IMG].isNull() )
-    {
-        QImage nullImg;
-        return nullImg;
-    }
-
     // Set connection for progress bar (on main window)
-    connect(&m_noise, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
+    connect(&m_noise, SIGNAL(SignalProcProgressPrc(int)),
+            this, SLOT(SlotProcProgressPrc(int)));
 
-    QImage sourceImg = m_imgMass[ORIGINAL_IMG];
-    QImage noisyImg = m_noise.SetNoiseToImg(sourceImg);
+    QImage noisyImg = m_noise.SetNoiseToImg( m_originalImg );
 
     // Process ended, so we no more need connection with progress bar
     m_noise.disconnect(SIGNAL(SignalProcProgressPrc(int)));
 
-    if ( true == noisyImg.isNull() )
+    if ( false == noisyImg.isNull() )
     {
-        return m_imgMass[ORIGINAL_IMG];
+        m_targetImg = noisyImg;
     }
 
-    m_imgMass[TARGET_IMG] = noisyImg;
-    return noisyImg;
+    return m_targetImg;
 }
 
-// Calc SKO between original and target (noised) images
-double ImgHandler::GetImgsSKO()
+// Calc SD between original and target images
+// @output:
+// - double - result SD
+double ImgHandler::CalcImgsSD()
 {
     ImgService imgService;
-    connect(&imgService, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
+    connect(&imgService, SIGNAL(SignalProcProgressPrc(int)),
+            this, SLOT(SlotProcProgressPrc(int)));
 
-    double sko =  imgService.CalcImgsSKO(m_imgMass[ORIGINAL_IMG], m_imgMass[TARGET_IMG]);
-    if ( ERROR == sko )
-    {
-        sko = 0;
-    }
+    double sd =  imgService.CalcImgsSD(m_originalImg, m_targetImg);
 
-    emit SignalUISetSKO(sko);
-    return sko;
+    imgService.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+
+    emit SignalUISetSD(sd);
+
+    return sd;
 }
 
-// Start filtration
-QImage ImgHandler::PerfFiltration()
+// Start filtration of target image
+// @output:
+// - QImage - result filtered target image
+QImage ImgHandler::FilterTargetImg()
 {
     PowerFilter filter;
     filter.Init(m_mask, m_aggrOpHandler.GetAggrOperator());
-    connect(&filter, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotProcProgressPrc(int)));
-//    connect(&filter, SIGNAL(SignalFiltrationFinished()), &m_mask, SLOT(SlotFiltrationDone()));
+    connect(&filter, SIGNAL(SignalProcProgressPrc(int)),
+            this, SLOT(SlotProcProgressPrc(int)));
 
-    QImage filteredImg = filter.FilterImg(m_imgMass[TARGET_IMG]);
-    if ( true == filteredImg.isNull() )
+    QImage filteredImg = filter.FilterImg(m_targetImg);
+
+    filter.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+
+    if ( false == filteredImg.isNull() )
     {
-        // Filtration failed. Return noised image.
-        filteredImg = m_imgMass[TARGET_IMG];
-    }
-    else
-    {
-        // Filtration successed. Update parameters.
-        m_imgMass[TARGET_IMG] = filteredImg;
-        GetImgsSKO();
+        m_targetImg = filteredImg;
+        CalcImgsSD();
     }
 
-    return filteredImg;
+    return m_targetImg;
 }
 
+// Get current aggregation operator type
 AggregOperator::Type::Type ImgHandler::GetAggrOpType()
 {
     return m_aggrOpHandler.GetAggrOpType();
 }
 
+// Get current power of aggregation operator
 double ImgHandler::GetAggrOpPower()
 {
     return m_aggrOpHandler.GetAggrOpPower();
 }
 
+// Get current function type of aggregation operator
 AggregOperator::Func::Type ImgHandler::GetAggrOpFunc()
 {
     return m_aggrOpHandler.GetAggrOpFunc();
 }
 
+// Get current noise type
 Noise::Type ImgHandler::GetNoiseType()
 {
     return m_noise.GetNoiseType();
 }
 
+// Get current noise amplitude
 int ImgHandler::GetNoiseAmp()
 {
     return m_noise.GetNoiseAmplitude();
 }
 
+// Slot for transmitting process progress (0 - 100 percents)
 void ImgHandler::SlotProcProgressPrc(int t_value)
 {
-    int progressValue = ERROR;
+    int progressValue = 0;
 
     if ( t_value < 0 )
     {
@@ -186,42 +191,31 @@ void ImgHandler::SlotProcProgressPrc(int t_value)
     emit SignalUIProgrBarValue(progressValue);
 }
 
+// Slot to change aggregation operator type
 void ImgHandler::SlotAggrOpTypeChanged(AggregOperator::Type::Type t_type)
 {
     m_aggrOpHandler.SlotSetAggrOpType(t_type);
 }
 
+// Slot to change aggregation operator power
 void ImgHandler::SlotAggrOpPowerChanged(double t_power)
 {
     m_aggrOpHandler.SlotSetAggrOpPower(t_power);
 }
 
+// Slot to change function type of aggregation operator
 void ImgHandler::SlotAggrOpFuncChanged(AggregOperator::Func::Type t_func)
 {
     m_aggrOpHandler.SlotSetAggrOpFunc(t_func);
 }
 
-void ImgHandler::SlotTransmitMask()
-{
-//    emit SignalSendMask(m_mask.GetMaskStructure());
-}
-
-//void ImgHandler::SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask)
-//{
-//    if ( true == t_mask.isEmpty() )
-//    {
-//        qDebug() << "ImgHandler::SlotRecieveMask(): Error - invalid arguments";
-//        return;
-//    }
-
-//    m_mask.SetMaskStructure(t_mask);
-//}
-
+// Slot to change noise type
 void ImgHandler::SlotRecieveNoiseType(Noise::Type t_type)
 {
     m_noise.SetNoiseType(t_type);
 }
 
+// Slot to change noise amplitude
 void ImgHandler::SlotRecieveNoiseAmp(int t_amp)
 {
     m_noise.SetNoiseAmplitude(t_amp);

@@ -66,7 +66,7 @@ QImage ImgService::TransColorImgToGrayImg(const QImage &t_img)
     return grayImg;
 }
 
-double ImgService::CalcImgsSKO(const QImage &t_firstImg, const QImage &t_secondImg)
+double ImgService::CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg)
 {
     int firstW = t_firstImg.width();
     int firstH = t_firstImg.height();
@@ -76,7 +76,8 @@ double ImgService::CalcImgsSKO(const QImage &t_firstImg, const QImage &t_secondI
     // Our images have the same size?
     if ( (firstW != secondW) || (firstH != secondH) )
     {
-        return ERROR;
+        qDebug() << __func__ << "Images have different size";
+        return 0.0;
     }
 
     QColor pixelFirst;

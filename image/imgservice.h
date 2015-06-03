@@ -19,7 +19,7 @@ public:
     explicit ImgService(QObject *parent = 0);
 
     QImage TransColorImgToGrayImg(const QImage &t_img);
-    double CalcImgsSKO(const QImage &t_firstImg, const QImage &t_secondImg);
+    double CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg);
 
 signals:
     void SignalProcProgressPrc(int t_progress);
