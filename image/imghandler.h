@@ -48,6 +48,8 @@ public:
     Noise::Type GetNoiseType();
     // Get current noise amplitude
     int GetNoiseAmp();
+    // Get pointer to mask
+    QSharedPointer<Mask> GetMask();
 
 signals:
     void SignalUIProgrBarValue(int t_value);

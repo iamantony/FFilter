@@ -2,9 +2,7 @@
 #define MASKDIALOG_H
 
 #include <QDialog>
-#include <QList>
-#include <QMap>
-#include <QTableWidget>
+#include <QTableWidgetItem>
 #include <QMenu>
 #include <QAction>
 #include <QSharedPointer>
@@ -23,12 +21,10 @@ class MaskSettingsDialog : public QDialog
     // == DATA ==
 private:
     Ui::MaskSettingsDialog *ui;
-    QMenu *m_cellMenu;
-    QAction *m_cellEnable;
-    QAction *m_cellCentral;
     QSharedPointer<Mask> m_mask;
-    unsigned int m_rowsInMask;
-    unsigned int m_columsInMask;
+    QMenu m_cellMenu;
+    QAction m_cellEnable;
+    QAction m_cellCentral;
 
     enum CellType
     {
@@ -40,43 +36,36 @@ private:
 
     // == METHODS ==
 public:
-    explicit MaskSettingsDialog(QWidget *parent = 0);
+    explicit MaskSettingsDialog(QSharedPointer<Mask> t_mask,
+                                QWidget *parent = 0);
     virtual ~MaskSettingsDialog();
 
-    // This signal send request to get mask
-    void DefineSettings();
-
 private:
-    void SetDefaults();
+    // Create menu widget
     void CreateCellMenu();
-    void SetTableSize();
-    // Fill table mask with given mask structure
-    void FillTable();
-    void GetMaskSize();
-    void FillCels();
-    QBrush SetCellColor(CellType t_type);
+    // Set to gui elements size of mask
+    void SetMaskSizeValues();
+    // Set up Table that represent mask
+    void SetUpTable();
+    // Set view of cell on base of its type
+    void SetCellView(QTableWidgetItem *t_item, const CellType &t_type);
+    // Get color of cell
+    QBrush GetCellColor(const CellType &t_type);
     void ChangeCellState(const unsigned int &t_row,
                          const unsigned int &t_column,
                          const bool &t_state);
 
     void ChangeCentralCell(const unsigned int &t_row, const unsigned int &t_column);
-    bool ChangeCell(QTableWidgetItem *t_item, CellType t_type);
+
     bool RebuildMask();
     long double GetWeightFromCell(QTableWidgetItem *t_item);
-
-signals:
-    void SignalGetMask();
-//    void SignalReturnMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
-
-public slots:
-//    void SlotRecieveMask(QMap<unsigned int, QList<Mask::MasksPixel> > t_mask);
 
 private slots:
     void SlotActivateCell();
     void SlotCenterCell();
     void SlotShowContextMenu(const QPoint &t_point);
-    // User pressed "OK" button
-    void on_buttonBox_accepted();
+    void on_rowsLE_editingFinished();
+    void on_colsLE_editingFinished();
 };
 
 #endif // MASKDIALOG_H

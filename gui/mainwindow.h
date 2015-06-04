@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QImage>
+#include <QSharedPointer>
 
 #include "gui/aggregfiltersettingsdialog.h"
 #include "gui/masksettingsdialog.h"
@@ -56,10 +57,10 @@ private slots:
     // == DATA ==
 private:
     Ui::MainWindow *ui;
-    AggregFilterSettingsDialog m_aggregFilterSettings;
-    MaskSettingsDialog m_maskSettings;
-    NoiseSettingsDialog m_noiseSettings;
     ImgHandler m_imgHandler;
+    AggregFilterSettingsDialog m_aggregFilterSettings;
+    NoiseSettingsDialog m_noiseSettings;
+    QSharedPointer<MaskSettingsDialog> m_maskSettings;
 };
 
 #endif // MAINWINDOW_H

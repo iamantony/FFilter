@@ -1,21 +1,22 @@
 #include "gui/masksettingsdialog.h"
 #include "ui_masksettingsdialog.h"
 
+#include <QIntValidator>
 #include <QBrush>
 #include <QColor>
 #include <QMessageBox>
 #include <QDebug>
 
-MaskSettingsDialog::MaskSettingsDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::MaskSettingsDialog)
+MaskSettingsDialog::MaskSettingsDialog(QSharedPointer<Mask> t_mask,
+                                       QWidget *parent) :
+    QDialog(parent), ui(new Ui::MaskSettingsDialog), m_mask(t_mask),
+    m_cellMenu(), m_cellEnable(&m_cellMenu), m_cellCentral(&m_cellMenu)
 {
     ui->setupUi(this);
 
-    SetDefaults();
     CreateCellMenu();
-
-    this->setAttribute(Qt::WA_DeleteOnClose);
+    SetMaskSizeValues();
+    SetUpTable();
 }
 
 MaskSettingsDialog::~MaskSettingsDialog()
@@ -23,153 +24,139 @@ MaskSettingsDialog::~MaskSettingsDialog()
     delete ui;
 }
 
-void MaskSettingsDialog::SetDefaults()
-{
-    m_mask.clear();
-
-    m_rowsInMask = 0;
-    m_columsInMask = 0;
-
-    m_cellEnable = NULL;
-    m_cellCentral = NULL;
-    m_cellMenu = NULL;
-
-    SetTableSize();
-}
-
+// Create menu widget
 void MaskSettingsDialog::CreateCellMenu()
 {
-    m_cellMenu = new QMenu(ui->maskTable);
+    m_cellMenu.setParent(ui->maskTable);
 
-    // This action will enable (if checked)/disable (if unchecked) cell
-    m_cellEnable = new QAction(m_cellMenu);
-    m_cellEnable->setText(tr("Enabled"));
-    m_cellEnable->setCheckable(true);
-    m_cellEnable->setChecked(false);
-    connect(m_cellEnable, SIGNAL(triggered()), this, SLOT(SlotActivateCell()));
+    // This action will enable/disable cell
+    m_cellEnable.setText(tr("Enabled"));
+    m_cellEnable.setCheckable(true);
+    m_cellEnable.setChecked(false);
+    connect(&m_cellEnable, SIGNAL(triggered()), this, SLOT(SlotActivateCell()));
 
     // This action will make any cell central
-    m_cellCentral = new QAction(m_cellMenu);
-    m_cellCentral->setText(tr("Central"));
-    m_cellCentral->setCheckable(true);
-    m_cellCentral->setChecked(false);
-    connect(m_cellCentral, SIGNAL(triggered()), this, SLOT(SlotCenterCell()));
+    m_cellCentral.setText(tr("Central"));
+    m_cellCentral.setCheckable(true);
+    m_cellCentral.setChecked(false);
+    connect(&m_cellCentral, SIGNAL(triggered()), this, SLOT(SlotCenterCell()));
 
-    m_cellMenu->addAction(m_cellEnable);
-    m_cellMenu->addAction(m_cellCentral);
+    m_cellMenu.addAction(&m_cellEnable);
+    m_cellMenu.addAction(&m_cellCentral);
+    m_cellMenu.hide();
 
     ui->maskTable->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->maskTable, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(SlotShowContextMenu(const QPoint &)));
 }
 
-void MaskSettingsDialog::SetTableSize()
+// Set to gui elements size of mask
+void MaskSettingsDialog::SetMaskSizeValues()
 {
-    ui->maskTable->clearContents();
+    QIntValidator *rowsValidator = new QIntValidator(ui->rowsLE);
+    rowsValidator->setBottom(1);
+    ui->rowsLE->setValidator(rowsValidator);
+    ui->rowsLE->setText(QString::number(m_mask->GetRowsNum()));
 
-    ui->maskTable->setRowCount(m_rowsInMask);
-    ui->maskTable->setColumnCount(m_columsInMask);
-
-    // TODO: user could set size of m_maskTable
+    QIntValidator *colsValidator = new QIntValidator(ui->colsLE);
+    colsValidator->setBottom(1);
+    ui->colsLE->setValidator(colsValidator);
+    ui->colsLE->setText(QString::number(m_mask->GetColsNum()));
 }
 
-// This signal send request to get mask params
-void MaskSettingsDialog::DefineSettings()
+// Set up Table that represent mask
+void MaskSettingsDialog::SetUpTable()
 {
-    emit SignalGetMask();
-}
+//    ui->maskTable->clearContents();
+    ui->maskTable->setRowCount(m_mask->GetRowsNum());
+    ui->maskTable->setColumnCount(m_mask->GetColsNum());
 
-// Fill table mask with given mask structure
-void MaskSettingsDialog::FillTable()
-{
-    if ( true == m_mask->IsEmpty() )
+    // Set up all cells
+    for ( int row = 0; row < ui->maskTable->rowCount(); ++row )
     {
-        qDebug() << "MaskSettingsDialog::FillTable(): Error - mask is empty";
+        for ( int col = 0; col < ui->maskTable->columnCount(); ++col )
+        {
+            QTableWidgetItem *item = ui->maskTable->item(row, col);
+            if ( NULL == item )
+            {
+                item = new QTableWidgetItem();
+            }
+
+            CellType type = UNACTIVE;
+            if ( m_mask->IsPixelEnabled(static_cast<unsigned int>(row),
+                                        static_cast<unsigned int>(col)) )
+            {
+                type = ACTIVE_SIMPLE;
+            }
+
+            SetCellView(item, type);
+
+            double weight =
+                    m_mask->GetPixelWeight(static_cast<unsigned int>(row),
+                                           static_cast<unsigned int>(col));
+
+            QString weightStr = QString::number(weight);
+            item->setText( weightStr );
+
+            ui->maskTable->setItem(row, col, item);
+        }
+    }
+
+    // Set up central cell
+    int centralCellRow = static_cast<int>(m_mask->GetCentralPixelRow());
+    int centralCellCol = static_cast<int>(m_mask->GetCentralPixelCol());
+    QTableWidgetItem *centralItem =
+            ui->maskTable->item(centralCellRow, centralCellCol);
+
+    SetCellView(centralItem, ACTIVE_CENTRAL);
+}
+
+// Set view of cell on base of its type
+// @input:
+// - *t_item - valid pointer to cell widget
+// - t_type - cell type
+void MaskSettingsDialog::SetCellView(QTableWidgetItem *t_item,
+                                     const CellType &t_type)
+{
+    if ( NULL == t_item || t_type >= DEFAULT_LAST )
+    {
+        qDebug() << __func__ << "Invalid arguments";
         return;
     }
 
-    GetMaskSize();
-    SetTableSize();
-    FillCels();
+    Qt::ItemFlags cellFlags = t_item->flags();
+    switch(t_type)
+    {
+        case ACTIVE_SIMPLE:
+        case ACTIVE_CENTRAL:
+            cellFlags |= Qt::ItemIsEditable;
+            break;
+
+        case UNACTIVE:
+            cellFlags &= ~Qt::ItemIsEditable;
+            break;
+
+        case DEFAULT_LAST:
+        default:
+        {
+            qDebug() << __func__ << "Invalid cell type";
+        }
+    }
+
+    t_item->setFlags(cellFlags);
+    t_item->setBackground( GetCellColor(t_type) );
 }
 
-void MaskSettingsDialog::GetMaskSize()
-{
-//    if ( true == m_mask.IsEmpty() )
-//    {
-//        qDebug() << "MaskSettingsDialog::GetMaskSize(): Error - mask is empty";
-//        SetDefaults();
-//        return;
-//    }
-
-//    QList<unsigned int> lines = m_mask.keys();
-
-//    m_rowsInMask = (unsigned int)lines.size();
-//    m_columsInMask = 0;
-
-//    for (unsigned int i = 0; i < m_rowsInMask; i++)
-//    {
-//        unsigned int rowLength = (unsigned int)m_mask.value(lines[i]).size();
-//        if ( 0 == rowLength )
-//        {
-//            qDebug() << "MaskSettingsDialog::GetMaskSize(): Error - one of the lines of mask is empty";
-//            SetDefaults();
-//        }
-//        else if ( m_columsInMask < rowLength )
-//        {
-//            m_columsInMask = rowLength;
-//        }
-//    }
-}
-
-// Fill cells and set their view by info from mask
-void MaskSettingsDialog::FillCels()
-{
-//    QList<unsigned int> lines = m_mask.keys();
-//    int maxRows = qMin( (int)m_rowsInMask, lines.size() );
-
-//    for (int row = 0; row < maxRows; row++)
-//    {
-//        QList<Mask::MasksPixel> colums = m_mask.value(row);
-//        int maxColums = qMin( (int)m_columsInMask, colums.size());
-
-//        for (int col = 0; col < maxColums; col++)
-//        {
-//            QString number;
-//            number.setNum((double)colums[col].weight);
-
-//            QTableWidgetItem *item = new QTableWidgetItem(number);
-//            item->setTextAlignment(Qt::AlignHCenter);
-
-//            CellType type = UNACTIVE;
-//            if ( true == colums[col].isEnabled )
-//            {
-//                if ( true == colums[col].isCentral )
-//                {
-//                    type = ACTIVE_CENTRAL;
-//                }
-//                else
-//                {
-//                    type = ACTIVE_SIMPLE;
-//                }
-//            }
-
-//            bool hasNewCell = ChangeCell(item, type);
-//            if ( false == hasNewCell )
-//            {
-//                qDebug() << "MaskSettingsDialog::FillCels(): Error - can't set new cell";
-//                reject();
-//            }
-
-//            m_maskTable->setItem(row, col, item);
-//        }
-//    }
-}
-
-QBrush MaskSettingsDialog::SetCellColor(CellType t_type)
+// Get color of cell
+// @input:
+// - t_type - type of the cell
+// @output:
+// - QBrush - QBrush object with set up cell color
+QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
 {
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
+    brush.setColor(Qt::gray);
 
     switch(t_type)
     {
@@ -182,14 +169,12 @@ QBrush MaskSettingsDialog::SetCellColor(CellType t_type)
             break;
 
         case UNACTIVE:
-            brush.setColor(Qt::gray);
             break;
 
         case DEFAULT_LAST:
         default:
         {
-            qDebug() << "MaskSettingsDialog::SetCellColor(): Error - invalid cell type";
-            brush.setColor(Qt::gray);
+            qDebug() << __func__ << "Invalid cell type";
         }
     }
 
@@ -288,54 +273,17 @@ void MaskSettingsDialog::ChangeCentralCell(const unsigned int &/*t_row*/, const 
 //    m_mask[t_row][t_column].isEnabled = true;
 }
 
-bool MaskSettingsDialog::ChangeCell(QTableWidgetItem *t_item, CellType t_type)
-{
-    if ( (NULL == t_item) || ( t_type >= DEFAULT_LAST) )
-    {
-        qDebug() << "MaskSettingsDialog::ChangeCell(): Error - invalid arguments";
-        return false;
-    }
-
-    Qt::ItemFlags cellFlags = t_item->flags();
-
-    switch(t_type)
-    {
-        case ACTIVE_SIMPLE:
-        case ACTIVE_CENTRAL:
-            cellFlags |= Qt::ItemIsEditable;
-            break;
-
-        case UNACTIVE:
-            cellFlags &= ~Qt::ItemIsEditable;
-            break;
-
-        case DEFAULT_LAST:
-        default:
-        {
-            qDebug() << "MaskSettingsDialog::ChangeCell(): Error - invalid cell type";
-            return false;
-        }
-    }
-
-    t_item->setFlags(cellFlags);
-
-    QBrush backgroundColor = SetCellColor(t_type);
-    t_item->setBackground(backgroundColor);
-
-    return true;
-}
-
 bool MaskSettingsDialog::RebuildMask()
 {
     // Lets find position of central pixel
 //    int posX = 0;
 //    int posY = 0;
-    bool centralPixelFound = false;
+//    bool centralPixelFound = false;
 
-    for (unsigned int row = 0; row < m_rowsInMask; row++)
-    {
-        for (unsigned int column = 0; column < m_columsInMask; column++)
-        {
+//    for (unsigned int row = 0; row < m_rowsInMask; row++)
+//    {
+//        for (unsigned int column = 0; column < m_columsInMask; column++)
+//        {
 //            if ( true == m_mask[row][column].isCentral )
 //            {
 //                centralPixelFound = true;
@@ -350,27 +298,27 @@ bool MaskSettingsDialog::RebuildMask()
 
 //                break;
 //            }
-        }
-    }
+//        }
+//    }
 
-    // User didn't define central pixel - emit warning
-    if ( false == centralPixelFound )
-    {
-        QMessageBox::warning(this, "Mask", "You should set central pixel");
-        return false;
-    }
+//    // User didn't define central pixel - emit warning
+//    if ( false == centralPixelFound )
+//    {
+//        QMessageBox::warning(this, "Mask", "You should set central pixel");
+//        return false;
+//    }
 
     // Change offsets and weights for all other pixels
-    for (int row = 0; row < (int)m_rowsInMask; row++)
-    {
-        for (int column = 0; column < (int)m_columsInMask; column++)
-        {
+//    for (int row = 0; row < (int)m_rowsInMask; row++)
+//    {
+//        for (int column = 0; column < (int)m_columsInMask; column++)
+//        {
 //            m_mask[row][column].posX = column - posX;
 //            m_mask[row][column].posY = row - posY;
 
 //            m_mask[row][column].weight = GetWeightFromCell( m_maskTable->item(row, column) );
-        }
-    }
+//        }
+//    }
 
     return true;
 }
@@ -394,22 +342,6 @@ long double MaskSettingsDialog::GetWeightFromCell(QTableWidgetItem *t_item)
     return 0;
 }
 
-//void MaskSettingsDialog::SlotRecieveMask(QMap< unsigned int, QList<Mask::MasksPixel> > t_mask)
-//{
-//    if ( true == t_mask.isEmpty() )
-//    {
-//        qDebug() << "MaskSettingsDialog::SlotRecieveMask(): Error - mask is empty";
-//        return;
-//    }
-
-//    m_mask.clear();
-//    m_mask = t_mask;
-
-//    FillTable();
-
-//    show();
-//}
-
 void MaskSettingsDialog::SlotActivateCell()
 {
 //    unsigned int row = (unsigned int)m_maskTable->currentRow();
@@ -427,7 +359,7 @@ void MaskSettingsDialog::SlotCenterCell()
 //    ChangeCentralCell(row, column);
 }
 
-void MaskSettingsDialog::SlotShowContextMenu(const QPoint &/*t_point*/)
+void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
 {
 //    int row = m_maskTable->currentRow();
 //    int column = m_maskTable->currentColumn();
@@ -450,14 +382,15 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &/*t_point*/)
 //        m_cellCentral->setChecked(false);
 //    }
 
-//    m_cellMenu->exec(m_maskTable->viewport()->mapToGlobal(t_point));
+    m_cellMenu.exec(ui->maskTable->viewport()->mapToGlobal(t_point));
 }
 
-void MaskSettingsDialog::on_buttonBox_accepted()
+void MaskSettingsDialog::on_rowsLE_editingFinished()
 {
-    if ( RebuildMask() )
-    {
-//        emit SignalReturnMask(m_mask);
-        accept();
-    }
+    // TODO
+}
+
+void MaskSettingsDialog::on_colsLE_editingFinished()
+{
+    // TODO
 }

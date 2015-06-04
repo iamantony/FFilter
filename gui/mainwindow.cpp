@@ -50,9 +50,6 @@ void MainWindow::SetConnections()
 
     connect(&m_noiseSettings, SIGNAL(SignalNoiseAmplitude(int)),
             &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
-
-    // Mask settings dialog connections
-
 }
 
 // Enable/disable functional UI elements
@@ -159,7 +156,13 @@ void MainWindow::on_actionNoiseSettings_triggered()
 // Show Mask Settings dialog
 void MainWindow::on_actionMaskFilterSettings_triggered()
 {
-    m_maskSettings.DefineSettings();
+    if ( m_maskSettings.isNull() )
+    {
+        m_maskSettings = QSharedPointer<MaskSettingsDialog>(
+                             new MaskSettingsDialog(m_imgHandler.GetMask()));
+    }
+
+    m_maskSettings->exec();
 }
 
 // TODO

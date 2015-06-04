@@ -15,6 +15,43 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="rowsLbl">
+       <property name="text">
+        <string>Rows:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="rowsLE"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="colsLbl">
+       <property name="text">
+        <string>Columns:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="colsLE"/>
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QTableWidget" name="maskTable">
      <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
@@ -65,5 +102,38 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>MaskSettingsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>244</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>MaskSettingsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>269</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>244</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -170,6 +170,12 @@ int ImgHandler::GetNoiseAmp()
     return m_noise.GetNoiseAmplitude();
 }
 
+// Get pointer to mask
+QSharedPointer<Mask> ImgHandler::GetMask()
+{
+    return m_mask;
+}
+
 // Slot for transmitting process progress (0 - 100 percents)
 void ImgHandler::SlotProcProgressPrc(int t_value)
 {
