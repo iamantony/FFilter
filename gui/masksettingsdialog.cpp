@@ -17,6 +17,9 @@ MaskSettingsDialog::MaskSettingsDialog(QSharedPointer<Mask> t_mask,
     CreateCellMenu();
     SetMaskSizeValues();
     SetUpTable();
+
+    connect(ui->maskTable, SIGNAL(cellChanged(int,int)),
+            this, SLOT(SlotCellChanged(int,int)));
 }
 
 MaskSettingsDialog::~MaskSettingsDialog()
@@ -359,29 +362,40 @@ void MaskSettingsDialog::SlotCenterCell()
 //    ChangeCentralCell(row, column);
 }
 
+// Slot that will be called on cell change
+// @input:
+// - t_row - row of changed item
+// - t_col - column of changed item
+void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
+{
+    QTableWidgetItem *item = ui->maskTable->item(t_row, t_col);
+    if ( NULL == item )
+    {
+        qDebug() << __func__ << "Null item";
+        return;
+    }
+
+    bool ok = false;
+    double weight = item->text().toDouble(&ok);
+    if ( false == ok )
+    {
+        double currentWeight =
+                m_mask->GetPixelWeight(static_cast<unsigned int>(t_row),
+                                       static_cast<unsigned int>(t_col));
+
+        QString cellStr = QString::number(currentWeight);
+        item->setText(cellStr);
+
+        return;
+    }
+
+    m_mask->SetPixelWeight(static_cast<unsigned int>(t_row),
+                           static_cast<unsigned int>(t_col),
+                           weight);
+}
+
 void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
 {
-//    int row = m_maskTable->currentRow();
-//    int column = m_maskTable->currentColumn();
-
-//    if ( true == m_mask[row].at(column).isEnabled )
-//    {
-//        m_cellEnable->setChecked(true);
-//    }
-//    else
-//    {
-//        m_cellEnable->setChecked(false);
-//    }
-
-//    if ( true == m_mask[row].at(column).isCentral )
-//    {
-//        m_cellCentral->setChecked(true);
-//    }
-//    else
-//    {
-//        m_cellCentral->setChecked(false);
-//    }
-
     m_cellMenu.exec(ui->maskTable->viewport()->mapToGlobal(t_point));
 }
 
