@@ -66,8 +66,8 @@ private slots:
     // Slot that will be called on cell change
     void SlotCellChanged(int t_row, int t_col);
     void SlotShowContextMenu(const QPoint &t_point);
-    void on_rowsLE_editingFinished();
-    void on_colsLE_editingFinished();
+    void on_rowsLE_textEdited();
+    void on_colsLE_textEdited();
 };
 
 #endif // MASKDIALOG_H

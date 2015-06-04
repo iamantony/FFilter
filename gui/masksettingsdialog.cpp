@@ -58,11 +58,13 @@ void MaskSettingsDialog::SetMaskSizeValues()
 {
     QIntValidator *rowsValidator = new QIntValidator(ui->rowsLE);
     rowsValidator->setBottom(1);
+    rowsValidator->setTop(5000);
     ui->rowsLE->setValidator(rowsValidator);
     ui->rowsLE->setText(QString::number(m_mask->GetRowsNum()));
 
     QIntValidator *colsValidator = new QIntValidator(ui->colsLE);
     colsValidator->setBottom(1);
+    rowsValidator->setTop(5000);
     ui->colsLE->setValidator(colsValidator);
     ui->colsLE->setText(QString::number(m_mask->GetColsNum()));
 }
@@ -83,6 +85,7 @@ void MaskSettingsDialog::SetUpTable()
             if ( NULL == item )
             {
                 item = new QTableWidgetItem();
+                ui->maskTable->setItem(row, col, item);
             }
 
             CellType type = UNACTIVE;
@@ -100,8 +103,6 @@ void MaskSettingsDialog::SetUpTable()
 
             QString weightStr = QString::number(weight);
             item->setText( weightStr );
-
-            ui->maskTable->setItem(row, col, item);
         }
     }
 
@@ -399,12 +400,34 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
     m_cellMenu.exec(ui->maskTable->viewport()->mapToGlobal(t_point));
 }
 
-void MaskSettingsDialog::on_rowsLE_editingFinished()
+void MaskSettingsDialog::on_rowsLE_textEdited()
 {
-    // TODO
+    bool ok = false;
+    int rowsNum = ui->rowsLE->text().toInt(&ok);
+    if ( false == ok )
+    {
+        ui->rowsLE->setText( QString::number(m_mask->GetRowsNum()) );
+        return;
+    }
+
+    m_mask->SetMaskSize(static_cast<unsigned int>(rowsNum),
+                        m_mask->GetColsNum());
+
+    SetUpTable();
 }
 
-void MaskSettingsDialog::on_colsLE_editingFinished()
+void MaskSettingsDialog::on_colsLE_textEdited()
 {
-    // TODO
+    bool ok = false;
+    int colsNum = ui->colsLE->text().toInt(&ok);
+    if ( false == ok )
+    {
+        ui->colsLE->setText( QString::number(m_mask->GetColsNum()) );
+        return;
+    }
+
+    m_mask->SetMaskSize(m_mask->GetRowsNum(),
+                        static_cast<unsigned int>(colsNum));
+
+    SetUpTable();
 }
