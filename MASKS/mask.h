@@ -29,6 +29,7 @@ public:
     // Check if pixel enabled
     bool IsPixelEnabled(const unsigned int &t_row,
                         const unsigned int &t_col) const;
+
     // Enable / disable pixel
     void SetPixelActiveStatus(const unsigned int &t_row,
                               const unsigned int &t_col,
@@ -42,6 +43,10 @@ public:
     void SetPixelWeight(const unsigned int &t_row,
                          const unsigned int &t_col,
                          const double &t_weight);
+
+    // Check if pixel is central
+    bool IsPixelCentral(const unsigned int &t_row,
+                        const unsigned int &t_col) const;
 
 private:
     // Check if pixel woth defined coordinates exist

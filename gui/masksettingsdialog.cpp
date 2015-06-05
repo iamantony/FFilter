@@ -46,7 +46,7 @@ void MaskSettingsDialog::CreateCellMenu()
 
     m_cellMenu.addAction(&m_cellEnable);
     m_cellMenu.addAction(&m_cellCentral);
-    m_cellMenu.hide();
+//    m_cellMenu.hide();
 
     ui->maskTable->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->maskTable, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -72,7 +72,6 @@ void MaskSettingsDialog::SetMaskSizeValues()
 // Set up Table that represent mask
 void MaskSettingsDialog::SetUpTable()
 {
-//    ui->maskTable->clearContents();
     ui->maskTable->setRowCount(m_mask->GetRowsNum());
     ui->maskTable->setColumnCount(m_mask->GetColsNum());
 
@@ -348,9 +347,10 @@ long double MaskSettingsDialog::GetWeightFromCell(QTableWidgetItem *t_item)
 
 void MaskSettingsDialog::SlotActivateCell()
 {
-//    unsigned int row = (unsigned int)m_maskTable->currentRow();
-//    unsigned int column = (unsigned int)m_maskTable->currentColumn();
-//    bool state = m_cellEnable->isChecked();
+//    unsigned int row = static_cast<unsigned int>(ui->maskTable->currentRow());
+//    unsigned int column =
+//            static_cast<unsigned int>(ui->maskTable->currentColumn());
+//    bool state = m_cellEnable.isChecked();
 
 //    ChangeCellState(row, column, state);
 }
@@ -395,11 +395,28 @@ void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
                            weight);
 }
 
+// Slot that will show menu
+// @input:
+// - t_point - point, where user clicked
 void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
 {
-    m_cellMenu.exec(ui->maskTable->viewport()->mapToGlobal(t_point));
+    QTableWidgetItem *item = ui->maskTable->itemAt(t_point);
+    if ( NULL == item )
+    {
+        return;
+    }
+
+    unsigned int row = static_cast<unsigned int>(item->row());
+    unsigned int col = static_cast<unsigned int>(item->column());
+
+    m_cellEnable.setChecked( m_mask->IsPixelEnabled(row, col) );
+    m_cellCentral.setChecked( m_mask->IsPixelCentral(row, col) );
+
+    m_cellMenu.show();
+    m_cellMenu.popup(ui->maskTable->viewport()->mapToGlobal(t_point));
 }
 
+// Slot that will be called on row number change
 void MaskSettingsDialog::on_rowsLE_textEdited()
 {
     bool ok = false;
@@ -416,6 +433,7 @@ void MaskSettingsDialog::on_rowsLE_textEdited()
     SetUpTable();
 }
 
+// Slot that will be called on columns number change
 void MaskSettingsDialog::on_colsLE_textEdited()
 {
     bool ok = false;

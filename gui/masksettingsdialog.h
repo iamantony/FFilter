@@ -65,8 +65,11 @@ private slots:
     void SlotCenterCell();
     // Slot that will be called on cell change
     void SlotCellChanged(int t_row, int t_col);
+    // Slot that will show menu
     void SlotShowContextMenu(const QPoint &t_point);
+    // Slot that will be called on row number change
     void on_rowsLE_textEdited();
+    // Slot that will be called on columns number change
     void on_colsLE_textEdited();
 };
 

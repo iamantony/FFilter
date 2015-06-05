@@ -204,3 +204,20 @@ void Mask::SetPixelWeight(const unsigned int &t_row,
 
     m_maskPixels[t_row][t_col].SetWieght(t_weight);
 }
+
+// Check if pixel is central
+// @input:
+// - t_row - row of pixel
+// - t_col - column of pixel
+// @output:
+// - bool - True if pixel is central, False otherwise
+bool Mask::IsPixelCentral(const unsigned int &t_row,
+                          const unsigned int &t_col) const
+{
+    if ( t_row == m_centralPixelRow && t_col == m_centralPixelCol )
+    {
+        return true;
+    }
+
+    return false;
+}
