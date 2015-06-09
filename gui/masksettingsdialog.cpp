@@ -4,19 +4,22 @@
 #include <QIntValidator>
 #include <QBrush>
 #include <QColor>
-#include <QMessageBox>
+#include <QMenu>
+#include <QAction>
 #include <QDebug>
 
 MaskSettingsDialog::MaskSettingsDialog(QSharedPointer<Mask> t_mask,
                                        QWidget *parent) :
-    QDialog(parent), ui(new Ui::MaskSettingsDialog), m_mask(t_mask),
-    m_cellMenu(), m_cellEnable(&m_cellMenu), m_cellCentral(&m_cellMenu)
+    QDialog(parent), ui(new Ui::MaskSettingsDialog), m_mask(t_mask)
 {
     ui->setupUi(this);
 
-    CreateCellMenu();
     SetMaskSizeValues();
     SetUpTable();
+
+    ui->maskTable->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->maskTable, SIGNAL(customContextMenuRequested(QPoint)),
+            this, SLOT(SlotShowContextMenu(QPoint)));
 
     connect(ui->maskTable, SIGNAL(cellChanged(int,int)),
             this, SLOT(SlotCellChanged(int,int)));
@@ -25,32 +28,6 @@ MaskSettingsDialog::MaskSettingsDialog(QSharedPointer<Mask> t_mask,
 MaskSettingsDialog::~MaskSettingsDialog()
 {
     delete ui;
-}
-
-// Create menu widget
-void MaskSettingsDialog::CreateCellMenu()
-{
-    m_cellMenu.setParent(ui->maskTable);
-
-    // This action will enable/disable cell
-    m_cellEnable.setText(tr("Enabled"));
-    m_cellEnable.setCheckable(true);
-    m_cellEnable.setChecked(false);
-    connect(&m_cellEnable, SIGNAL(triggered()), this, SLOT(SlotActivateCell()));
-
-    // This action will make any cell central
-    m_cellCentral.setText(tr("Central"));
-    m_cellCentral.setCheckable(true);
-    m_cellCentral.setChecked(false);
-    connect(&m_cellCentral, SIGNAL(triggered()), this, SLOT(SlotCenterCell()));
-
-    m_cellMenu.addAction(&m_cellEnable);
-    m_cellMenu.addAction(&m_cellCentral);
-//    m_cellMenu.hide();
-
-    ui->maskTable->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->maskTable, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(SlotShowContextMenu(const QPoint &)));
 }
 
 // Set to gui elements size of mask
@@ -87,14 +64,7 @@ void MaskSettingsDialog::SetUpTable()
                 ui->maskTable->setItem(row, col, item);
             }
 
-            CellType type = UNACTIVE;
-            if ( m_mask->IsPixelEnabled(static_cast<unsigned int>(row),
-                                        static_cast<unsigned int>(col)) )
-            {
-                type = ACTIVE_SIMPLE;
-            }
-
-            SetCellView(item, type);
+            SetItemView(item);
 
             double weight =
                     m_mask->GetPixelWeight(static_cast<unsigned int>(row),
@@ -104,38 +74,36 @@ void MaskSettingsDialog::SetUpTable()
             item->setText( weightStr );
         }
     }
-
-    // Set up central cell
-    int centralCellRow = static_cast<int>(m_mask->GetCentralPixelRow());
-    int centralCellCol = static_cast<int>(m_mask->GetCentralPixelCol());
-    QTableWidgetItem *centralItem =
-            ui->maskTable->item(centralCellRow, centralCellCol);
-
-    SetCellView(centralItem, ACTIVE_CENTRAL);
 }
 
-// Set view of cell on base of its type
+// Set view of mask item on base of its type
 // @input:
-// - *t_item - valid pointer to cell widget
-// - t_type - cell type
-void MaskSettingsDialog::SetCellView(QTableWidgetItem *t_item,
-                                     const CellType &t_type)
+// - *t_item - valid pointer to item widget
+void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
 {
-    if ( NULL == t_item || t_type >= DEFAULT_LAST )
+    if ( NULL == t_item )
     {
         qDebug() << __func__ << "Invalid arguments";
         return;
     }
 
-    Qt::ItemFlags cellFlags = t_item->flags();
-    switch(t_type)
+    unsigned int row = static_cast<unsigned int>(t_item->row());
+    unsigned int col = static_cast<unsigned int>(t_item->column());
+
+    CellType type = DISABLED;
+    if ( m_mask->IsPixelEnabled(row, col) )
     {
-        case ACTIVE_SIMPLE:
-        case ACTIVE_CENTRAL:
+        type = ENABLED;
+    }
+
+    Qt::ItemFlags cellFlags = t_item->flags();
+    switch(type)
+    {
+        case ENABLED:
             cellFlags |= Qt::ItemIsEditable;
             break;
 
-        case UNACTIVE:
+        case DISABLED:
             cellFlags &= ~Qt::ItemIsEditable;
             break;
 
@@ -147,7 +115,7 @@ void MaskSettingsDialog::SetCellView(QTableWidgetItem *t_item,
     }
 
     t_item->setFlags(cellFlags);
-    t_item->setBackground( GetCellColor(t_type) );
+    t_item->setBackground( GetCellColor(type) );
 }
 
 // Get color of cell
@@ -163,15 +131,11 @@ QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
 
     switch(t_type)
     {
-        case ACTIVE_SIMPLE:
+        case ENABLED:
             brush.setColor(Qt::white);
             break;
 
-        case ACTIVE_CENTRAL:
-            brush.setColor(Qt::red);
-            break;
-
-        case UNACTIVE:
+        case DISABLED:
             break;
 
         case DEFAULT_LAST:
@@ -182,185 +146,6 @@ QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
     }
 
     return brush;
-}
-
-void MaskSettingsDialog::ChangeCellState(const unsigned int &/*t_row*/,
-                                 const unsigned int &/*t_column*/,
-                                 const bool &/*t_state*/)
-{
-//    if ( (m_rowsInMask <= t_row) || (m_columsInMask <= t_column) )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCellState(): Error - index out of range";
-//        reject();
-//    }
-
-//    QTableWidgetItem *cellItem = m_maskTable->item(t_row, t_column);
-//    if ( NULL == cellItem )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCellState(): Error - item is NULL (" << t_row << t_column << ")";
-//        reject();
-//    }
-
-//    CellType type = DEFAULT_LAST;
-//    if ( true == t_state )
-//    {
-//        type = ACTIVE_SIMPLE;
-//    }
-//    else
-//    {
-//        type = UNACTIVE;
-//    }
-
-//    bool stateChanged = ChangeCell(cellItem, type);
-//    if ( false == stateChanged )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCellState(): Error - can't change state of cell";
-//        reject();
-//    }
-
-//    // Change state of pixel in mask
-//    m_mask[t_row][t_column].isEnabled = t_state;
-//    m_mask[t_row][t_column].isCentral = false;
-}
-
-void MaskSettingsDialog::ChangeCentralCell(const unsigned int &/*t_row*/, const unsigned int &/*t_column*/)
-{
-//    if ( (m_rowsInMask <= t_row) || (m_columsInMask <= t_column) )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCentralCell(): Error - index out of range";
-//        reject();
-//    }
-
-//    // Lets deactivate our current central cell
-//    for (unsigned int row = 0; row < m_rowsInMask; row++)
-//    {
-//        for (unsigned int column = 0; column < m_columsInMask; column++)
-//        {
-//            if ( true == m_mask[row][column].isCentral )
-//            {
-//                QTableWidgetItem *oldCentralItem = m_maskTable->item(row, column);
-//                if ( NULL == oldCentralItem )
-//                {
-//                    qDebug() << "MaskSettingsDialog::ChangeCentralCell(): Error - old central item is NULL";
-//                    reject();
-//                }
-
-//                bool cellDeactivated = ChangeCell(oldCentralItem, ACTIVE_SIMPLE);
-//                if ( false == cellDeactivated )
-//                {
-//                    qDebug() << "MaskSettingsDialog::ChangeCentralCell(): Error - can't deactivate central cell";
-//                    reject();
-//                }
-
-//                m_mask[row][column].isCentral = false;
-//            }
-//        }
-//    }
-
-//    // And activate new central cell
-//    QTableWidgetItem *newCentralItem = m_maskTable->item(t_row, t_column);
-//    if ( NULL == newCentralItem )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCentralCell(): Error - new central item is NULL";
-//        reject();
-//    }
-
-//    bool hasNewCentralCell = ChangeCell(newCentralItem, ACTIVE_CENTRAL);
-//    if ( false == hasNewCentralCell )
-//    {
-//        qDebug() << "MaskSettingsDialog::ChangeCentralCell(): Error - can't set new central cell";
-//        reject();
-//    }
-
-//    m_mask[t_row][t_column].isCentral = true;
-//    m_mask[t_row][t_column].isEnabled = true;
-}
-
-bool MaskSettingsDialog::RebuildMask()
-{
-    // Lets find position of central pixel
-//    int posX = 0;
-//    int posY = 0;
-//    bool centralPixelFound = false;
-
-//    for (unsigned int row = 0; row < m_rowsInMask; row++)
-//    {
-//        for (unsigned int column = 0; column < m_columsInMask; column++)
-//        {
-//            if ( true == m_mask[row][column].isCentral )
-//            {
-//                centralPixelFound = true;
-
-//                posX = (int)column;
-//                posY = (int)row;
-
-//                m_mask[row][column].posX = posX;
-//                m_mask[row][column].posY = posY;
-
-//                m_mask[row][column].weight = GetWeightFromCell( m_maskTable->item(row, column) );
-
-//                break;
-//            }
-//        }
-//    }
-
-//    // User didn't define central pixel - emit warning
-//    if ( false == centralPixelFound )
-//    {
-//        QMessageBox::warning(this, "Mask", "You should set central pixel");
-//        return false;
-//    }
-
-    // Change offsets and weights for all other pixels
-//    for (int row = 0; row < (int)m_rowsInMask; row++)
-//    {
-//        for (int column = 0; column < (int)m_columsInMask; column++)
-//        {
-//            m_mask[row][column].posX = column - posX;
-//            m_mask[row][column].posY = row - posY;
-
-//            m_mask[row][column].weight = GetWeightFromCell( m_maskTable->item(row, column) );
-//        }
-//    }
-
-    return true;
-}
-
-long double MaskSettingsDialog::GetWeightFromCell(QTableWidgetItem *t_item)
-{
-    if ( NULL == t_item )
-    {
-        qDebug() << "MaskSettingsDialog::GetWeightFromCell(): Error - invalid arguments";
-        return 0;
-    }
-
-    bool ok = false;
-    QString textInCell = t_item->text();
-    double weight = textInCell.toDouble(&ok);
-    if ( true == ok )
-    {
-        return (long double)weight;
-    }
-
-    return 0;
-}
-
-void MaskSettingsDialog::SlotActivateCell()
-{
-//    unsigned int row = static_cast<unsigned int>(ui->maskTable->currentRow());
-//    unsigned int column =
-//            static_cast<unsigned int>(ui->maskTable->currentColumn());
-//    bool state = m_cellEnable.isChecked();
-
-//    ChangeCellState(row, column, state);
-}
-
-void MaskSettingsDialog::SlotCenterCell()
-{
-//    unsigned int row = (unsigned int)m_maskTable->currentRow();
-//    unsigned int column = (unsigned int)m_maskTable->currentColumn();
-
-//    ChangeCentralCell(row, column);
 }
 
 // Slot that will be called on cell change
@@ -409,11 +194,17 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
     unsigned int row = static_cast<unsigned int>(item->row());
     unsigned int col = static_cast<unsigned int>(item->column());
 
-    m_cellEnable.setChecked( m_mask->IsPixelEnabled(row, col) );
-    m_cellCentral.setChecked( m_mask->IsPixelCentral(row, col) );
+    QMenu menu;
+    QAction *enabledAction = menu.addAction(tr("Enabled"));
+    enabledAction->setCheckable(true);
+    enabledAction->setChecked( m_mask->IsPixelEnabled(row, col) );
 
-    m_cellMenu.show();
-    m_cellMenu.popup(ui->maskTable->viewport()->mapToGlobal(t_point));
+    if ( enabledAction ==
+         menu.exec(ui->maskTable->viewport()->mapToGlobal(t_point)) )
+    {
+        m_mask->SetPixelActiveStatus(row, col, enabledAction->isChecked());
+        SetItemView(item);
+    }
 }
 
 // Slot that will be called on row number change

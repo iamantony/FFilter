@@ -15,25 +15,6 @@ bool Mask::IsEmpty() const
     return m_maskPixels.isEmpty();
 }
 
-// Set position of central pixel
-// @input:
-// - t_row - row of central pixel
-// - t_col - column of central pixel
-// @output:
-// - bool - True if central pixel set, False otherwise
-bool Mask::SetCentralPixel(const unsigned int &t_row, const unsigned int &t_col)
-{
-    if ( IsPixelExist( t_row, t_col ) )
-    {
-        m_centralPixelRow = t_row;
-        m_centralPixelCol = t_col;
-
-        return true;
-    }
-
-    return false;
-}
-
 // Check if pixel woth defined coordinates exist
 // @input:
 // - t_row - row of pixel
@@ -89,15 +70,7 @@ void Mask::ResizeMask(const unsigned int &t_rows, const unsigned int &t_cols)
 
     if ( maskWasEmpty )
     {
-        SetCentralPixel(0, 0);
-    }
-    else
-    {
-        m_centralPixelRow = qMin<unsigned int>(m_centralPixelRow,
-                                               m_maskPixels.size());
-
-        m_centralPixelCol = qMin<unsigned int>(m_centralPixelCol,
-                                 m_maskPixels.first().size());
+        SetPixelActiveStatus(0, 0, true);
     }
 }
 
@@ -115,22 +88,6 @@ unsigned int Mask::GetRowsNum() const
 unsigned int Mask::GetColsNum() const
 {
     return m_maskPixels.first().size();
-}
-
-// Get row of central pixel
-// @output:
-// - unsigned int - number of row of central pixel
-unsigned int Mask::GetCentralPixelRow() const
-{
-    return m_centralPixelRow;
-}
-
-// Get columns of central pixel
-// @output:
-// - unsigned int - number of columns of central pixel
-unsigned int Mask::GetCentralPixelCol() const
-{
-    return m_centralPixelCol;
 }
 
 // Check if pixel enabled
@@ -203,21 +160,4 @@ void Mask::SetPixelWeight(const unsigned int &t_row,
     }
 
     m_maskPixels[t_row][t_col].SetWieght(t_weight);
-}
-
-// Check if pixel is central
-// @input:
-// - t_row - row of pixel
-// - t_col - column of pixel
-// @output:
-// - bool - True if pixel is central, False otherwise
-bool Mask::IsPixelCentral(const unsigned int &t_row,
-                          const unsigned int &t_col) const
-{
-    if ( t_row == m_centralPixelRow && t_col == m_centralPixelCol )
-    {
-        return true;
-    }
-
-    return false;
 }
