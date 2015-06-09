@@ -1,24 +1,38 @@
-#include "constnoise.h"
+#include "noise/constnoise.h"
+
+#include <QColor>
+#include <QDebug>
+
+ConstNoise::ConstNoise(const QImage &t_img,
+                       const unsigned int &t_noiseLvl,
+                       const int &t_noiseAmp) :
+    AbstractNoise(t_img, t_noiseLvl, t_noiseAmp)
+{
+}
+
+ConstNoise::~ConstNoise()
+{
+}
 
 QImage ConstNoise::GetNoisedImage()
 {
-    if ( true == m_imgToNoise.isNull() )
+    if ( true == m_img.isNull() )
     {
         qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
-        return m_imgToNoise;
+        return m_img;
     }
 
     // Noise without amplitude is not the noise at all
     if ( 0 == m_noiseAmplitude )
     {
-        return m_imgToNoise;
+        return m_img;
     }
 
     QList<int> noiseForPixels = GenerateNoise();
     int pixelsToNoise = noiseForPixels.size();
     int noisedPixelNum = 0;
-    int imgW = m_imgToNoise.width();
-    int imgH = m_imgToNoise.height();
+    int imgW = m_img.width();
+    int imgH = m_img.height();
     int pixelLum = 0;
     QRgb newPixel;
     QColor oldPixel;
@@ -32,10 +46,10 @@ QImage ConstNoise::GetNoisedImage()
     {
         for ( int h = 0; h < imgH; h++ )
         {
-            if ( (m_needToNoise == m_pixelsToChange[w][h]) &&
+            if ( (m_needToNoise == m_pixelsMap[w][h]) &&
                  ( noisedPixelNum < pixelsToNoise ) )
             {
-                oldPixel = m_imgToNoise.pixel(w, h);
+                oldPixel = m_img.pixel(w, h);
                 pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
                 noisedPixelNum++;
 
@@ -49,7 +63,7 @@ QImage ConstNoise::GetNoisedImage()
                 }
 
                 newPixel = qRgb(pixelLum, pixelLum, pixelLum);
-                m_imgToNoise.setPixel(w, h, newPixel);
+                m_img.setPixel(w, h, newPixel);
             }
 
             counter++;
@@ -62,7 +76,7 @@ QImage ConstNoise::GetNoisedImage()
         }
     }
 
-    return m_imgToNoise;
+    return m_img;
 }
 
 QList<int> ConstNoise::GenerateNoise()

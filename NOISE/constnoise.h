@@ -2,25 +2,25 @@
 #define CONSTNOISE_H
 
 #include <QImage>
-#include <QColor>
-#include <QDebug>
-#include "defaultnoise.h"
 
-class ConstNoise : public DefaultNoise
+#include "noise/abstractnoise.h"
+
+class ConstNoise : public AbstractNoise
 {
+    Q_OBJECT
+
     // == METHODS ==
 public:
-    ConstNoise(const QImage &t_img,
-               const unsigned int &t_noiseLvl = 0,
-               const int &t_noiseAmp = 0,
-               QObject *parent = 0):
-      DefaultNoise(t_img, t_noiseLvl, t_noiseAmp, parent)
-  {}
+    explicit ConstNoise(const QImage &t_img,
+                        const unsigned int &t_noiseLvl,
+                        const int &t_noiseAmp);
 
-    QImage GetNoisedImage();
+    virtual ~ConstNoise();
+
+    virtual QImage GetNoisedImage();
 
 protected:
-    QList<int> GenerateNoise();
+    virtual QList<int> GenerateNoise();
 };
 
 #endif // CONSTNOISE_H

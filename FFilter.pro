@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     aggreg_operators/funcaggregoperator.cpp \
     noise/noisegenerator.cpp \
     noise/absrandnoise.cpp \
-    noise/defaultnoise.cpp \
     noise/randnoise.cpp \
     noise/constnoise.cpp \
     gui/mainwindow.cpp \
@@ -32,7 +31,8 @@ SOURCES += main.cpp\
     gui/noisesettingsdialog.cpp \
     gui/masksettingsdialog.cpp \
     masks/maskpixel.cpp \
-    masks/mask.cpp
+    masks/mask.cpp \
+    noise/abstractnoise.cpp
 
 HEADERS  += \
     image/imghandler.h \
@@ -49,7 +49,6 @@ HEADERS  += \
     aggreg_operators/funcaggregoperator.h \
     common/common.h \
     noise/noisegenerator.h \
-    noise/defaultnoise.h \
     noise/absrandnoise.h \
     noise/randnoise.h \
     noise/constnoise.h \
@@ -61,7 +60,8 @@ HEADERS  += \
     gui/noisesettingsdialog.h \
     gui/masksettingsdialog.h \
     masks/maskpixel.h \
-    masks/mask.h
+    masks/mask.h \
+    noise/abstractnoise.h
 
 FORMS    += \
     gui/mainwindow.ui \

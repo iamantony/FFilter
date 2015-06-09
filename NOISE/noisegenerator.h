@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QImage>
 
-#include "defaultnoise.h"
 #include "noise.h"
 
 class NoiseGenerator : public QObject

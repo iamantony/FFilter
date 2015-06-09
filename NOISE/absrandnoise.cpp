@@ -1,18 +1,33 @@
-#include "absrandnoise.h"
+#include "noise/absrandnoise.h"
+
+#include <time.h>
+
+#include <QDebug>
+
+AbsRandNoise::AbsRandNoise(const QImage &t_img,
+                           const unsigned int &t_noiseLvl,
+                           const int &t_noiseAmp) :
+    AbstractNoise(t_img, t_noiseLvl, t_noiseAmp)
+{
+}
+
+AbsRandNoise::~AbsRandNoise()
+{
+}
 
 QImage AbsRandNoise::GetNoisedImage()
 {
-    if ( true == m_imgToNoise.isNull() )
+    if ( true == m_img.isNull() )
     {
         qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
-        return m_imgToNoise;
+        return m_img;
     }
 
     QList<int> noiseForPixels = GenerateNoise();
     int pixelsToNoise = noiseForPixels.size();
     int noisedPixelNum = 0;
-    int imgW = m_imgToNoise.width();
-    int imgH = m_imgToNoise.height();
+    int imgW = m_img.width();
+    int imgH = m_img.height();
     int pixelLum = 0;
     QRgb pixel;
 
@@ -25,14 +40,14 @@ QImage AbsRandNoise::GetNoisedImage()
     {
         for ( int h = 0; h < imgH; h++ )
         {
-            if ( (m_needToNoise == m_pixelsToChange[w][h]) &&
+            if ( (m_needToNoise == m_pixelsMap[w][h]) &&
                  ( noisedPixelNum < pixelsToNoise ) )
             {
                 pixelLum = noiseForPixels.at(noisedPixelNum);
                 noisedPixelNum++;
 
                 pixel = qRgb(pixelLum, pixelLum, pixelLum);
-                m_imgToNoise.setPixel(w, h, pixel);
+                m_img.setPixel(w, h, pixel);
             }
 
             counter++;
@@ -45,7 +60,7 @@ QImage AbsRandNoise::GetNoisedImage()
         }
     }
 
-    return m_imgToNoise;
+    return m_img;
 }
 
 QList<int> AbsRandNoise::GenerateNoise()

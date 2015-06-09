@@ -3,9 +3,10 @@
 #include <QScopedPointer>
 #include <QDebug>
 
-#include "constnoise.h"
-#include "randnoise.h"
-#include "absrandnoise.h"
+#include "noise/abstractnoise.h"
+#include "noise/constnoise.h"
+#include "noise/randnoise.h"
+#include "noise/absrandnoise.h"
 
 NoiseGenerator::NoiseGenerator(QObject *parent) :
     QObject(parent)
@@ -79,15 +80,14 @@ void NoiseGenerator::SetNoiseLevel(const unsigned int &t_level)
 // - QImage - copy of input image with noise
 QImage NoiseGenerator::NoiseImage(const QImage &t_img)
 {
-    QScopedPointer<DefaultNoise> noise;
+    QScopedPointer<AbstractNoise> noise;
     switch(m_noiseType)
     {
         case Noise::CONSTANT:
         {
             noise.reset(new ConstNoise(t_img,
                                        m_noiseLvlPercent,
-                                       m_noiseAmp,
-                                       this));
+                                       m_noiseAmp));
 
             break;
         }
@@ -96,8 +96,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
         {
             noise.reset(new RandNoise(t_img,
                                       m_noiseLvlPercent,
-                                      m_noiseAmp,
-                                      this));
+                                      m_noiseAmp));
 
             break;
         }
@@ -106,8 +105,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
         {
             noise.reset(new AbsRandNoise(t_img,
                                          m_noiseLvlPercent,
-                                         m_noiseAmp,
-                                         this));
+                                         m_noiseAmp));
             break;
         }
 

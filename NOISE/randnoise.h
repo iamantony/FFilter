@@ -1,27 +1,26 @@
 #ifndef RANDNOISE_H
 #define RANDNOISE_H
 
-#include <time.h>
 #include <QImage>
-#include <QColor>
-#include <QDebug>
-#include "defaultnoise.h"
 
-class RandNoise : public DefaultNoise
+#include "noise/abstractnoise.h"
+
+class RandNoise : public AbstractNoise
 {
+    Q_OBJECT
+
     // == METHODS ==
 public:
-    RandNoise(const QImage &t_img,
-              const unsigned int &t_noiseLvl = 0,
-              const int &t_noiseAmp = 0,
-              QObject *parent = 0):
-     DefaultNoise(t_img, t_noiseLvl, t_noiseAmp, parent)
-    {}
+    explicit RandNoise(const QImage &t_img,
+                       const unsigned int &t_noiseLvl,
+                       const int &t_noiseAmp);
 
-    QImage GetNoisedImage();
+    virtual ~RandNoise();
+
+    virtual QImage GetNoisedImage();
 
 protected:
-    QList<int> GenerateNoise();
+    virtual QList<int> GenerateNoise();
 };
 
 #endif // RANDNOISE_H
