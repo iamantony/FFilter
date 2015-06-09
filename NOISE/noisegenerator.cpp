@@ -1,39 +1,65 @@
 #include "noisegenerator.h"
 
+#include <QScopedPointer>
+#include <QDebug>
+
+#include "constnoise.h"
+#include "randnoise.h"
+#include "absrandnoise.h"
+
 NoiseGenerator::NoiseGenerator(QObject *parent) :
     QObject(parent)
 {
     m_noiseType = Noise::CONSTANT;
     m_noiseAmp = 0;
     m_noiseLvlPercent = 0;
-    m_noiseGenerator = NULL;
 }
 
 NoiseGenerator::~NoiseGenerator()
 {
-
 }
 
-void NoiseGenerator::SetNoiseType(Noise::Type t_type)
+// Set noise type
+// @input:
+// - t_type - noise type
+void NoiseGenerator::SetNoiseType(const Noise::Type &t_type)
 {
     m_noiseType = t_type;
 }
 
-Noise::Type NoiseGenerator::GetNoiseType()
+// Get current noise type
+// @output:
+// - Noise::Type - current noise type
+Noise::Type NoiseGenerator::GetNoiseType() const
 {
     return m_noiseType;
 }
 
+// Set noise amplitude
+// @input:
+// - t_type - noise amplitude within [0, 255]
 void NoiseGenerator::SetNoiseAmplitude(const int &t_amp)
 {
+    if ( t_amp < 0 || 255 < t_amp )
+    {
+        qDebug() << __func__ << "Invalid noise amplitude";
+        return;
+    }
+
     m_noiseAmp = t_amp;
 }
 
-int NoiseGenerator::GetNoiseAmplitude()
+// Get current noise amplitude
+// @output:
+// - int - value of current noise amplitude
+int NoiseGenerator::GetNoiseAmplitude() const
 {
     return m_noiseAmp;
 }
 
+// Set level of noise
+// @input:
+// - t_level - noise level within [0, 100]
 void NoiseGenerator::SetNoiseLevel(const unsigned int &t_level)
 {
     if ( 100 < t_level )
@@ -46,36 +72,42 @@ void NoiseGenerator::SetNoiseLevel(const unsigned int &t_level)
     }
 }
 
-QImage NoiseGenerator::SetNoiseToImg(const QImage &t_img)
+// Apply noise to image
+// @input:
+// - t_img - valid image that should be noised
+// @output:
+// - QImage - copy of input image with noise
+QImage NoiseGenerator::NoiseImage(const QImage &t_img)
 {
+    QScopedPointer<DefaultNoise> noise;
     switch(m_noiseType)
     {
         case Noise::CONSTANT:
         {
-            m_noiseGenerator = new ConstNoise(t_img,
-                                              m_noiseLvlPercent,
-                                              m_noiseAmp,
-                                              this);
+            noise.reset(new ConstNoise(t_img,
+                                       m_noiseLvlPercent,
+                                       m_noiseAmp,
+                                       this));
 
             break;
         }
 
         case Noise::RANDOM:
         {
-            m_noiseGenerator = new RandNoise(t_img,
-                                             m_noiseLvlPercent,
-                                             m_noiseAmp,
-                                             this);
+            noise.reset(new RandNoise(t_img,
+                                      m_noiseLvlPercent,
+                                      m_noiseAmp,
+                                      this));
 
             break;
         }
 
         case Noise::ABS_RANDOM:
         {
-            m_noiseGenerator = new AbsRandNoise(t_img,
-                                                m_noiseLvlPercent,
-                                                m_noiseAmp,
-                                                this);
+            noise.reset(new AbsRandNoise(t_img,
+                                         m_noiseLvlPercent,
+                                         m_noiseAmp,
+                                         this));
             break;
         }
 
@@ -87,13 +119,12 @@ QImage NoiseGenerator::SetNoiseToImg(const QImage &t_img)
         }
     }
 
-    connect(m_noiseGenerator, SIGNAL(SignalProcProgressPrc(int)), this, SLOT(SlotGetProgressBarValue(int)));
+    connect(noise.data(), SIGNAL(SignalProgressPrc(int)),
+            this, SLOT(SlotGetProgressPrc(int)));
 
-    QImage noisedImg = m_noiseGenerator->GetNoisedImage();
+    QImage noisedImg = noise->GetNoisedImage();
 
-    m_noiseGenerator->disconnect(SIGNAL(SignalProcProgressPrc(int)));
-
-    delete m_noiseGenerator;
+    noise->disconnect(SIGNAL(SignalProgressPrc(int)));
 
     if ( true == noisedImg.isNull() )
     {
@@ -104,7 +135,10 @@ QImage NoiseGenerator::SetNoiseToImg(const QImage &t_img)
     return noisedImg;
 }
 
-void NoiseGenerator::SlotGetProgressBarValue(int t_progress)
+// Slot for transmitting progress percent
+// @input:
+// - t_progress - progress percent
+void NoiseGenerator::SlotGetProgressPrc(int t_progress)
 {
-    emit SignalProcProgressPrc(t_progress);
+    emit SignalProgressPrc(t_progress);
 }
