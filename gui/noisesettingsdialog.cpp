@@ -13,7 +13,7 @@ NoiseSettingsDialog::NoiseSettingsDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->amplituteLE->setValidator(new QIntValidator());
+    ui->amplituteLE->setValidator(new QIntValidator(0, 255));
     FillNoiseTypesCB();
 }
 
