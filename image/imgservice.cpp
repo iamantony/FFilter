@@ -59,7 +59,7 @@ QImage ImgService::TransColorImgToGrayImg(const QImage &t_img)
             counter = 0;
             progressPrc++;
             // Change value of ProgressBar on MainWindow
-            emit SignalProcProgressPrc(progressPrc);
+            emit SignalProgressPrc(progressPrc);
         }
     }
 
@@ -121,7 +121,7 @@ double ImgService::CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondIm
             {
                 counter = 0;
                 progressPrc++;
-                emit SignalProcProgressPrc(progressPrc);
+                emit SignalProgressPrc(progressPrc);
             }
         }
     }

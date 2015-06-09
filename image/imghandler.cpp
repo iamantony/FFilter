@@ -83,13 +83,13 @@ void ImgHandler::SetNoiseLevelPrc(const unsigned int t_noiseLvlPrc)
 QImage ImgHandler::GetNoisyImg()
 {
     // Set connection for progress bar (on main window)
-    connect(&m_noise, SIGNAL(SignalProcProgressPrc(int)),
-            this, SLOT(SlotProcProgressPrc(int)));
+    connect(&m_noise, SIGNAL(SignalProgressPrc(int)),
+            this, SLOT(SlotProgressPrc(int)));
 
-    QImage noisyImg = m_noise.SetNoiseToImg( m_originalImg );
+    QImage noisyImg = m_noise.NoiseImage( m_originalImg );
 
     // Process ended, so we no more need connection with progress bar
-    m_noise.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+    m_noise.disconnect(SIGNAL(SignalProgressPrc(int)));
 
     if ( false == noisyImg.isNull() )
     {
@@ -105,12 +105,12 @@ QImage ImgHandler::GetNoisyImg()
 double ImgHandler::CalcImgsSD()
 {
     ImgService imgService;
-    connect(&imgService, SIGNAL(SignalProcProgressPrc(int)),
-            this, SLOT(SlotProcProgressPrc(int)));
+    connect(&imgService, SIGNAL(SignalProgressPrc(int)),
+            this, SLOT(SlotProgressPrc(int)));
 
     double sd =  imgService.CalcImgsSD(m_originalImg, m_targetImg);
 
-    imgService.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+    imgService.disconnect(SIGNAL(SignalProgressPrc(int)));
 
     emit SignalUISetSD(sd);
 
@@ -124,12 +124,12 @@ QImage ImgHandler::FilterTargetImg()
 {
     PowerFilter filter;
     filter.Init(m_mask, m_aggrOpHandler.GetAggrOperator());
-    connect(&filter, SIGNAL(SignalProcProgressPrc(int)),
-            this, SLOT(SlotProcProgressPrc(int)));
+    connect(&filter, SIGNAL(SignalProgressPrc(int)),
+            this, SLOT(SlotProgressPrc(int)));
 
     QImage filteredImg = filter.FilterImg(m_targetImg);
 
-    filter.disconnect(SIGNAL(SignalProcProgressPrc(int)));
+    filter.disconnect(SIGNAL(SignalProgressPrc(int)));
 
     if ( false == filteredImg.isNull() )
     {
@@ -177,7 +177,7 @@ QSharedPointer<Mask> ImgHandler::GetMask()
 }
 
 // Slot for transmitting process progress (0 - 100 percents)
-void ImgHandler::SlotProcProgressPrc(int t_value)
+void ImgHandler::SlotProgressPrc(int t_value)
 {
     int progressValue = 0;
 

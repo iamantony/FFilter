@@ -22,7 +22,7 @@ public:
     double CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg);
 
 signals:
-    void SignalProcProgressPrc(int t_progress);
+    void SignalProgressPrc(int t_progress);
 };
 
 #endif // IMGSERVICE_H

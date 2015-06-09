@@ -80,7 +80,7 @@ QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
         {
             counter = 0;
             progressPrc++;
-            emit SignalProcProgressPrc(progressPrc);
+            emit SignalProgressPrc(progressPrc);
         }
     }
 

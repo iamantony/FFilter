@@ -37,7 +37,7 @@ private:
     void CreateImgNoiseMap();
 
 signals:
-    void SignalProcProgressPrc(int t_progress);
+    void SignalProgressPrc(int t_progress);
 };
 
 #endif // DEFAULTNOISE_H

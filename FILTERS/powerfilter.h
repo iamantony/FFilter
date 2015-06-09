@@ -24,7 +24,7 @@ private:
     void SetDefaults();
 
 signals:
-    void SignalProcProgressPrc(int t_progress);
+    void SignalProgressPrc(int t_progress);
     void SignalFiltrationFinished();
 
     // == DATA ==

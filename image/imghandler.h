@@ -58,7 +58,7 @@ signals:
 
 public slots:
     // Slot for transmitting process progress (0 - 100 percents)
-    void SlotProcProgressPrc(int t_value);
+    void SlotProgressPrc(int t_value);
     // Slot to change aggregation operator type
     void SlotAggrOpTypeChanged(AggregOperator::Type::Type t_type);
     // Slot to change aggregation operator power

@@ -57,7 +57,7 @@ QImage ConstNoise::GetNoisedImage()
             {
                 counter = 0;
                 progressPrc++;
-                emit SignalProcProgressPrc(progressPrc);
+                emit SignalProgressPrc(progressPrc);
             }
         }
     }
