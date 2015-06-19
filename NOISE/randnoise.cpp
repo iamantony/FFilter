@@ -48,8 +48,7 @@ QImage RandNoise::GetNoisedImage()
     {
         for ( int h = 0; h < imgH; h++ )
         {
-            if ( (m_needToNoise == m_pixelsMap[w][h]) &&
-                 ( noisedPixelNum < pixelsToNoise ) )
+            if ( m_pixelsMap[w][h] && noisedPixelNum < pixelsToNoise )
             {
                 oldPixel = m_img.pixel(w, h);
                 pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
@@ -94,7 +93,7 @@ QList<int> RandNoise::GenerateNoise()
 
     QList<int> listOfNoise;
 
-    for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
+    for (unsigned int i = 0; i < GetNumOfPixelsToNoise(); i++ )
     {
         randLuminance = rand() % maxDeviation;
         randLuminance *= sign;

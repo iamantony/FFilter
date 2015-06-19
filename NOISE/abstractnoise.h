@@ -23,6 +23,8 @@ public:
 protected:
     // Generate noise values
     virtual QList<int> GenerateNoise() = 0;
+    // Get number of pixels that should be noised
+    unsigned int GetNumOfPixelsToNoise() const;
 
 private:
     // Create map of pixels by whitch we can define should this pixel be noised
@@ -34,9 +36,7 @@ signals:
 
     // == DATA ==
 protected:
-    bool m_needToNoise;
     int m_noiseAmplitude;
-    unsigned int m_pixelsToNoise;
     QVector< QVector<bool> > m_pixelsMap;
     QImage m_img;
 };

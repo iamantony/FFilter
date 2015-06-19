@@ -11,7 +11,7 @@ const unsigned int maxPercent = 100;
 AbstractNoise::AbstractNoise(const QImage &t_img,
                              const unsigned int &t_noiseLvl,
                              const int &t_noiseAmp) :
-    m_needToNoise(false), m_noiseAmplitude(0), m_pixelsToNoise(0)
+    m_noiseAmplitude(0)
 {
     if ( true == t_img.isNull() )
     {
@@ -86,4 +86,18 @@ void AbstractNoise::CreatePixelsMap(const unsigned int &t_noiseLvl)
             }
         }
     }
+}
+
+// Get number of pixels that should be noised
+// @output:
+// - unsigned int - number of pixels that should be noised
+unsigned int AbstractNoise::GetNumOfPixelsToNoise() const
+{
+    unsigned int pixelsNum = 0;
+    for ( int i = 0; i < m_pixelsMap.size(); ++i )
+    {
+        pixelsNum += m_pixelsMap.at(i).count(true);
+    }
+
+    return pixelsNum;
 }

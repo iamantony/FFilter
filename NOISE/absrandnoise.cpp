@@ -40,8 +40,7 @@ QImage AbsRandNoise::GetNoisedImage()
     {
         for ( int h = 0; h < imgH; h++ )
         {
-            if ( (m_needToNoise == m_pixelsMap[w][h]) &&
-                 ( noisedPixelNum < pixelsToNoise ) )
+            if ( m_pixelsMap[w][h] && noisedPixelNum < pixelsToNoise )
             {
                 pixelLum = noiseForPixels.at(noisedPixelNum);
                 noisedPixelNum++;
@@ -70,7 +69,7 @@ QList<int> AbsRandNoise::GenerateNoise()
     const int maxLuminance = 256;
     QList<int> listOfNoise;
 
-    for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
+    for (unsigned int i = 0; i < GetNumOfPixelsToNoise(); i++ )
     {
         randLuminance = rand() % maxLuminance;
         listOfNoise.append(randLuminance);

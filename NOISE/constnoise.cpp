@@ -14,15 +14,17 @@ ConstNoise::~ConstNoise()
 {
 }
 
+// Get noised copy of image
+// @ouput:
+// - QImage - noised copy of image. Or original image in case of some error
 QImage ConstNoise::GetNoisedImage()
 {
-    if ( true == m_img.isNull() )
+    if ( m_img.isNull() )
     {
-        qDebug() << "AbsRandNoise::NoiseImage(): Error - invalid arguments";
+        qDebug() << __func__ << "Invalid arguments";
         return m_img;
     }
 
-    // Noise without amplitude is not the noise at all
     if ( 0 == m_noiseAmplitude )
     {
         return m_img;
@@ -46,8 +48,7 @@ QImage ConstNoise::GetNoisedImage()
     {
         for ( int h = 0; h < imgH; h++ )
         {
-            if ( (m_needToNoise == m_pixelsMap[w][h]) &&
-                 ( noisedPixelNum < pixelsToNoise ) )
+            if ( m_pixelsMap[w][h] && noisedPixelNum < pixelsToNoise )
             {
                 oldPixel = m_img.pixel(w, h);
                 pixelLum = oldPixel.red() + noiseForPixels.at(noisedPixelNum);
@@ -79,10 +80,11 @@ QImage ConstNoise::GetNoisedImage()
     return m_img;
 }
 
+// Generate noise values
 QList<int> ConstNoise::GenerateNoise()
 {
     QList<int> listOfNoise;
-    for (unsigned int i = 0; i < m_pixelsToNoise; i++ )
+    for (unsigned int i = 0; i < GetNumOfPixelsToNoise(); i++ )
     {
         listOfNoise.append(m_noiseAmplitude);
     }

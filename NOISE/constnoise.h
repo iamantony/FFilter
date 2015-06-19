@@ -16,10 +16,11 @@ public:
                         const int &t_noiseAmp);
 
     virtual ~ConstNoise();
-
+    // Get noised copy of image
     virtual QImage GetNoisedImage();
 
 protected:
+    // Generate noise values
     virtual QList<int> GenerateNoise();
 };
 
