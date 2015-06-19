@@ -4,9 +4,7 @@
 
 #include <QDebug>
 
-const int minNoiseAmp = -255;
-const int maxNoiseAmp = 255;
-const unsigned int maxPercent = 100;
+#include "noise/noise.h"
 
 AbstractNoise::AbstractNoise(const QImage &t_img,
                              const unsigned int &t_noiseLvl,
@@ -22,13 +20,13 @@ AbstractNoise::AbstractNoise(const QImage &t_img,
     m_img = t_img;
 
     m_noiseAmplitude = t_noiseAmp;
-    if ( m_noiseAmplitude < minNoiseAmp )
+    if ( m_noiseAmplitude < Noise::MIN_NOISE_AMP )
     {
-        m_noiseAmplitude = minNoiseAmp;
+        m_noiseAmplitude = Noise::MIN_NOISE_AMP;
     }
-    else if ( maxNoiseAmp < m_noiseAmplitude )
+    else if ( Noise::MAX_NOISE_AMP < m_noiseAmplitude )
     {
-        m_noiseAmplitude = maxNoiseAmp;
+        m_noiseAmplitude = Noise::MAX_NOISE_AMP;
     }
 
     CreatePixelsMap(t_noiseLvl);
@@ -47,21 +45,22 @@ void AbstractNoise::CreatePixelsMap(const unsigned int &t_noiseLvl)
 {
     // Set how many pixels should be noised in percents and set pixels default
     // value - "not noised"
-    unsigned int pixelsToChangePrc = qMin(t_noiseLvl, maxPercent);
+    unsigned int pixelsToChangePrc = qMin(t_noiseLvl, Noise::MAX_PERCENT);
     bool isPixelNoised = false;
 
     // If pixelsToChangePrc is more than a half of the max value ( 100% ),
     // than noise algorithm would work faster if we set pixels default values
     // to "noised" and than "denoise" some of the pixels
-    if ( (maxPercent / 2) < pixelsToChangePrc )
+    if ( (Noise::MAX_PERCENT / 2) < pixelsToChangePrc )
     {
-        pixelsToChangePrc = maxPercent - pixelsToChangePrc;
+        pixelsToChangePrc = Noise::MAX_PERCENT - pixelsToChangePrc;
         isPixelNoised = true;
     }
 
     int imgW = m_img.width();
     int imgH = m_img.height();
-    unsigned int pixelsToChange = ( pixelsToChangePrc * (imgW * imgH)) / 100;
+    unsigned int pixelsToChange =
+            ( pixelsToChangePrc * (imgW * imgH)) / Noise::MAX_PERCENT;
 
     // Create pixels map with default value
     for ( int w = 0; w < imgW; ++w )

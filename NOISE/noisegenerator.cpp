@@ -3,6 +3,7 @@
 #include <QScopedPointer>
 #include <QDebug>
 
+#include "noise/noise.h"
 #include "noise/abstractnoise.h"
 #include "noise/constnoise.h"
 #include "noise/randnoise.h"
@@ -41,7 +42,7 @@ Noise::Type NoiseGenerator::GetNoiseType() const
 // - t_type - noise amplitude within [0, 255]
 void NoiseGenerator::SetNoiseAmplitude(const int &t_amp)
 {
-    if ( t_amp < 0 || 255 < t_amp )
+    if ( t_amp < Noise::MIN_NOISE_AMP || Noise::MAX_NOISE_AMP < t_amp )
     {
         qDebug() << __func__ << "Invalid noise amplitude";
         return;
