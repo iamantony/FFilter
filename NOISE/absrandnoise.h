@@ -17,9 +17,8 @@ public:
 
     virtual ~AbsRandNoise();
 
-    virtual QImage GetNoisedImage();
-
 protected:
+    // Generate noise values
     virtual QVector<int> GenerateNoise();
 };
 

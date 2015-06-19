@@ -18,7 +18,7 @@ public:
     virtual ~AbstractNoise();
 
     // Get noised copy of image
-    virtual QImage GetNoisedImage() = 0;
+    QImage GetNoisedImage();
 
 protected:
     // Generate noise values
@@ -37,6 +37,8 @@ signals:
     // == DATA ==
 protected:
     int m_noiseAmplitude;
+
+private:
     QVector< QVector<bool> > m_pixelsMap;
     QImage m_img;
 };
