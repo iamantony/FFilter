@@ -20,7 +20,7 @@ public:
     virtual QImage GetNoisedImage();
 
 protected:
-    virtual QList<int> GenerateNoise();
+    virtual QVector<int> GenerateNoise();
 };
 
 #endif // RANDNOISE_H

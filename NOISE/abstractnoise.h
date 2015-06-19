@@ -22,7 +22,7 @@ public:
 
 protected:
     // Generate noise values
-    virtual QList<int> GenerateNoise() = 0;
+    virtual QVector<int> GenerateNoise() = 0;
     // Get number of pixels that should be noised
     unsigned int GetNumOfPixelsToNoise() const;
 

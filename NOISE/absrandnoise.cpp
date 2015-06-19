@@ -23,7 +23,7 @@ QImage AbsRandNoise::GetNoisedImage()
         return m_img;
     }
 
-    QList<int> noiseForPixels = GenerateNoise();
+    QVector<int> noiseForPixels = GenerateNoise();
     int pixelsToNoise = noiseForPixels.size();
     int noisedPixelNum = 0;
     int imgW = m_img.width();
@@ -62,12 +62,12 @@ QImage AbsRandNoise::GetNoisedImage()
     return m_img;
 }
 
-QList<int> AbsRandNoise::GenerateNoise()
+QVector<int> AbsRandNoise::GenerateNoise()
 {
     srand(time(NULL));
     int randLuminance = 0;
     const int maxLuminance = 256;
-    QList<int> listOfNoise;
+    QVector<int> listOfNoise;
 
     for (unsigned int i = 0; i < GetNumOfPixelsToNoise(); i++ )
     {

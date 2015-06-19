@@ -21,7 +21,7 @@ public:
 
 protected:
     // Generate noise values
-    virtual QList<int> GenerateNoise();
+    virtual QVector<int> GenerateNoise();
 };
 
 #endif // CONSTNOISE_H

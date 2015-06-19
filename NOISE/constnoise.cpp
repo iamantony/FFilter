@@ -1,5 +1,6 @@
 #include "noise/constnoise.h"
 
+#include <QVector>
 #include <QColor>
 #include <QDebug>
 
@@ -30,7 +31,7 @@ QImage ConstNoise::GetNoisedImage()
         return m_img;
     }
 
-    QList<int> noiseForPixels = GenerateNoise();
+    QVector<int> noiseForPixels = GenerateNoise();
     int pixelsToNoise = noiseForPixels.size();
     int noisedPixelNum = 0;
     int imgW = m_img.width();
@@ -81,13 +82,9 @@ QImage ConstNoise::GetNoisedImage()
 }
 
 // Generate noise values
-QList<int> ConstNoise::GenerateNoise()
+// @output:
+// - QVector<int> - noise values
+QVector<int> ConstNoise::GenerateNoise()
 {
-    QList<int> listOfNoise;
-    for (unsigned int i = 0; i < GetNumOfPixelsToNoise(); i++ )
-    {
-        listOfNoise.append(m_noiseAmplitude);
-    }
-
-    return listOfNoise;
+    return QVector<int>(GetNumOfPixelsToNoise(), m_noiseAmplitude);
 }
