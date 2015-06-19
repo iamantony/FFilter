@@ -26,7 +26,7 @@ bool ImgHandler::SetOriginalImg(const QImage &t_img)
     if ( Image::GRAYSCALE == m_imgMode && false == t_img.isGrayscale() )
     {
         ImgService imgService;
-        QImage grayImg = imgService.TransColorImgToGrayImg(t_img);
+        QImage grayImg = imgService.ColorImgToGray(t_img);
         if ( grayImg.isNull() )
         {
             qDebug() << __func__ << "Transformation to grayscale image failed";

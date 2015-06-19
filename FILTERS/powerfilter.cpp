@@ -75,11 +75,11 @@ QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
 //            }
         }
 
-        counter++;
+        ++counter;
         if ( counter == onePercent )
         {
             counter = 0;
-            progressPrc++;
+            ++progressPrc;
             emit SignalProgressPrc(progressPrc);
         }
     }

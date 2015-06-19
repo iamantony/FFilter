@@ -130,11 +130,11 @@ QImage AbstractNoise::GetNoisedImage()
                 ++noisedPixelNum;
             }
 
-            counter++;
+            ++counter;
             if ( counter == onePercent )
             {
                 counter = 0;
-                progressPrc++;
+                ++progressPrc;
                 emit SignalProgressPrc(progressPrc);
             }
         }
