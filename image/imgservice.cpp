@@ -1,64 +1,62 @@
 #include "imgservice.h"
 
-#include "common/common.h"
+#include <time.h>
+#include <math.h>
+
+#include <QColor>
+#include <QDebug>
+
+const double MIN_SD = 0.00001;
 
 ImgService::ImgService(QObject *parent) :
     QObject(parent)
 {
 }
 
-QImage ImgService::TransColorImgToGrayImg(const QImage &t_img)
+// Transform color image to gray image
+// @input:
+// - t_img - not empty image
+// @output:
+// QImage - grayscaled copy of input image. Or empty image in case of error
+QImage ImgService::ColorImgToGray(const QImage &t_img)
 {
-    if ( true == t_img.isNull() )
+    if ( t_img.isNull() )
     {
-        qDebug() << "TransColorImgToGrayImg(): Error - invalid arguments";
-        QImage nullImg;
-        return nullImg;
+        qDebug() << __func__ << "Invalid arguments";
+        return QImage();
     }
 
     int width = t_img.width();
     int height = t_img.height();
     QImage grayImg(width, height, QImage::Format_RGB32);
 
-    QColor pixel;
-    int resultLuminance;
-    double grayPixel;
-
-    int onePercent = width/100;
+    int onePercent = width / 100;
     int progressPrc = 0;
     int counter = 0;
 
-    for (int x = 0; x < width; x++)
+    for (int wdt = 0; wdt < width; ++wdt)
     {
-        for (int y = 0; y < height; y++)
+        for (int hgt = 0; hgt < height; ++hgt)
         {
-            pixel = t_img.pixel(x, y);
-            grayPixel = 0.2126 * pixel.red() + 0.7152 * pixel.green() + 0.0722 * pixel.blue();
-            resultLuminance = (int)floor(grayPixel + 0.5);
+            QColor pixel = t_img.pixel(wdt, hgt);
+            double grayPixel = 0.2126 * pixel.red() +
+                               0.7152 * pixel.green() +
+                               0.0722 * pixel.blue();
 
-            if( resultLuminance < 0 )
-            {
-                resultLuminance = 0;
-            }
-            else if( resultLuminance > 255 )
-            {
-                resultLuminance = 255;
-            }
+            int resultLuminance = (int)floor(grayPixel + 0.5);
+            resultLuminance = qMax(resultLuminance, 0);
+            resultLuminance = qMin(resultLuminance, 255);
 
-            pixel.setRed(resultLuminance);
-            pixel.setGreen(resultLuminance);
-            pixel.setBlue(resultLuminance);
-
-            grayImg.setPixel(x, y, pixel.rgb());
+            grayImg.setPixel(wdt,
+                             hgt,
+                             qRgb(resultLuminance, resultLuminance, resultLuminance));
         }
 
-        // Count progress of operation in percent
-        counter++;
+        ++counter;
         if ( counter == onePercent )
         {
             counter = 0;
-            progressPrc++;
-            // Change value of ProgressBar on MainWindow
+            ++progressPrc;
             emit SignalProgressPrc(progressPrc);
         }
     }
@@ -66,77 +64,65 @@ QImage ImgService::TransColorImgToGrayImg(const QImage &t_img)
     return grayImg;
 }
 
+// Calc Standart Deviation (SD) between two images of the same size
+// @input:
+// - t_firstImg - not empty image
+// - t_secondImg - not empty image with size equal to first image size
+// @output:
+// - double - result SD. In case of error function will return 0
 double ImgService::CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg)
 {
-    int firstW = t_firstImg.width();
-    int firstH = t_firstImg.height();
-    int secondW = t_secondImg.width();
-    int secondH = t_secondImg.height();
-
-    // Our images have the same size?
-    if ( (firstW != secondW) || (firstH != secondH) )
+    double sd = 0.0;
+    if ( t_firstImg.isNull() || t_firstImg.size() != t_secondImg.size() )
     {
-        qDebug() << __func__ << "Images have different size";
-        return 0.0;
+        qDebug() << __func__ << "Invalid arguments";
+        return sd;
     }
 
-    QColor pixelFirst;
-    QColor pixelSecond;
-    double SKO = 0.0;
-    int rFirst, rSecond, diffRed;
-    int gFirst, gSecond, diffGreen;
-    int bFirst, bSecond, diffBlue;
+    int imgWdt = t_firstImg.width();
+    int imgHgt = t_firstImg.height();
 
-    int onePercent = ( firstW * firstH )/100;
+    int onePercent = ( imgWdt * imgHgt )/100;
     int progressPrc = 0;
     int counter = 0;
 
-    for (int x = 0; x < firstW; x++)
+    for (int wdt = 0; wdt < imgWdt; ++wdt)
     {
-        for (int y = 0; y < firstH; y++)
+        for (int hgt = 0; hgt < imgHgt; ++hgt)
         {
-            pixelFirst = t_firstImg.pixel(x, y);
-            pixelSecond = t_secondImg.pixel(x, y);
+            QColor pixelFirst = t_firstImg.pixel(wdt, hgt);
+            QColor pixelSecond = t_secondImg.pixel(wdt, hgt);
 
-            // get square of difference between red channels of images
-            rFirst = pixelFirst.red();
-            rSecond = pixelSecond.red();
-            diffRed = pow( (rFirst - rSecond), 2 );
+            // get square of difference between red, green and blue channels of
+            // pixels
+            double diffRed = pow((pixelFirst.red() - pixelSecond.red()), 2);
+            double diffGreen =
+                    pow((pixelFirst.green() - pixelSecond.green()), 2);
+            double diffBlue = pow((pixelFirst.blue() - pixelSecond.blue()), 2);
 
-            // get square of difference between green channels of images
-            gFirst = pixelFirst.green();
-            gSecond = pixelSecond.green();
-            diffGreen = pow( (gFirst - gSecond), 2);
+            // sum all squares of diffs
+            sd += diffRed + diffGreen + diffBlue;
 
-            // get square of difference between blue channels of images
-            bFirst = pixelFirst.blue();
-            bSecond = pixelSecond.blue();
-            diffBlue = pow( (bFirst - bSecond), 2);
-
-            // sum all squares
-            SKO += diffRed + diffGreen + diffBlue;
-
-            counter++;
+            ++counter;
             if ( counter == onePercent )
             {
                 counter = 0;
-                progressPrc++;
+                ++progressPrc;
                 emit SignalProgressPrc(progressPrc);
             }
         }
     }
 
-    // get mean of square SKO for each pixel
-    SKO = SKO /( firstW * firstH );
-    if (SKO < MIN_SKO)
+    sd /= imgWdt * imgHgt;
+    if (sd < MIN_SD)
     {
-        SKO = 0;
+        sd = 0.0;
     }
     else
     {
-        // get root
-        SKO = pow(SKO, 0.5);
+        // get root of SD
+        sd = pow(sd, 0.5);
     }
 
-    return SKO;
+    return sd;
 }

@@ -3,12 +3,6 @@
 
 #include <QObject>
 #include <QImage>
-#include <QColor>
-#include <time.h>
-#include <math.h>
-#include <QDebug>
-
-#define MIN_SKO 0.00001
 
 class ImgService : public QObject
 {
@@ -18,7 +12,9 @@ class ImgService : public QObject
 public:
     explicit ImgService(QObject *parent = 0);
 
-    QImage TransColorImgToGrayImg(const QImage &t_img);
+    // Transform color image to gray image
+    QImage ColorImgToGray(const QImage &t_img);
+    // Calc Standart Deviation (SD) between two images of the same size
     double CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg);
 
 signals:
