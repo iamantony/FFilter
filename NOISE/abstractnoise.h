@@ -27,7 +27,7 @@ protected:
 private:
     // Create map of pixels by whitch we can define should this pixel be noised
     // or not
-    void CreatePixelsMap();
+    void CreatePixelsMap(const unsigned int &t_noiseLvl);
 
 signals:
     void SignalProgressPrc(int t_progress);
@@ -36,9 +36,7 @@ signals:
 protected:
     bool m_needToNoise;
     int m_noiseAmplitude;
-    unsigned int m_noiseLevelPercent;
     unsigned int m_pixelsToNoise;
-    unsigned int m_numPixToChange;
     QVector< QVector<bool> > m_pixelsMap;
     QImage m_img;
 };

@@ -4,11 +4,14 @@
 
 #include <QDebug>
 
+const int minNoiseAmp = -255;
+const int maxNoiseAmp = 255;
+const unsigned int maxPercent = 100;
+
 AbstractNoise::AbstractNoise(const QImage &t_img,
                              const unsigned int &t_noiseLvl,
                              const int &t_noiseAmp) :
-    m_needToNoise(false), m_noiseAmplitude(0), m_noiseLevelPercent(0),
-    m_pixelsToNoise(0), m_numPixToChange(0)
+    m_needToNoise(false), m_noiseAmplitude(0), m_pixelsToNoise(0)
 {
     if ( true == t_img.isNull() )
     {
@@ -17,41 +20,18 @@ AbstractNoise::AbstractNoise(const QImage &t_img,
     }
 
     m_img = t_img;
+
     m_noiseAmplitude = t_noiseAmp;
-
-    if ( 100 < t_noiseLvl )
+    if ( m_noiseAmplitude < minNoiseAmp )
     {
-        m_noiseLevelPercent = 100;
+        m_noiseAmplitude = minNoiseAmp;
     }
-    else
+    else if ( maxNoiseAmp < m_noiseAmplitude )
     {
-        m_noiseLevelPercent = t_noiseLvl;
-    }
-
-    // If noiseLvl > 50% we invert an algorith. What does it mean?
-    // If noiseLvl < 50% we choose noiseLvl% of pixels and add noise to them.
-    // But when noiseLvl > 50%, algorithm becomes slower and slower. In this
-    // case it's faster to choose (100 - noiseLvl)% of pixels that we
-    // WOULD NOT noise.
-    m_needToNoise = true;
-    if ( 50 < m_noiseLevelPercent )
-    {
-        m_noiseLevelPercent = 100 - m_noiseLevelPercent;
-        m_needToNoise = false;
+        m_noiseAmplitude = maxNoiseAmp;
     }
 
-    unsigned int pixelsInImg = m_img.width() * m_img.height();
-    m_numPixToChange = ( m_noiseLevelPercent * pixelsInImg) / 100;
-    if ( true == m_needToNoise )
-    {
-        m_pixelsToNoise = m_numPixToChange;
-    }
-    else
-    {
-        m_pixelsToNoise = pixelsInImg - m_numPixToChange;
-    }
-
-    CreatePixelsMap();
+    CreatePixelsMap(t_noiseLvl);
 }
 
 AbstractNoise::~AbstractNoise()
@@ -60,42 +40,50 @@ AbstractNoise::~AbstractNoise()
 
 // Create map of pixels by whitch we can define should this pixel be noised
 // or not
-void AbstractNoise::CreatePixelsMap()
+// @input:
+// - t_noiseLvl - noise level in percents (number of pixels in percents that
+// should be noised)
+void AbstractNoise::CreatePixelsMap(const unsigned int &t_noiseLvl)
 {
-    srand(time(NULL));
+    // Set how many pixels should be noised in percents and set pixels default
+    // value - "not noised"
+    unsigned int pixelsToChangePrc = qMin(t_noiseLvl, maxPercent);
+    bool isPixelNoised = false;
 
-    if ( true ==  m_img.isNull() )
+    // If pixelsToChangePrc is more than a half of the max value ( 100% ),
+    // than noise algorithm would work faster if we set pixels default values
+    // to "noised" and than "denoise" some of the pixels
+    if ( (maxPercent / 2) < pixelsToChangePrc )
     {
-        qDebug() << __func__ << "Can't create pixels map for empty image";
-        return;
+        pixelsToChangePrc = maxPercent - pixelsToChangePrc;
+        isPixelNoised = true;
     }
 
     int imgW = m_img.width();
     int imgH = m_img.height();
+    unsigned int pixelsToChange = ( pixelsToChangePrc * (imgW * imgH)) / 100;
 
+    // Create pixels map with default value
     for ( int w = 0; w < imgW; ++w )
     {
-        m_pixelsMap << QVector<bool>(imgH, false);
+        m_pixelsMap << QVector<bool>(imgH, isPixelNoised);
     }
 
-    // Then by random we choose pixels and define their fate:
-    // - if noiseLvl < 50%, then they will be noised
-    // - if noiseLvl > 50%, then they value will be saved (and unchoosed will be noised)
+    // Change default value of calculated number of pixels
+    srand(time(NULL));
     int wRand = 0;
     int hRand = 0;
-    for ( unsigned int pix = 0; pix < m_numPixToChange; pix++ )
+    for ( unsigned int pix = 0; pix < pixelsToChange; ++pix )
     {
-        do
+        while(true)
         {
             wRand = rand() % imgW;
             hRand = rand() % imgH;
-
-            if ( false == m_pixelsMap.at(wRand).at(hRand) )
+            if ( isPixelNoised == m_pixelsMap.at(wRand).at(hRand) )
             {
-                m_pixelsMap[wRand][hRand] = true;
+                m_pixelsMap[wRand][hRand] = !isPixelNoised;
                 break;
             }
         }
-        while( true );
     }
 }
