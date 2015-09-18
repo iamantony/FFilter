@@ -18,12 +18,12 @@ PowerFilter::~PowerFilter()
 
 void PowerFilter::SetDefaults()
 {
-    m_aggregOperator = NULL;
+    m_aggregOperator = nullptr;
 }
 
 void PowerFilter::Init(QSharedPointer<Mask> t_mask, DefaultAggregOperator *t_aggrOp)
 {
-    if ( (NULL == t_mask) || (NULL == t_aggrOp) )
+    if ( (nullptr == t_mask) || (nullptr == t_aggrOp) )
     {
         qDebug() << "PowerFilter::Init(): Error - invalid arguments";
         return;
@@ -35,7 +35,7 @@ void PowerFilter::Init(QSharedPointer<Mask> t_mask, DefaultAggregOperator *t_agg
 
 QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
 {
-    if ( (NULL == m_mask) || (NULL == m_aggregOperator) )
+    if ( (nullptr == m_mask) || (nullptr == m_aggregOperator) )
     {
         qDebug() << "PowerFilter::FilterImg(): Error - filter is not initialised";
         return t_noisyImg;

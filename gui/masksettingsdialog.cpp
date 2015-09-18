@@ -58,7 +58,7 @@ void MaskSettingsDialog::SetUpTable()
         for ( int col = 0; col < ui->maskTable->columnCount(); ++col )
         {
             QTableWidgetItem *item = ui->maskTable->item(row, col);
-            if ( NULL == item )
+            if ( nullptr == item )
             {
                 item = new QTableWidgetItem();
                 ui->maskTable->setItem(row, col, item);
@@ -81,7 +81,7 @@ void MaskSettingsDialog::SetUpTable()
 // - *t_item - valid pointer to item widget
 void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
 {
-    if ( NULL == t_item )
+    if ( nullptr == t_item )
     {
         qDebug() << __func__ << "Invalid arguments";
         return;
@@ -155,7 +155,7 @@ QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
 void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
 {
     QTableWidgetItem *item = ui->maskTable->item(t_row, t_col);
-    if ( NULL == item )
+    if ( nullptr == item )
     {
         qDebug() << __func__ << "Null item";
         return;
@@ -186,7 +186,7 @@ void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
 void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
 {
     QTableWidgetItem *item = ui->maskTable->itemAt(t_point);
-    if ( NULL == item )
+    if ( nullptr == item )
     {
         return;
     }

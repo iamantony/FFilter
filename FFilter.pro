@@ -6,6 +6,15 @@ QMAKE_CXXFLAGS_WARN_ON += -Werror -Wformat=2 -Wuninitialized -Winit-self \
         -Wmissing-include-dirs -Wswitch-enum -Wundef -Wpointer-arith \
         -Wdisabled-optimization -Wcast-align -Wcast-qual
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+    CONFIG += c++11
+}
+else {
+    !win32-msvc*:QMAKE_CXXFLAGS += -std=c++0x
+}
+
+INCLUDEPATH += $$PWD
+
 TARGET = FFilter
 TEMPLATE = app
 

@@ -6,7 +6,7 @@ AggrOpHandler::AggrOpHandler(QObject *parent) :
     m_aggrOpType = AggregOperator::Type::MIN;
     m_aggrOpFunc = AggregOperator::Func::EXP;
     m_power = 1;
-    m_aggrOperator = NULL;
+    m_aggrOperator = nullptr;
 }
 
 AggrOpHandler::~AggrOpHandler()
