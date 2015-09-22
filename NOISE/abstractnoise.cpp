@@ -14,7 +14,7 @@ AbstractNoise::AbstractNoise(const QImage &t_img,
 {
     if ( true == t_img.isNull() )
     {
-        qDebug() << __func__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Invalid arguments";
         return;
     }
 
@@ -95,7 +95,7 @@ QImage AbstractNoise::GetNoisedImage()
 {
     if ( m_img.isNull() )
     {
-        qDebug() << __func__ << "Image is empty";
+        qDebug() << __FUNCTION__ << "Image is empty";
         return m_img;
     }
 

@@ -44,7 +44,7 @@ void NoiseGenerator::SetNoiseAmplitude(const int &t_amp)
 {
     if ( t_amp < Noise::MIN_NOISE_AMP || Noise::MAX_NOISE_AMP < t_amp )
     {
-        qDebug() << __func__ << "Invalid noise amplitude";
+        qDebug() << __FUNCTION__ << "Invalid noise amplitude";
         return;
     }
 

@@ -50,7 +50,7 @@ void Mask::ResizeMask(const unsigned int &t_rows, const unsigned int &t_cols)
 {
     if ( 0 == t_rows || 0 == t_cols )
     {
-        qDebug() << __func__ << "Invalid mask size";
+        qDebug() << __FUNCTION__ << "Invalid mask size";
         return;
     }
 
@@ -101,7 +101,7 @@ bool Mask::IsPixelEnabled(const unsigned int &t_row,
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
-        qDebug() << __func__ << "Invalid pixel index";
+        qDebug() << __FUNCTION__ << "Invalid pixel index";
         return false;
     }
 
@@ -119,7 +119,7 @@ void Mask::SetPixelActiveStatus(const unsigned int &t_row,
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
-        qDebug() << __func__ << "Invalid pixel index";
+        qDebug() << __FUNCTION__ << "Invalid pixel index";
         return;
     }
 
@@ -137,7 +137,7 @@ double Mask::GetPixelWeight(const unsigned int &t_row,
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
-        qDebug() << __func__ << "Invalid pixel index";
+        qDebug() << __FUNCTION__ << "Invalid pixel index";
         return 0.0;
     }
 
@@ -155,7 +155,7 @@ void Mask::SetPixelWeight(const unsigned int &t_row,
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
-        qDebug() << __func__ << "Invalid pixel index";
+        qDebug() << __FUNCTION__ << "Invalid pixel index";
         return;
     }
 
