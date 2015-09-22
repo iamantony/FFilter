@@ -63,14 +63,14 @@ HEADERS  += \
     noise/constnoise.h \
     gui/mainwindow.h \
     gui/aggregfiltersettingsdialog.h \
-    aggreg_operators/aggreg_operators.h \
     noise/noise.h \
     image/image.h \
     gui/noisesettingsdialog.h \
     gui/masksettingsdialog.h \
     masks/maskpixel.h \
     masks/mask.h \
-    noise/abstractnoise.h
+    noise/abstractnoise.h \
+    aggreg_operators/aggregoperators.h
 
 FORMS    += \
     gui/mainwindow.ui \
