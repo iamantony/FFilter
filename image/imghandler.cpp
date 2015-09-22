@@ -19,7 +19,7 @@ bool ImgHandler::SetOriginalImg(const QImage &t_img)
 {
     if ( t_img.isNull() )
     {
-        qDebug() << __func__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Invalid arguments";
         return false;
     }
 
@@ -29,7 +29,7 @@ bool ImgHandler::SetOriginalImg(const QImage &t_img)
         QImage grayImg = imgService.ColorImgToGray(t_img);
         if ( grayImg.isNull() )
         {
-            qDebug() << __func__ << "Transformation to grayscale image failed";
+            qDebug() << __FUNCTION__ << "Transformation to grayscale image failed";
             return false;
         }
 
@@ -123,7 +123,12 @@ double ImgHandler::CalcImgsSD()
 QImage ImgHandler::FilterTargetImg()
 {
     PowerFilter filter;
-    filter.Init(m_mask, m_aggrOpHandler.GetAggrOperator());
+    if ( false == filter.Init(m_mask, m_aggrOpHandler.GetAggrOperator()) )
+    {
+        qDebug() << __FUNCTION__ << "Failed to init filter";
+        return QImage();
+    }
+
     connect(&filter, SIGNAL(SignalProgressPrc(int)),
             this, SLOT(SlotProgressPrc(int)));
 
@@ -141,7 +146,7 @@ QImage ImgHandler::FilterTargetImg()
 }
 
 // Get current aggregation operator type
-AggregOperator::Type::Type ImgHandler::GetAggrOpType()
+AggregOperator::Type ImgHandler::GetAggrOpType()
 {
     return m_aggrOpHandler.GetAggrOpType();
 }
@@ -153,7 +158,7 @@ double ImgHandler::GetAggrOpPower()
 }
 
 // Get current function type of aggregation operator
-AggregOperator::Func::Type ImgHandler::GetAggrOpFunc()
+AggregOperator::Func ImgHandler::GetAggrOpFunc()
 {
     return m_aggrOpHandler.GetAggrOpFunc();
 }
@@ -198,7 +203,7 @@ void ImgHandler::SlotProgressPrc(int t_value)
 }
 
 // Slot to change aggregation operator type
-void ImgHandler::SlotAggrOpTypeChanged(AggregOperator::Type::Type t_type)
+void ImgHandler::SlotAggrOpTypeChanged(AggregOperator::Type t_type)
 {
     m_aggrOpHandler.SlotSetAggrOpType(t_type);
 }
@@ -210,7 +215,7 @@ void ImgHandler::SlotAggrOpPowerChanged(double t_power)
 }
 
 // Slot to change function type of aggregation operator
-void ImgHandler::SlotAggrOpFuncChanged(AggregOperator::Func::Type t_func)
+void ImgHandler::SlotAggrOpFuncChanged(AggregOperator::Func t_func)
 {
     m_aggrOpHandler.SlotSetAggrOpFunc(t_func);
 }

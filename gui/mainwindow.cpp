@@ -32,17 +32,17 @@ void MainWindow::SetConnections()
 
     // Aggregation operators settings dialog connections
     connect(&m_aggregFilterSettings,
-            SIGNAL(SignalAggrOpType(AggregOperator::Type::Type)),
+            SIGNAL(SignalAggrOpType(AggregOperator::Type)),
             &m_imgHandler,
-            SLOT(SlotAggrOpTypeChanged(AggregOperator::Type::Type)));
+            SLOT(SlotAggrOpTypeChanged(AggregOperator::Type)));
 
     connect(&m_aggregFilterSettings, SIGNAL(SignalAggrOpPower(double)),
             &m_imgHandler, SLOT(SlotAggrOpPowerChanged(double)));
 
     connect(&m_aggregFilterSettings,
-            SIGNAL(SignalAggrOpFunc(AggregOperator::Func::Type)),
+            SIGNAL(SignalAggrOpFunc(AggregOperator::Func)),
             &m_imgHandler,
-            SLOT(SlotAggrOpFuncChanged(AggregOperator::Func::Type)));
+            SLOT(SlotAggrOpFuncChanged(AggregOperator::Func)));
 
     // Noise settings dialog connections
     connect(&m_noiseSettings, SIGNAL(SignalNoiseType(Noise::Type)),

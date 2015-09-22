@@ -39,11 +39,11 @@ public:
     // Start filtration of target image
     QImage FilterTargetImg();
     // Get current aggregation operator type
-    AggregOperator::Type::Type GetAggrOpType();
+    AggregOperator::Type GetAggrOpType();
     // Get current power of aggregation operator
     double GetAggrOpPower();
     // Get current function type of aggregation operator
-    AggregOperator::Func::Type GetAggrOpFunc();
+    AggregOperator::Func GetAggrOpFunc();
     // Get current noise type
     Noise::Type GetNoiseType();
     // Get current noise amplitude
@@ -60,11 +60,11 @@ public slots:
     // Slot for transmitting process progress (0 - 100 percents)
     void SlotProgressPrc(int t_value);
     // Slot to change aggregation operator type
-    void SlotAggrOpTypeChanged(AggregOperator::Type::Type t_type);
+    void SlotAggrOpTypeChanged(AggregOperator::Type t_type);
     // Slot to change aggregation operator power
     void SlotAggrOpPowerChanged(double t_power);
     // Slot to change function type of aggregation operator
-    void SlotAggrOpFuncChanged(AggregOperator::Func::Type t_func);
+    void SlotAggrOpFuncChanged(AggregOperator::Func t_func);
     // Slot to change noise type
     void SlotRecieveNoiseType(Noise::Type t_type);
     // Slot to change noise amplitude

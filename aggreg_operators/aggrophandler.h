@@ -2,50 +2,43 @@
 #define AGGROPHANDLER_H
 
 #include <QObject>
-#include <QList>
-#include <QMap>
-#include <QDebug>
-#include "defaultaggregoperator.h"
-#include "maxaggregoperator.h"
-#include "minaggregoperator.h"
-#include "meanaggregoperator.h"
-#include "geomeanaggregoperator.h"
-#include "harmmeanaggregoperator.h"
-#include "medaggregoperator.h"
-#include "funcaggregoperator.h"
+#include <QSharedPointer>
+
+#include "aggreg_operators/aggregoperators.h"
+#include "aggreg_operators/defaultaggregoperator.h"
 
 class AggrOpHandler : public QObject
 {
     Q_OBJECT
 
-    // == DATA ==
-private:
-    AggregOperator::Type::Type m_aggrOpType;
-    double m_power;
-    AggregOperator::Func::Type m_aggrOpFunc;
-    DefaultAggregOperator *m_aggrOperator;
-
     // == METHODS ==
 public:
     explicit AggrOpHandler(QObject *parent = 0);
-    ~AggrOpHandler();
-    AggregOperator::Type::Type GetAggrOpType();
+    virtual ~AggrOpHandler() {}
+
+    AggregOperator::Type GetAggrOpType();
     double GetAggrOpPower();
-    AggregOperator::Func::Type GetAggrOpFunc();
-    DefaultAggregOperator* GetAggrOperator();
+    AggregOperator::Func GetAggrOpFunc();
+    QSharedPointer<DefaultAggregOperator> GetAggrOperator();
 
 private:
     void SetNewAggrOp();
 
 signals:
-    void SignalCurrAgOpType(AggregOperator::Type::Type t_type);
-    void SignalFuncType(AggregOperator::Func::Type t_funcTyped);
+    void SignalCurrAgOpType(AggregOperator::Type t_type);
+    void SignalFuncType(AggregOperator::Func t_funcTyped);
 
 public slots:
-    void SlotSetAggrOpType(AggregOperator::Type::Type t_type);
+    void SlotSetAggrOpType(AggregOperator::Type t_type);
     void SlotSetAggrOpPower(double t_power);
-    void SlotSetAggrOpFunc(AggregOperator::Func::Type t_funcType);
+    void SlotSetAggrOpFunc(AggregOperator::Func t_funcType);
 
+    // == DATA ==
+private:
+    double m_power;
+    AggregOperator::Type m_aggrOpType;
+    AggregOperator::Func m_aggrOpFunc;
+    QSharedPointer<DefaultAggregOperator> m_aggrOperator;
 };
 
 #endif // AGGROPHANDLER_H

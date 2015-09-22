@@ -2,7 +2,7 @@
 
 #include "common/common.h"
 
-FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func::Type &t_func)
+FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func& t_func)
 {
     switch(t_func)
     {

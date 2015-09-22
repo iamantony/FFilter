@@ -7,7 +7,7 @@
 #include <QDebug>
 
 #include "defaultaggregoperator.h"
-#include "aggreg_operators/aggreg_operators.h"
+#include "aggreg_operators/aggregoperators.h"
 
 class FuncAggregOperator : public DefaultAggregOperator
 {
@@ -20,7 +20,7 @@ private:
 
     // == METHODS ==
 public:
-    explicit FuncAggregOperator(const AggregOperator::Func::Type &t_func);
+    explicit FuncAggregOperator(const AggregOperator::Func &t_func);
     int GetWorthlyValue(const QList<long double> &t_list);
 
 protected:

@@ -1,5 +1,6 @@
 #include "powerfilter.h"
 
+#include <QImage>
 #include <QColor>
 #include <QDebug>
 
@@ -8,42 +9,34 @@
 PowerFilter::PowerFilter(QObject *parent) :
     QObject(parent)
 {
-    SetDefaults();
 }
 
-PowerFilter::~PowerFilter()
+bool PowerFilter::Init(QSharedPointer<Mask> t_mask,
+                       QSharedPointer<DefaultAggregOperator> t_aggrOp)
 {
-    SetDefaults();
-}
-
-void PowerFilter::SetDefaults()
-{
-    m_aggregOperator = nullptr;
-}
-
-void PowerFilter::Init(QSharedPointer<Mask> t_mask, DefaultAggregOperator *t_aggrOp)
-{
-    if ( (nullptr == t_mask) || (nullptr == t_aggrOp) )
+    if ( t_mask.isNull() || t_aggrOp.isNull() )
     {
-        qDebug() << "PowerFilter::Init(): Error - invalid arguments";
-        return;
+        qDebug() << __FUNCTION__ << "Error - invalid arguments";
+        return false;
     }
 
     m_mask = t_mask;
     m_aggregOperator = t_aggrOp;
+
+    return true;
 }
 
 QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
 {
-    if ( (nullptr == m_mask) || (nullptr == m_aggregOperator) )
+    if ( m_mask.isNull() || m_aggregOperator.isNull() )
     {
-        qDebug() << "PowerFilter::FilterImg(): Error - filter is not initialised";
+        qDebug() << __FUNCTION__ << "Error - filter is not initialised";
         return t_noisyImg;
     }
 
     if ( true == t_noisyImg.isNull() )
     {
-        qDebug() << "PowerFilter::FilterImg(): Error - invalid arguments";
+        qDebug() << __FUNCTION__ << "Error - invalid arguments";
         return t_noisyImg;
     }
 
