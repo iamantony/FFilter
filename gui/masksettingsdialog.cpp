@@ -83,7 +83,7 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
 {
     if ( nullptr == t_item )
     {
-        qDebug() << __func__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Invalid arguments";
         return;
     }
 
@@ -110,7 +110,7 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
         case DEFAULT_LAST:
         default:
         {
-            qDebug() << __func__ << "Invalid cell type";
+            qDebug() << __FUNCTION__ << "Invalid cell type";
         }
     }
 
@@ -141,7 +141,7 @@ QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
         case DEFAULT_LAST:
         default:
         {
-            qDebug() << __func__ << "Invalid cell type";
+            qDebug() << __FUNCTION__ << "Invalid cell type";
         }
     }
 
@@ -157,7 +157,7 @@ void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
     QTableWidgetItem *item = ui->maskTable->item(t_row, t_col);
     if ( nullptr == item )
     {
-        qDebug() << __func__ << "Null item";
+        qDebug() << __FUNCTION__ << "Null item";
         return;
     }
 

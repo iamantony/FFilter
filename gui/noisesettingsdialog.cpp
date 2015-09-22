@@ -72,7 +72,7 @@ void NoiseSettingsDialog::on_noiseTypeCB_currentIndexChanged(int index)
 {
     if ( index < 0 || Noise::DEFAULT_LAST < index )
     {
-        qDebug() << __func__ << "Error - invalid index value";
+        qDebug() << __FUNCTION__ << "Error - invalid index value";
         return;
     }
 

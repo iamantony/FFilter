@@ -22,7 +22,7 @@ QImage ImgService::ColorImgToGray(const QImage &t_img)
 {
     if ( t_img.isNull() )
     {
-        qDebug() << __func__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Invalid arguments";
         return QImage();
     }
 
@@ -75,7 +75,7 @@ double ImgService::CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondIm
     double sd = 0.0;
     if ( t_firstImg.isNull() || t_firstImg.size() != t_secondImg.size() )
     {
-        qDebug() << __func__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Invalid arguments";
         return sd;
     }
 
