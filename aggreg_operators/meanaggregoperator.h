@@ -12,9 +12,6 @@ public:
 
     virtual int GetWorthyValue(const QList<double>& t_list);
 
-protected:
-    void ResetValues();
-
     // == DATA ==
 private:
     double m_power;
