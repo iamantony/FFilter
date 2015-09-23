@@ -6,8 +6,6 @@
 
 #include <QDebug>
 
-const double ZERO = 0.0;
-
 MeanAggregOperator::MeanAggregOperator(const double &t_power)
 {
     m_power = t_power;
@@ -17,6 +15,11 @@ MeanAggregOperator::MeanAggregOperator(const double &t_power)
     }
 }
 
+// Apply aggregation operator to list of values
+// @input:
+// - t_list - list of values
+// @output:
+// - int - result of operation
 int MeanAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
@@ -30,7 +33,7 @@ int MeanAggregOperator::Calc(const QList<double>& t_list)
     };
 
     double summ = std::accumulate(
-                 t_list.constBegin(), t_list.constEnd(), ZERO, accPower);
+                 t_list.constBegin(), t_list.constEnd(), 0.0, accPower);
 
     summ /= (double)t_list.size();
     summ = pow( summ, (1/m_power) );

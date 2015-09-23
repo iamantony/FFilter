@@ -2,6 +2,11 @@
 
 #include <QDebug>
 
+// Apply aggregation operator to list of values
+// @input:
+// - t_list - list of values
+// @output:
+// - int - result of operation
 int MedAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )

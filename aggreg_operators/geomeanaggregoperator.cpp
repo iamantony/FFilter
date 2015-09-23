@@ -4,8 +4,11 @@
 #include <limits>
 #include <QDebug>
 
-const double ZERO = 0.0;
-
+// Apply aggregation operator to list of values
+// @input:
+// - t_list - list of values
+// @output:
+// - int - result of operation
 int GeoMeanAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
@@ -15,7 +18,7 @@ int GeoMeanAggregOperator::Calc(const QList<double>& t_list)
     }
 
     // Calc product of all non-zero elements in list
-    double product = ZERO;
+    double product = 0.0;
     for (int i = 0; i < t_list.size(); ++i)
     {
         if ( std::numeric_limits<double>::epsilon() < std::abs(t_list.at(i)) )

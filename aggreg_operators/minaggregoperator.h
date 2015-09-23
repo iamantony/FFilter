@@ -10,6 +10,7 @@ public:
     explicit MinAggregOperator() {}
     virtual ~MinAggregOperator() {}
 
+    // Apply aggregation operator to list of values
     virtual int Calc(const QList<double>& t_list);
 };
 

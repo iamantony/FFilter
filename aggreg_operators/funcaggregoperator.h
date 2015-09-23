@@ -10,6 +10,8 @@ class FuncAggregOperator : public DefaultAggregOperator
 public:
     explicit FuncAggregOperator(const AggregOperator::Func &t_func);
     virtual ~FuncAggregOperator() {}
+
+    // Apply aggregation operator to list of values
     virtual int Calc(const QList<double>& t_list);
 
     // == DATA ==

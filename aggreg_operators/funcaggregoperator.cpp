@@ -25,6 +25,11 @@ FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func& t_func)
     }
 }
 
+// Apply aggregation operator to list of values
+// @input:
+// - t_list - list of values
+// @output:
+// - int - result of operation
 int FuncAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
