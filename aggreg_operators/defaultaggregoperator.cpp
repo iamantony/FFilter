@@ -1,8 +1,10 @@
 #include "defaultaggregoperator.h"
 
-DefaultAggregOperator::DefaultAggregOperator(QObject *parent) :
-    QObject(parent)
+#include <math.h>
+
+void DefaultAggregOperator::ResetValues()
 {
+    m_result = 0;
 }
 
 void DefaultAggregOperator::CheckResult()
@@ -17,7 +19,7 @@ void DefaultAggregOperator::CheckResult()
     }
 }
 
-void DefaultAggregOperator::FormResult(const long double &t_result)
+void DefaultAggregOperator::FormResult(const long double& t_result)
 {
     m_result = (int)floor(t_result + 0.5);
 }
