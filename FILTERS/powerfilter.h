@@ -29,6 +29,12 @@ signals:
     void SignalProgressPrc(const int& t_progress);
     void SignalFiltrationFinished();
 
+private:
+    // Create list of pixels that located in mask
+    QList<double> FormMaskPixels(const QImage& t_img,
+                                 const unsigned int& t_width,
+                                 const unsigned int& t_height);
+
     // == DATA ==
 private:
     QSharedPointer<Mask> m_mask;

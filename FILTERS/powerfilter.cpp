@@ -64,7 +64,7 @@ QImage PowerFilter::FilterImg(const QImage &t_img)
         for (unsigned int h = 0; h < imgH; ++h)
         {
             // Get list of pixels in mask and calc filtered value of this pixel
-            QList<double> pixelsInMask = m_mask->FormPixelMask(t_img, w, h);
+            QList<double> pixelsInMask = FormMaskPixels(t_img, w, h);
             int resultPixel = m_aggregOperator->Calc(pixelsInMask);
 
             QRgb newPixel = qRgb(resultPixel, resultPixel, resultPixel);
@@ -83,4 +83,18 @@ QImage PowerFilter::FilterImg(const QImage &t_img)
     emit SignalFiltrationFinished();
 
     return filteredImg;
+}
+
+// Create list of pixels that located in mask
+// @input:
+// - t_img - image
+// - t_width - horizontal position of pixel
+// - t_height - vertical position of pixel
+// @outpu:
+// - QList<double> - list of mask pixels
+QList<double> PowerFilter::FormMaskPixels(const QImage& /*t_img*/,
+                                          const unsigned int& /*t_width*/,
+                                          const unsigned int& /*t_height*/)
+{
+    return QList<double>();
 }
