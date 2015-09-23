@@ -66,10 +66,7 @@ void MaskSettingsDialog::SetUpTable()
 
             SetItemView(item);
 
-            double weight =
-                    m_mask->GetPixelWeight(static_cast<unsigned int>(row),
-                                           static_cast<unsigned int>(col));
-
+            double weight = m_mask->GetPixelWeight(row, col);
             QString weightStr = QString::number(weight);
             item->setText( weightStr );
         }
@@ -87,11 +84,8 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
         return;
     }
 
-    unsigned int row = static_cast<unsigned int>(t_item->row());
-    unsigned int col = static_cast<unsigned int>(t_item->column());
-
     CellType type = DISABLED;
-    if ( m_mask->IsPixelEnabled(row, col) )
+    if ( m_mask->IsPixelEnabled(t_item->row(), t_item->column()) )
     {
         type = ENABLED;
     }
@@ -165,19 +159,14 @@ void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
     double weight = item->text().toDouble(&ok);
     if ( false == ok )
     {
-        double currentWeight =
-                m_mask->GetPixelWeight(static_cast<unsigned int>(t_row),
-                                       static_cast<unsigned int>(t_col));
-
+        double currentWeight = m_mask->GetPixelWeight(t_row, t_col);
         QString cellStr = QString::number(currentWeight);
         item->setText(cellStr);
 
         return;
     }
 
-    m_mask->SetPixelWeight(static_cast<unsigned int>(t_row),
-                           static_cast<unsigned int>(t_col),
-                           weight);
+    m_mask->SetPixelWeight(t_row, t_col, weight);
 }
 
 // Slot that will show menu
@@ -191,8 +180,8 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
         return;
     }
 
-    unsigned int row = static_cast<unsigned int>(item->row());
-    unsigned int col = static_cast<unsigned int>(item->column());
+    int row = item->row();
+    int col = item->column();
 
     QMenu menu;
     QAction *enabledAction = menu.addAction(tr("Enabled"));
@@ -200,7 +189,7 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
     enabledAction->setChecked( m_mask->IsPixelEnabled(row, col) );
 
     if ( enabledAction ==
-         menu.exec(ui->maskTable->viewport()->mapToGlobal(t_point)) )
+            menu.exec(ui->maskTable->viewport()->mapToGlobal(t_point)) )
     {
         m_mask->SetPixelActiveStatus(row, col, enabledAction->isChecked());
         SetItemView(item);
@@ -218,9 +207,7 @@ void MaskSettingsDialog::on_rowsLE_textEdited()
         return;
     }
 
-    m_mask->SetMaskSize(static_cast<unsigned int>(rowsNum),
-                        m_mask->GetColsNum());
-
+    m_mask->SetMaskSize(rowsNum, m_mask->GetColsNum());
     SetUpTable();
 }
 
@@ -235,8 +222,6 @@ void MaskSettingsDialog::on_colsLE_textEdited()
         return;
     }
 
-    m_mask->SetMaskSize(m_mask->GetRowsNum(),
-                        static_cast<unsigned int>(colsNum));
-
+    m_mask->SetMaskSize(m_mask->GetRowsNum(), colsNum);
     SetUpTable();
 }
