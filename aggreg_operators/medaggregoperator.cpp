@@ -1,52 +1,38 @@
 #include "medaggregoperator.h"
 
-#include "common/common.h"
-
-MedAggregOperator::MedAggregOperator()
-{
-}
+#include <QDebug>
 
 int MedAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "MedAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
     }
 
     ResetValues();
 
-    m_listOfValues = t_list;
-    qSort(m_listOfValues);
+    QList<double> values = t_list;
+    qSort(values);
 
-    m_numOfValues = m_listOfValues.size();
-    m_mean = (m_numOfValues / 2);
-    m_modulo = m_numOfValues % 2;
-    if ( 0 == m_modulo )
+    int meanInd = values.size() / 2;
+    int moduloInd = values.size() % 2;
+    double summ = 0.0;
+    if ( 0 == moduloInd )
     {
-        // m_numOfValues is an even number
-        m_summ += m_listOfValues.at(m_mean - 1);
-        m_summ += m_listOfValues.at(m_mean);
-        m_summ /= 2;
+        // there are an even number of values
+        summ += values.at(meanInd - 1);
+        summ += values.at(meanInd);
+        summ /= 2;
     }
     else
     {
-        // m_numOfValues is an odd number
-        m_summ = m_listOfValues.at(m_mean);
+        // there are an odd number of values
+        summ = values.at(meanInd);
     }
 
-    FormResult(m_summ);
+    FormResult(summ);
     CheckResult();
 
     return m_result;
-}
-
-void MedAggregOperator::ResetValues()
-{
-    m_listOfValues.clear();
-    m_numOfValues = 0;
-    m_mean = 0;
-    m_modulo = 0;
-    m_summ = 0;
-    m_result = 0;
 }
