@@ -18,12 +18,15 @@ public:
     explicit PowerFilter(QObject *parent = 0);
     virtual ~PowerFilter() {}
 
+    // Initialize
     bool Init(QSharedPointer<Mask> t_mask,
               QSharedPointer<DefaultAggregOperator> t_aggrOp);
-    QImage FilterImg(const QImage &t_noisyImg);
+
+    // Perform image filtration
+    QImage FilterImg(const QImage &t_img);
 
 signals:
-    void SignalProgressPrc(int t_progress);
+    void SignalProgressPrc(const int& t_progress);
     void SignalFiltrationFinished();
 
     // == DATA ==

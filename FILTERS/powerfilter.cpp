@@ -9,6 +9,12 @@ PowerFilter::PowerFilter(QObject *parent) :
 {
 }
 
+// Initialize
+// @input:
+// - t_mask - valid pointer to Mask object
+// - t_aggrOp - valid pointer to DefaultAggregOperator object
+// @output:
+// - bool - True if initialization was successful, False otherwise
 bool PowerFilter::Init(QSharedPointer<Mask> t_mask,
                        QSharedPointer<DefaultAggregOperator> t_aggrOp)
 {
@@ -24,50 +30,49 @@ bool PowerFilter::Init(QSharedPointer<Mask> t_mask,
     return true;
 }
 
-QImage PowerFilter::FilterImg(const QImage &t_noisyImg)
+// Perform image filtration
+// @input:
+// - t_img - valid image that should be filtered from noise
+// @outpu:
+// - QImage - result filtered image. Function will return empty image if
+// there was an error during filtration process
+QImage PowerFilter::FilterImg(const QImage &t_img)
 {
     if ( m_mask.isNull() || m_aggregOperator.isNull() )
     {
         qDebug() << __FUNCTION__ << "Error - filter is not initialised";
-        return t_noisyImg;
+        return QImage();
     }
 
-    if ( true == t_noisyImg.isNull() )
+    if ( t_img.isNull() )
     {
         qDebug() << __FUNCTION__ << "Error - invalid arguments";
-        return t_noisyImg;
+        return QImage();
     }
 
-    QImage filteredImg = t_noisyImg;
-    unsigned int imgW = (unsigned int)t_noisyImg.width();
-    unsigned int imgH = (unsigned int)t_noisyImg.height();
+    QImage filteredImg(t_img);
+    unsigned int imgW = (unsigned int)t_img.width();
+    unsigned int imgH = (unsigned int)t_img.height();
 
-//    QList<long double> pixelsInMask;
-//    int resultLum = 0;
-//    QRgb newPixel;
-
-    const int onePercent = imgW/100;
-    int progressPrc = 0;
-    int counter = 0;
+    const unsigned int onePrc = imgW / 100;
+    unsigned int progressPrc = 0;
+    unsigned int counter = 0;
 
     // For each pixel in image
-    for (unsigned int w = 0; w < imgW; w++)
+    for (unsigned int w = 0; w < imgW; ++w)
     {
-        for (unsigned int h = 0; h < imgH; h++)
+        for (unsigned int h = 0; h < imgH; ++h)
         {
-//            // Get list of pixels in mask
-//            pixelsInMask.clear();
-//            pixelsInMask = m_mask->FormPixelMask(t_noisyImg, w, h);
-//            resultLum = m_aggregOperator->GetWorthlyValue(pixelsInMask);
-//            if ( ERROR != resultLum )
-//            {
-//                newPixel = qRgb(resultLum, resultLum, resultLum);
-//                filteredImg.setPixel(w, h, newPixel);
-//            }
+            // Get list of pixels in mask and calc filtered value of this pixel
+            QList<double> pixelsInMask = m_mask->FormPixelMask(t_img, w, h);
+            int resultPixel = m_aggregOperator->Calc(pixelsInMask);
+
+            QRgb newPixel = qRgb(resultPixel, resultPixel, resultPixel);
+            filteredImg.setPixel(w, h, newPixel);
         }
 
         ++counter;
-        if ( counter == onePercent )
+        if ( counter == onePrc )
         {
             counter = 0;
             ++progressPrc;
