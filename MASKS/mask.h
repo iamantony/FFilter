@@ -51,7 +51,7 @@ private:
 
     // == DATA ==
 private:
-    QPoint centralPixel;
+    QPoint m_centralPixel;
     QVector< QVector<MaskPixel> > m_maskPixels;
 };
 

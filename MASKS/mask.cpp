@@ -65,6 +65,12 @@ void Mask::ResizeMask(const int& t_rows, const int& t_cols)
     {
         SetPixelActiveStatus(0, 0, true);
     }
+
+    int centralPixRow = std::min(m_maskPixels.size() - 1, m_centralPixel.y());
+    int centralPixCol = std::min(m_maskPixels.first().size() - 1,
+                                 m_centralPixel.x());
+
+    SetCentralPixel(centralPixRow, centralPixCol);
 }
 
 // Get number of rows in mask
@@ -165,8 +171,8 @@ void Mask::SetCentralPixel(const int& t_row, const int& t_col)
         return;
     }
 
-    centralPixel.setY(t_row);
-    centralPixel.setX(t_col);
+    m_centralPixel.setY(t_row);
+    m_centralPixel.setX(t_col);
 }
 
 // Check if pixel is central
@@ -177,5 +183,5 @@ void Mask::SetCentralPixel(const int& t_row, const int& t_col)
 // - bool - True if pixel is central, False otherwise
 bool Mask::IsPixelCentral(const int& t_row, const int& t_col) const
 {
-    return centralPixel.x() == t_col && centralPixel.y() == t_row;
+    return m_centralPixel.x() == t_col && m_centralPixel.y() == t_row;
 }
