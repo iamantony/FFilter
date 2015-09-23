@@ -14,8 +14,6 @@ int GeoMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-
     // Calc product of all non-zero elements in list
     double product = ZERO;
     for (int i = 0; i < t_list.size(); ++i)
@@ -40,8 +38,5 @@ int GeoMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
         product = std::pow(product, power);
     }
 
-    FormResult(product);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(product);
 }

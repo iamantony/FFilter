@@ -25,8 +25,6 @@ int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-
     auto accPower = [&m_power](const double& a, const double& b) {
         return a + std::pow(b, m_power);
     };
@@ -37,8 +35,5 @@ int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
     summ /= (double)t_list.size();
     summ = pow( summ, (1/m_power) );
 
-    FormResult(summ);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(summ);
 }

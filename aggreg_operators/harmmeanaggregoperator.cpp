@@ -14,8 +14,6 @@ int HarmMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-
     double summ = ZERO;
     for (int i = 0; i < t_list.size(); ++i)
     {
@@ -28,8 +26,5 @@ int HarmMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
     summ *= 1.0 / (double)t_list.size();
     summ = 1.0 / summ;
 
-    FormResult(summ);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(summ);
 }

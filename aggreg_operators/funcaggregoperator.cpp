@@ -33,8 +33,6 @@ int FuncAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-
     double summ = 0.0;
     for (int i = 0; i < t_list.size(); ++i)
     {
@@ -44,8 +42,5 @@ int FuncAggregOperator::GetWorthyValue(const QList<double>& t_list)
     summ *= 1.0 / t_list.size();
     summ = m_inverseFunc(summ);
 
-    FormResult(summ);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(summ);
 }

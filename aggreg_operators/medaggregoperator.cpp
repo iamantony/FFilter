@@ -10,8 +10,6 @@ int MedAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-
     QList<double> values = t_list;
     qSort(values);
 
@@ -31,8 +29,5 @@ int MedAggregOperator::GetWorthyValue(const QList<double>& t_list)
         summ = values.at(meanInd);
     }
 
-    FormResult(summ);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(summ);
 }

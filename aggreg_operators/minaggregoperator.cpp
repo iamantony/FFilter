@@ -20,9 +20,5 @@ int MinAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    ResetValues();
-    FormResult(*iter);
-    CheckResult();
-
-    return m_result;
+    return ResultToInt(*iter);
 }
