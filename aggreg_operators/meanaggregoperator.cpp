@@ -17,7 +17,7 @@ MeanAggregOperator::MeanAggregOperator(const double &t_power)
     }
 }
 
-int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
+int MeanAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
     {

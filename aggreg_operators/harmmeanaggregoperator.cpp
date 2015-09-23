@@ -6,7 +6,7 @@
 
 const double ZERO = 0.0;
 
-int HarmMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
+int HarmMeanAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
     {

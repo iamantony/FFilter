@@ -10,7 +10,7 @@ public:
     explicit MedAggregOperator() {}
     virtual ~MedAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<double>& t_list);
+    virtual int Calc(const QList<double>& t_list);
 };
 
 #endif // MEDAGGREGOPERATOR_H

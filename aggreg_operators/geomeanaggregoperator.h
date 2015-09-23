@@ -10,7 +10,7 @@ public:
     explicit GeoMeanAggregOperator() {}
     virtual ~GeoMeanAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<double>& t_list);
+    virtual int Calc(const QList<double>& t_list);
 };
 
 #endif // GEOMEANAGGREGOPERATOR_H

@@ -10,7 +10,7 @@ class FuncAggregOperator : public DefaultAggregOperator
 public:
     explicit FuncAggregOperator(const AggregOperator::Func &t_func);
     virtual ~FuncAggregOperator() {}
-    virtual int GetWorthyValue(const QList<double>& t_list);
+    virtual int Calc(const QList<double>& t_list);
 
     // == DATA ==
 private:

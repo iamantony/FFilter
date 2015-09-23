@@ -10,7 +10,7 @@ public:
     explicit HarmMeanAggregOperator() {}
     virtual ~HarmMeanAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<double>& t_list);
+    virtual int Calc(const QList<double>& t_list);
 };
 
 #endif // HARMMEANAGGREGOPERATOR_H

@@ -25,7 +25,7 @@ FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func& t_func)
     }
 }
 
-int FuncAggregOperator::GetWorthyValue(const QList<double>& t_list)
+int FuncAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
     {

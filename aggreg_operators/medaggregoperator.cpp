@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-int MedAggregOperator::GetWorthyValue(const QList<double>& t_list)
+int MedAggregOperator::Calc(const QList<double>& t_list)
 {
     if ( t_list.isEmpty() )
     {

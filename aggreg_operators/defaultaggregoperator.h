@@ -10,7 +10,7 @@ public:
     explicit DefaultAggregOperator() {}
     virtual ~DefaultAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<double>& t_list) = 0;
+    virtual int Calc(const QList<double>& t_list) = 0;
 
 protected:
     int ResultToInt(const double& t_result) const;

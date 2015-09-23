@@ -10,7 +10,7 @@ public:
     explicit MeanAggregOperator(const double& t_power);
     virtual ~MeanAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<double>& t_list);
+    virtual int Calc(const QList<double>& t_list);
 
     // == DATA ==
 private:
