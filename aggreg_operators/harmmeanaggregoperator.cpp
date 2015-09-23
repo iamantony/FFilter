@@ -6,7 +6,7 @@ HarmMeanAggregOperator::HarmMeanAggregOperator()
 {
 }
 
-int HarmMeanAggregOperator::GetWorthyValue(const QList<long double> &t_list)
+int HarmMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {

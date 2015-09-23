@@ -10,7 +10,7 @@ public:
     explicit MinAggregOperator() {}
     virtual ~MinAggregOperator() {}
 
-    virtual int GetWorthyValue(const QList<long double>& t_list);
+    virtual int GetWorthyValue(const QList<double>& t_list);
 };
 
 #endif // MINAGGREGOPERATOR_H

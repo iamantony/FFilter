@@ -19,7 +19,7 @@ private:
     // == METHODS ==
 public:
     GeoMeanAggregOperator();
-    int GetWorthyValue(const QList<long double> &t_list);
+    int GetWorthyValue(const QList<double>& t_list);
 
 protected:
     void ResetValues();

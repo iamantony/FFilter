@@ -16,7 +16,7 @@ private:
     // == METHODS ==
 public:
     HarmMeanAggregOperator();
-    int GetWorthyValue(const QList<long double> &t_list);
+    int GetWorthyValue(const QList<double>& t_list);
 
 protected:
     void ResetValues();
