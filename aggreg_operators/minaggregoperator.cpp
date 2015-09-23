@@ -12,7 +12,7 @@ int MinAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return 0;
     }
 
-    QList<long double>::const_iterator iter =
+    QList<double>::const_iterator iter =
             std::min_element(t_list.constBegin(), t_list.constEnd());
     if ( iter == t_list.constEnd() )
     {
