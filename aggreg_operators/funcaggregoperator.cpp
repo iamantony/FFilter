@@ -31,7 +31,7 @@ FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func& t_func)
 
 }
 
-int FuncAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
+int FuncAggregOperator::GetWorthyValue(const QList<long double> &t_list)
 {
     if ( true == t_list.isEmpty() )
     {

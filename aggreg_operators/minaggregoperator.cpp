@@ -6,7 +6,7 @@ MinAggregOperator::MinAggregOperator()
 {
 }
 
-int MinAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
+int MinAggregOperator::GetWorthyValue(const QList<long double> &t_list)
 {
     if ( true == t_list.isEmpty() )
     {

@@ -21,7 +21,7 @@ private:
     // == METHODS ==
 public:
     explicit FuncAggregOperator(const AggregOperator::Func &t_func);
-    int GetWorthlyValue(const QList<long double> &t_list);
+    int GetWorthyValue(const QList<long double> &t_list);
 
 protected:
     void ResetValues();

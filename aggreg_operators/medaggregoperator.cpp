@@ -6,7 +6,7 @@ MedAggregOperator::MedAggregOperator()
 {
 }
 
-int MedAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
+int MedAggregOperator::GetWorthyValue(const QList<long double> &t_list)
 {
     if ( true == t_list.isEmpty() )
     {

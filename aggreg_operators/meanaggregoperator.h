@@ -17,7 +17,7 @@ private:
     // == METHODS ==
 public:
     MeanAggregOperator(const double &t_power);
-    int GetWorthlyValue(const QList<long double> &t_list);
+    int GetWorthyValue(const QList<long double> &t_list);
 
 protected:
     void ResetValues();
