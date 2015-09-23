@@ -1,65 +1,51 @@
 #include "funcaggregoperator.h"
 
-#include "common/common.h"
+#include <cmath>
+
+#include <QDebug>
 
 FuncAggregOperator::FuncAggregOperator(const AggregOperator::Func& t_func)
 {
     switch(t_func)
     {
-        case AggregOperator::Func::EXP:
-        {
-            m_directFunc = &expl;
-            m_inverseFunc = &logl;
-            break;
-        }
-
         case AggregOperator::Func::LOG_NATURAL:
         {
-            m_directFunc = &logl;
-            m_inverseFunc = &expl;
+            m_directFunc = &std::log;
+            m_inverseFunc = &std::exp;
             break;
         }
 
+        case AggregOperator::Func::EXP:
         case AggregOperator::Func::DEFAULT_LAST:
         default:
         {
-            qDebug() << "FuncAggregOperator(): Error - undefined function type. Using defaults";
-            m_directFunc = &expl;
-            m_inverseFunc = &logl;
+            m_directFunc = &std::exp;
+            m_inverseFunc = &std::log;
         }
     }
-
 }
 
 int FuncAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
-    if ( true == t_list.isEmpty() )
+    if ( t_list.isEmpty() )
     {
-        qDebug() << "FuncAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
     }
 
     ResetValues();
 
-    m_numOfValues = t_list.size();
-
-    for (int i = 0; i < m_numOfValues; i++)
+    double summ = 0.0;
+    for (int i = 0; i < t_list.size(); ++i)
     {
-        m_summ += m_directFunc( 1 + t_list.at(i) );
+        summ += m_directFunc( 1 + t_list.at(i) );
     }
 
-    m_summ *= (long double)1/m_numOfValues;
-    m_summ = m_inverseFunc(m_summ);
+    summ *= 1.0 / t_list.size();
+    summ = m_inverseFunc(summ);
 
-    FormResult(m_summ);
+    FormResult(summ);
     CheckResult();
 
     return m_result;
-}
-
-void FuncAggregOperator::ResetValues()
-{
-    m_numOfValues = 0;
-    m_summ = 0;
-    m_result = 0;
 }

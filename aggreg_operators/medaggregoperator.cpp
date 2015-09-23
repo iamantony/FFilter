@@ -4,7 +4,7 @@
 
 int MedAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
-    if ( true == t_list.isEmpty() )
+    if ( t_list.isEmpty() )
     {
         qDebug() << __FUNCTION__ << "Error - list is empty";
         return 0;
