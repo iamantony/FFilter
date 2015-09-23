@@ -1,32 +1,28 @@
 #include "maxaggregoperator.h"
 
-#include "common/common.h"
+#include <algorithm>
 
-MaxAggregOperator::MaxAggregOperator()
-{
-}
+#include <QDebug>
 
-int MaxAggregOperator::GetWorthlyValue(const QList<long double> &t_list)
+int MaxAggregOperator::GetWorthyValue(const QList<long double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "MaxAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - invalid arguments";
+        return 0;
+    }
+
+    QList<long double>::const_iterator iter =
+            std::max_element(t_list.constBegin(), t_list.constEnd());
+    if ( iter == t_list.constEnd() )
+    {
+        qDebug() << __FUNCTION__ << "Failed to find max element";
+        return 0;
     }
 
     ResetValues();
-
-    m_listOfValues = t_list;
-    qSort(m_listOfValues);
-
-    FormResult(m_listOfValues.last());
+    FormResult(*iter);
     CheckResult();
 
     return m_result;
-}
-
-void MaxAggregOperator::ResetValues()
-{
-    m_listOfValues.clear();
-    m_result = 0;
 }
