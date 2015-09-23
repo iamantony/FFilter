@@ -1,16 +1,19 @@
 #include "meanaggregoperator.h"
 
-#include "common/common.h"
+#include <cmath>
+#include <limits>
+#include <numeric>
+
+#include <QDebug>
+
+const double ZERO = 0.0;
 
 MeanAggregOperator::MeanAggregOperator(const double &t_power)
 {
-    if ( 0 == t_power )
+    m_power = t_power;
+    if ( std::abs(ZERO - m_power) <= std::numeric_limits<double>::epsilon() )
     {
-        m_power = 1;
-    }
-    else
-    {
-        m_power = (long double)t_power;
+        m_power = 1.0;
     }
 }
 
@@ -18,23 +21,20 @@ int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "MaxAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
     }
 
     ResetValues();
 
-    m_numOfValues = t_list.size();
+    auto accPower = [&m_power](const double& a, const double& b) {
+        return a + std::pow(b, m_power);
+    };
 
-    for (int i = 0; i < m_numOfValues; i++)
-    {
-        if ( 0 < t_list.at(i) )
-        {
-            m_summ += pow(t_list.at(i), m_power);
-        }
-    }
+    m_summ = std::accumulate(
+                 t_list.constBegin(), t_list.constEnd(), ZERO, accPower);
 
-    m_summ /= (long double)m_numOfValues;
+    m_summ /= (double)t_list.size();
     m_summ = pow( m_summ, (1/m_power) );
 
     FormResult(m_summ);
@@ -45,7 +45,6 @@ int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
 
 void MeanAggregOperator::ResetValues()
 {
-    m_summ = 0;
-    m_numOfValues = 0;
-    m_result = 0;
+    DefaultAggregOperator::ResetValues();
+    m_summ = ZERO;
 }
