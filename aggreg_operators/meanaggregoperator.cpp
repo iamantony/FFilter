@@ -11,7 +11,7 @@ const double ZERO = 0.0;
 MeanAggregOperator::MeanAggregOperator(const double &t_power)
 {
     m_power = t_power;
-    if ( std::abs(ZERO - m_power) <= std::numeric_limits<double>::epsilon() )
+    if ( std::abs(m_power) <= std::numeric_limits<double>::epsilon() )
     {
         m_power = 1.0;
     }
@@ -31,20 +31,14 @@ int MeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
         return a + std::pow(b, m_power);
     };
 
-    m_summ = std::accumulate(
+    double summ = std::accumulate(
                  t_list.constBegin(), t_list.constEnd(), ZERO, accPower);
 
-    m_summ /= (double)t_list.size();
-    m_summ = pow( m_summ, (1/m_power) );
+    summ /= (double)t_list.size();
+    summ = pow( summ, (1/m_power) );
 
-    FormResult(m_summ);
+    FormResult(summ);
     CheckResult();
 
     return m_result;
-}
-
-void MeanAggregOperator::ResetValues()
-{
-    DefaultAggregOperator::ResetValues();
-    m_summ = ZERO;
 }

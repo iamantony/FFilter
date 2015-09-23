@@ -18,7 +18,6 @@ protected:
     // == DATA ==
 private:
     double m_power;
-    double m_summ;
 };
 
 #endif // MEANAGGREGOPERATOR_H
