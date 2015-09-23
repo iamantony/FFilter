@@ -21,9 +21,10 @@ private:
     Ui::MaskSettingsDialog *ui;
     QSharedPointer<Mask> m_mask;
 
-    enum CellType
+    enum class CellType
     {
         ENABLED = 0,
+        CENTRAL,
         DISABLED,
         DEFAULT_LAST
     };

@@ -84,24 +84,25 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
         return;
     }
 
-    CellType type = DISABLED;
+    CellType type = CellType::DISABLED;
     if ( m_mask->IsPixelEnabled(t_item->row(), t_item->column()) )
     {
-        type = ENABLED;
+        type = CellType::ENABLED;
     }
 
     Qt::ItemFlags cellFlags = t_item->flags();
     switch(type)
     {
-        case ENABLED:
+        case CellType::ENABLED:
+        case CellType::CENTRAL:
             cellFlags |= Qt::ItemIsEditable;
             break;
 
-        case DISABLED:
+        case CellType::DISABLED:
             cellFlags &= ~Qt::ItemIsEditable;
             break;
 
-        case DEFAULT_LAST:
+        case CellType::DEFAULT_LAST:
         default:
         {
             qDebug() << __FUNCTION__ << "Invalid cell type";
@@ -125,14 +126,18 @@ QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
 
     switch(t_type)
     {
-        case ENABLED:
+        case CellType::ENABLED:
             brush.setColor(Qt::white);
             break;
 
-        case DISABLED:
+        case CellType::CENTRAL:
+            brush.setColor(Qt::red);
             break;
 
-        case DEFAULT_LAST:
+        case CellType::DISABLED:
+            break;
+
+        case CellType::DEFAULT_LAST:
         default:
         {
             qDebug() << __FUNCTION__ << "Invalid cell type";
