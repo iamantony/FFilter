@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-Mask::Mask(const unsigned int t_rows, const unsigned int t_cols)
+Mask::Mask(const int t_rows, const int t_cols)
 {
     SetMaskSize(t_rows, t_cols);
 }
@@ -21,23 +21,17 @@ bool Mask::IsEmpty() const
 // - t_col - column of pixel
 // @output:
 // - bool - True if pixel exist, False otherwise
-bool Mask::IsPixelExist(const unsigned int &t_row,
-                        const unsigned int &t_col) const
+bool Mask::IsPixelExist(const int& t_row, const int& t_col) const
 {
-    if ( t_row < static_cast<unsigned int>(m_maskPixels.size()) &&
-         t_col < static_cast<unsigned int>(m_maskPixels.first().size()) )
-    {
-        return true;
-    }
-
-    return false;
+    return ( t_row < m_maskPixels.size() &&
+             t_col < m_maskPixels.first().size() );
 }
 
 // Set size of the mask
 // @input:
 // - t_rows - new number of rows
 // - t_cols - new number of columns
-void Mask::SetMaskSize(const unsigned int &t_rows, const unsigned int &t_cols)
+void Mask::SetMaskSize(const int& t_rows, const int& t_cols)
 {
     ResizeMask(t_rows, t_cols);
 }
@@ -46,22 +40,21 @@ void Mask::SetMaskSize(const unsigned int &t_rows, const unsigned int &t_cols)
 // @input:
 // - t_rows - new number of rows
 // - t_cols - new number of columns
-void Mask::ResizeMask(const unsigned int &t_rows, const unsigned int &t_cols)
+void Mask::ResizeMask(const int& t_rows, const int& t_cols)
 {
-    if ( 0 == t_rows || 0 == t_cols )
+    if ( t_rows <= 0 || t_cols <= 0 )
     {
-        qDebug() << __FUNCTION__ << "Invalid mask size";
+        qDebug() << __FUNCTION__ << "Error - Invalid mask size";
         return;
     }
 
-    if ( t_rows == static_cast<unsigned int>(m_maskPixels.size()) &&
-         t_cols == static_cast<unsigned int>(m_maskPixels.first().size()) )
+    if ( t_rows == m_maskPixels.size() &&
+         t_cols == m_maskPixels.first().size() )
     {
         return;
     }
 
     bool maskWasEmpty = m_maskPixels.isEmpty();
-
     m_maskPixels.resize(t_rows);
     for ( int i = 0; i < m_maskPixels.size(); ++i )
     {
@@ -77,7 +70,7 @@ void Mask::ResizeMask(const unsigned int &t_rows, const unsigned int &t_cols)
 // Get number of rows in mask
 // @output:
 // - unsigned int - number of rows in mask
-unsigned int Mask::GetRowsNum() const
+int Mask::GetRowsNum() const
 {
     return m_maskPixels.size();
 }
@@ -85,7 +78,7 @@ unsigned int Mask::GetRowsNum() const
 // Get number of columns in mask
 // @output:
 // - unsigned int - number of columns in mask
-unsigned int Mask::GetColsNum() const
+int Mask::GetColsNum() const
 {
     return m_maskPixels.first().size();
 }
@@ -96,8 +89,7 @@ unsigned int Mask::GetColsNum() const
 // - t_col - column of pixel
 // @output:
 // - bool - True if pixel enabled, False otherwise
-bool Mask::IsPixelEnabled(const unsigned int &t_row,
-                          const unsigned int &t_col) const
+bool Mask::IsPixelEnabled(const int& t_row, const int& t_col) const
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
@@ -113,9 +105,9 @@ bool Mask::IsPixelEnabled(const unsigned int &t_row,
 // - t_row - row of pixel
 // - t_col - column of pixel
 // - t_isEnabled - pixel status
-void Mask::SetPixelActiveStatus(const unsigned int &t_row,
-                                const unsigned int &t_col,
-                                const bool &t_isEnabled)
+void Mask::SetPixelActiveStatus(const int& t_row,
+                                const int& t_col,
+                                const bool& t_isEnabled)
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
@@ -132,8 +124,7 @@ void Mask::SetPixelActiveStatus(const unsigned int &t_row,
 // - t_col - column of pixel
 // @output:
 // - double - wight of pixel
-double Mask::GetPixelWeight(const unsigned int &t_row,
-                             const unsigned int &t_col) const
+double Mask::GetPixelWeight(const int& t_row, const int& t_col) const
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
@@ -141,7 +132,7 @@ double Mask::GetPixelWeight(const unsigned int &t_row,
         return 0.0;
     }
 
-    return m_maskPixels.at(t_row).at(t_col).GetWieght();
+    return m_maskPixels[t_row][t_col].GetWieght();
 }
 
 // Set weight of pixel
@@ -149,9 +140,9 @@ double Mask::GetPixelWeight(const unsigned int &t_row,
 // - t_row - row of pixel
 // - t_col - column of pixel
 // - t_weight - new weight of pixel
-void Mask::SetPixelWeight(const unsigned int &t_row,
-                          const unsigned int &t_col,
-                          const double &t_weight)
+void Mask::SetPixelWeight(const int& t_row,
+                          const int& t_col,
+                          const double& t_weight)
 {
     if ( false == IsPixelExist(t_row, t_col) )
     {
@@ -160,4 +151,31 @@ void Mask::SetPixelWeight(const unsigned int &t_row,
     }
 
     m_maskPixels[t_row][t_col].SetWieght(t_weight);
+}
+
+// Set coordinates of central pixel
+// @input:
+// - t_row - row of pixel
+// - t_col - column of pixel
+void Mask::SetCentralPixel(const int& t_row, const int& t_col)
+{
+    if ( false == IsPixelExist(t_row, t_col) )
+    {
+        qDebug() << __FUNCTION__ << "Invalid pixel index";
+        return;
+    }
+
+    centralPixel.setY(t_row);
+    centralPixel.setX(t_col);
+}
+
+// Check if pixel is central
+// @input:
+// - t_row - row of pixel
+// - t_col - column of pixel
+// @output:
+// - bool - True if pixel is central, False otherwise
+bool Mask::IsPixelCentral(const int& t_row, const int& t_col) const
+{
+    return centralPixel.x() == t_col && centralPixel.y() == t_row;
 }
