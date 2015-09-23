@@ -1,67 +1,47 @@
 #include "geomeanaggregoperator.h"
 
-#include "common/common.h"
+#include <cmath>
+#include <limits>
+#include <QDebug>
 
-GeoMeanAggregOperator::GeoMeanAggregOperator()
-{
-}
+const double ZERO = 0.0;
 
 int GeoMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "GeoMeanAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
     }
 
     ResetValues();
 
-    m_numOfValues = t_list.size();
-
-    // Lets find in list first non-null value
-    for (int val = 0; val < m_numOfValues; val++)
+    // Calc product of all non-zero elements in list
+    double product = ZERO;
+    for (int i = 0; i < t_list.size(); ++i)
     {
-        if ( 0 < t_list.at(val) )
+        if ( std::numeric_limits<double>::epsilon() < std::abs(t_list.at(i)) )
         {
-            m_product = t_list.at(val);
-            m_startValue = val + 1;
-            break;
-        }
-    }
-
-    if ( 0 == m_product )
-    {
-        // If all values in list are 0, our answer will be 0 too.
-        m_rootedProduct = 0;
-    }
-    else
-    {
-        // If in list we've found non-zero value, lets calculate product of all non-zero values in list
-        for (int val = m_startValue; val < m_numOfValues; val++)
-        {
-            if ( 0 < t_list.at(val) )
+            if (std::numeric_limits<double>::epsilon() < std::abs(product))
             {
-                m_product *= t_list.at(val);
+                product *= t_list.at(i);
+            }
+            else
+            {
+                product = t_list.at(i);
             }
         }
-
-        // Get root of product
-        m_power = 1/(long double)m_numOfValues;
-        m_rootedProduct = pow(m_product, m_power);
     }
 
-    FormResult(m_rootedProduct);
+    // If product is not equal to zero, calc root of it
+    if (std::numeric_limits<double>::epsilon() < std::abs(product))
+    {
+        double power = 1.0 / (double)t_list.size();
+        product = std::pow(product, power);
+    }
+
+    FormResult(product);
     CheckResult();
 
     return m_result;
-}
-
-void GeoMeanAggregOperator::ResetValues()
-{
-    m_product = 0;
-    m_numOfValues = 0;
-    m_startValue = 0;
-    m_rootedProduct = 0;
-    m_power = 1;
-    m_result = 0;
 }
