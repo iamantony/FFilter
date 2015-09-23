@@ -5,8 +5,6 @@
 #include <QIntValidator>
 #include <QDebug>
 
-#include "common/common.h"
-
 NoiseSettingsDialog::NoiseSettingsDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NoiseSettingsDialog)

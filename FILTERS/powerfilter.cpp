@@ -4,8 +4,6 @@
 #include <QColor>
 #include <QDebug>
 
-#include "common/common.h"
-
 PowerFilter::PowerFilter(QObject *parent) :
     QObject(parent)
 {
