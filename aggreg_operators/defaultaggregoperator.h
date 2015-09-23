@@ -15,7 +15,7 @@ public:
 protected:
     virtual void ResetValues();
     void CheckResult();
-    void FormResult(const long double& t_result);
+    void FormResult(const double& t_result);
 
     // == DATA ==
 protected:

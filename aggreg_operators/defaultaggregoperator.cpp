@@ -1,6 +1,6 @@
 #include "defaultaggregoperator.h"
 
-#include <math.h>
+#include <cmath>
 
 void DefaultAggregOperator::ResetValues()
 {
@@ -19,7 +19,7 @@ void DefaultAggregOperator::CheckResult()
     }
 }
 
-void DefaultAggregOperator::FormResult(const long double& t_result)
+void DefaultAggregOperator::FormResult(const double& t_result)
 {
-    m_result = (int)floor(t_result + 0.5);
+    m_result = (int)std::floor(t_result + 0.5);
 }
