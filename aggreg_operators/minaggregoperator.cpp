@@ -1,32 +1,28 @@
 #include "minaggregoperator.h"
 
-#include "common/common.h"
+#include <algorithm>
 
-MinAggregOperator::MinAggregOperator()
-{
-}
+#include <QDebug>
 
 int MinAggregOperator::GetWorthyValue(const QList<long double> &t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "MinAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
+    }
+
+    QList<long double>::const_iterator iter =
+            std::min_element(t_list.constBegin(), t_list.constEnd());
+    if ( iter == t_list.constEnd() )
+    {
+        qDebug() << __FUNCTION__ << "Failed to find min element";
+        return 0;
     }
 
     ResetValues();
-
-    m_listOfValues = t_list;
-    qSort(m_listOfValues);
-
-    FormResult(m_listOfValues.first());
+    FormResult(*iter);
     CheckResult();
 
     return m_result;
-}
-
-void MinAggregOperator::ResetValues()
-{
-    m_listOfValues.clear();
-    m_result = 0;
 }
