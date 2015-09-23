@@ -1,40 +1,35 @@
 #include "harmmeanaggregoperator.h"
 
-#include "common/common.h"
+#include <limits>
 
-HarmMeanAggregOperator::HarmMeanAggregOperator()
-{
-}
+#include <QDebug>
+
+const double ZERO = 0.0;
 
 int HarmMeanAggregOperator::GetWorthyValue(const QList<double>& t_list)
 {
     if ( true == t_list.isEmpty() )
     {
-        qDebug() << "HarmMeanAggregOperator::GetWorthlyValue(): Error - list is empty!";
-        return ERROR;
+        qDebug() << __FUNCTION__ << "Error - list is empty";
+        return 0;
     }
 
     ResetValues();
 
-    m_numOfValues = t_list.size();
-
-    for (int i = 0; i < m_numOfValues; i++)
+    double summ = ZERO;
+    for (int i = 0; i < t_list.size(); ++i)
     {
-        m_summ += 1/t_list.at(i);
+        if ( std::numeric_limits<double>::epsilon() < std::abs(t_list.at(i)) )
+        {
+            summ += 1 / t_list.at(i);
+        }
     }
 
-    m_summ *= (long double)1/m_numOfValues;
-    m_summ = 1/m_summ;
+    summ *= 1.0 / (double)t_list.size();
+    summ = 1.0 / summ;
 
-    FormResult(m_summ);
+    FormResult(summ);
     CheckResult();
 
     return m_result;
-}
-
-void HarmMeanAggregOperator::ResetValues()
-{
-    m_summ = 0;
-    m_numOfValues = 0;
-    m_result = 0;;
 }
