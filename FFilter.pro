@@ -56,7 +56,6 @@ HEADERS  += \
     aggreg_operators/harmmeanaggregoperator.h \
     aggreg_operators/medaggregoperator.h \
     aggreg_operators/funcaggregoperator.h \
-    common/common.h \
     noise/noisegenerator.h \
     noise/absrandnoise.h \
     noise/randnoise.h \
