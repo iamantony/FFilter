@@ -14,12 +14,12 @@ bool MaskPixel::IsEnabled() const
     return m_isEnabled;
 }
 
-void MaskPixel::SetWieght(const double &t_weight)
+void MaskPixel::SetWeight(const double &t_weight)
 {
     m_weight = t_weight;
 }
 
-double MaskPixel::GetWieght() const
+double MaskPixel::GetWeight() const
 {
     return m_weight;
 }

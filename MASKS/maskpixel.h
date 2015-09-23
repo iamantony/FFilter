@@ -9,8 +9,8 @@ public:
 
     void SetEnabled(const bool &t_isEnabled);
     bool IsEnabled() const;
-    void SetWieght(const double &t_weight);
-    double GetWieght() const;
+    void SetWeight(const double &t_weight);
+    double GetWeight() const;
 
     // == DATA
 private:

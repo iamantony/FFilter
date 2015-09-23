@@ -138,7 +138,7 @@ double Mask::GetPixelWeight(const int& t_row, const int& t_col) const
         return 0.0;
     }
 
-    return m_maskPixels[t_row][t_col].GetWieght();
+    return m_maskPixels[t_row][t_col].GetWeight();
 }
 
 // Set weight of pixel
@@ -156,7 +156,7 @@ void Mask::SetPixelWeight(const int& t_row,
         return;
     }
 
-    m_maskPixels[t_row][t_col].SetWieght(t_weight);
+    m_maskPixels[t_row][t_col].SetWeight(t_weight);
 }
 
 // Set coordinates of central pixel
@@ -173,6 +173,7 @@ void Mask::SetCentralPixel(const int& t_row, const int& t_col)
 
     m_centralPixel.setY(t_row);
     m_centralPixel.setX(t_col);
+    SetPixelActiveStatus(t_row, t_col, true);
 }
 
 // Check if pixel is central
