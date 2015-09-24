@@ -7,7 +7,7 @@
 ImgHandler::ImgHandler(QObject *parent) :
     QObject(parent), m_mask(new Mask())
 {
-    m_imgMode = Image::GRAYSCALE;
+    m_imgMode = Image::Mode::GRAYSCALE;
 }
 
 // Set original image
@@ -23,7 +23,7 @@ bool ImgHandler::SetOriginalImg(const QImage &t_img)
         return false;
     }
 
-    if ( Image::GRAYSCALE == m_imgMode && false == t_img.isGrayscale() )
+    if ( Image::Mode::GRAYSCALE == m_imgMode && false == t_img.isGrayscale() )
     {
         ImgService imgService;
         QImage grayImg = imgService.ColorImgToGray(t_img);

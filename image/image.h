@@ -3,7 +3,7 @@
 
 namespace Image
 {
-    enum Mode
+    enum class Mode
     {
         GRAYSCALE = 0,
         COLOR
