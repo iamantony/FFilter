@@ -36,6 +36,10 @@ public:
                         const int& t_col,
                         const double& t_weight);
 
+    // Get row coordinate of central pixel
+    int GetCentralPixelRow() const;
+    // Get col coordinate of central pixel
+    int GetCentralPixelCol() const;
     // Set coordinates of central pixel
     void SetCentralPixel(const int& t_row, const int& t_col);
     // Check if pixel is central

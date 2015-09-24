@@ -9,7 +9,7 @@
 #include <QDebug>
 
 MaskSettingsDialog::MaskSettingsDialog(QSharedPointer<Mask> t_mask,
-                                       QWidget *parent) :
+                                       QWidget* parent) :
     QDialog(parent), ui(new Ui::MaskSettingsDialog), m_mask(t_mask)
 {
     ui->setupUi(this);
@@ -76,7 +76,7 @@ void MaskSettingsDialog::SetUpTable()
 // Set view of mask item on base of its type
 // @input:
 // - *t_item - valid pointer to item widget
-void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
+void MaskSettingsDialog::SetItemView(QTableWidgetItem* t_item)
 {
     if ( nullptr == t_item )
     {
@@ -88,6 +88,11 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
     if ( m_mask->IsPixelEnabled(t_item->row(), t_item->column()) )
     {
         type = CellType::ENABLED;
+    }
+
+    if ( m_mask->IsPixelCentral(t_item->row(), t_item->column()) )
+    {
+        type = CellType::CENTRAL;
     }
 
     Qt::ItemFlags cellFlags = t_item->flags();
@@ -118,7 +123,7 @@ void MaskSettingsDialog::SetItemView(QTableWidgetItem *t_item)
 // - t_type - type of the cell
 // @output:
 // - QBrush - QBrush object with set up cell color
-QBrush MaskSettingsDialog::GetCellColor(const CellType &t_type)
+QBrush MaskSettingsDialog::GetCellColor(const CellType& t_type)
 {
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
@@ -177,7 +182,7 @@ void MaskSettingsDialog::SlotCellChanged(int t_row, int t_col)
 // Slot that will show menu
 // @input:
 // - t_point - point, where user clicked
-void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
+void MaskSettingsDialog::SlotShowContextMenu(const QPoint& t_point)
 {
     QTableWidgetItem *item = ui->maskTable->itemAt(t_point);
     if ( nullptr == item )
@@ -185,20 +190,40 @@ void MaskSettingsDialog::SlotShowContextMenu(const QPoint &t_point)
         return;
     }
 
-    int row = item->row();
-    int col = item->column();
+    const int row = item->row();
+    const int col = item->column();
 
     QMenu menu;
-    QAction *enabledAction = menu.addAction(tr("Enabled"));
+    QAction* enabledAction = menu.addAction(tr("Enabled"));
     enabledAction->setCheckable(true);
     enabledAction->setChecked( m_mask->IsPixelEnabled(row, col) );
 
-    if ( enabledAction ==
-            menu.exec(ui->maskTable->viewport()->mapToGlobal(t_point)) )
+    QAction* centralAction = menu.addAction(tr("Central"));
+    centralAction->setCheckable(true);
+    centralAction->setChecked( m_mask->IsPixelCentral(row, col) );
+
+    QAction* clickedAction =
+            menu.exec(ui->maskTable->viewport()->mapToGlobal(t_point));
+    if ( nullptr == clickedAction )
+    {
+        return;
+    }
+
+    if ( enabledAction == clickedAction )
     {
         m_mask->SetPixelActiveStatus(row, col, enabledAction->isChecked());
-        SetItemView(item);
     }
+    else if ( centralAction == clickedAction && centralAction->isChecked() )
+    {
+        QTableWidgetItem* oldCentralItem = ui->maskTable->item(
+                    m_mask->GetCentralPixelRow(), m_mask->GetCentralPixelCol());
+
+        m_mask->SetCentralPixel(row, col);
+
+        SetItemView(oldCentralItem);
+    }
+
+    SetItemView(item);
 }
 
 // Slot that will be called on row number change

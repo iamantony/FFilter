@@ -96,5 +96,6 @@ QList<double> PowerFilter::FormMaskPixels(const QImage& /*t_img*/,
                                           const unsigned int& /*t_width*/,
                                           const unsigned int& /*t_height*/)
 {
+    // TODO
     return QList<double>();
 }

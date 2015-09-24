@@ -159,6 +159,22 @@ void Mask::SetPixelWeight(const int& t_row,
     m_maskPixels[t_row][t_col].SetWeight(t_weight);
 }
 
+// Get row coordinate of central pixel
+// @output:
+// - int - row coord of central pixel
+int Mask::GetCentralPixelRow() const
+{
+    return m_centralPixel.y();
+}
+
+// Get col coordinate of central pixel
+// @output:
+// - int - col coord of central pixel
+int Mask::GetCentralPixelCol() const
+{
+    return m_centralPixel.x();
+}
+
 // Set coordinates of central pixel
 // @input:
 // - t_row - row of pixel
