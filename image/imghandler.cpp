@@ -2,6 +2,7 @@
 
 #include <QDebug>
 
+#include "image/imgservice.h"
 #include "filters/powerfilter.h"
 
 ImgHandler::ImgHandler(QObject *parent) :

@@ -2,12 +2,9 @@
 #define IMGHANDLER_H
 
 #include <QObject>
-#include <QList>
 #include <QImage>
-#include <QMap>
 #include <QSharedPointer>
 
-#include "imgservice.h"
 #include "noise/noisegenerator.h"
 #include "masks/mask.h"
 #include "noise/noise.h"
