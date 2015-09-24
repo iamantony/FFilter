@@ -16,11 +16,11 @@ class NoiseSettingsDialog : public QDialog
 
     // == METHODS ==
 public:
-    explicit NoiseSettingsDialog(QWidget *parent = 0);
+    explicit NoiseSettingsDialog(QWidget* parent = 0);
     virtual ~NoiseSettingsDialog();
 
     // Set noise params
-    void SetNoiseParams(const Noise::Type &t_type, const int &t_amplitude);
+    void SetNoiseParams(const Noise::Type& t_type, const int& t_amplitude);
     // Get current noise type
     Noise::Type GetNoiseType() const;
     // Get current noise amplitude
@@ -36,7 +36,7 @@ signals:
 
 private slots:
     // Slot that will be called on change of noise type
-    void on_noiseTypeCB_currentIndexChanged(int index);
+    void on_noiseTypeCB_currentIndexChanged(const QString& text);
     // Slot that will be called on change of noise amplitude
     void on_amplituteLE_editingFinished();
 

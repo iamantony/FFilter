@@ -1,11 +1,20 @@
 #include "gui/noisesettingsdialog.h"
 #include "ui_noisesettingsdialog.h"
 
-#include <QStringList>
 #include <QIntValidator>
 #include <QDebug>
 
-NoiseSettingsDialog::NoiseSettingsDialog(QWidget *parent) :
+#include "gui/cblistmodel.h"
+
+template<>
+void CBListModel<Noise::Type>::init()
+{
+    m_data << QPair<Noise::Type, QString>(Noise::Type::CONSTANT, "Constant") <<
+        QPair<Noise::Type, QString>(Noise::Type::RANDOM, "Random") <<
+        QPair<Noise::Type, QString>(Noise::Type::ABS_RANDOM, "Absolute Random");
+}
+
+NoiseSettingsDialog::NoiseSettingsDialog(QWidget* parent) :
     QDialog(parent),
     ui(new Ui::NoiseSettingsDialog)
 {
@@ -23,20 +32,28 @@ NoiseSettingsDialog::~NoiseSettingsDialog()
 // Fill ComboBox with noise types
 void NoiseSettingsDialog::FillNoiseTypesCB()
 {
-    QStringList items;
-    items << "Constant" << "Random" << "Absolute Random";
+    CBListModel<Noise::Type>* model = new CBListModel<Noise::Type>(this);
+    model->init();
 
-    ui->noiseTypeCB->addItems(items);
+    ui->noiseTypeCB->setModel(model);
 }
 
 // Set noise params
 // @input:
 // - t_type - type of noise
 // - t_amplitude - amplitude of noise
-void NoiseSettingsDialog::SetNoiseParams(const Noise::Type &t_type,
-                                         const int &t_amplitude)
+void NoiseSettingsDialog::SetNoiseParams(const Noise::Type& t_type,
+                                         const int& t_amplitude)
 {
-    ui->noiseTypeCB->setCurrentIndex(t_type);
+    CBListModel<Noise::Type>* model =
+        dynamic_cast<CBListModel<Noise::Type>*>(ui->noiseTypeCB->model());
+    if ( nullptr == model )
+    {
+        qDebug() << __FUNCTION__ << "Failed to get model";
+        return;
+    }
+
+    ui->noiseTypeCB->setCurrentIndex( model->getIndex(t_type) );
     ui->amplituteLE->setText(QString::number(t_amplitude));
 }
 
@@ -45,7 +62,15 @@ void NoiseSettingsDialog::SetNoiseParams(const Noise::Type &t_type,
 // - Noise::Type - current noise type
 Noise::Type NoiseSettingsDialog::GetNoiseType() const
 {
-    return (Noise::Type)ui->noiseTypeCB->currentIndex();
+    CBListModel<Noise::Type>* model =
+        dynamic_cast<CBListModel<Noise::Type>*>(ui->noiseTypeCB->model());
+    if ( nullptr == model )
+    {
+        qDebug() << __FUNCTION__ << "Failed to get model";
+        return Noise::Type::CONSTANT;
+    }
+
+    return model->getType(ui->noiseTypeCB->currentText());
 }
 
 // Get current noise amplitude
@@ -66,24 +91,21 @@ int NoiseSettingsDialog::GetNoiseAmplitude() const
 // Slot that will be called on change of noise type
 // @input:
 // - index - index of noise type
-void NoiseSettingsDialog::on_noiseTypeCB_currentIndexChanged(int index)
+void NoiseSettingsDialog::on_noiseTypeCB_currentIndexChanged(
+        const QString& text)
 {
-    if ( index < 0 || Noise::DEFAULT_LAST < index )
+    CBListModel<Noise::Type>* model =
+        dynamic_cast<CBListModel<Noise::Type>*>(ui->noiseTypeCB->model());
+    if ( nullptr == model )
     {
-        qDebug() << __FUNCTION__ << "Error - invalid index value";
+        qDebug() << __FUNCTION__ << "Failed to get model";
         return;
     }
 
-    emit SignalNoiseType( (Noise::Type)index );
+    Noise::Type type = model->getType(text);
+    emit SignalNoiseType(type);
 
-    if ( Noise::ABS_RANDOM == index )
-    {
-        ui->amplituteLE->setEnabled(false);
-    }
-    else
-    {
-        ui->amplituteLE->setEnabled(true);
-    }
+    ui->amplituteLE->setEnabled( Noise::Type::ABS_RANDOM == type );
 }
 
 // Slot that will be called on change of noise amplitude

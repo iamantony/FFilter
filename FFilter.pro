@@ -69,7 +69,8 @@ HEADERS  += \
     masks/maskpixel.h \
     masks/mask.h \
     noise/abstractnoise.h \
-    aggreg_operators/aggregoperators.h
+    aggreg_operators/aggregoperators.h \
+    gui/cblistmodel.h
 
 FORMS    += \
     gui/mainwindow.ui \

@@ -13,7 +13,7 @@
 NoiseGenerator::NoiseGenerator(QObject *parent) :
     QObject(parent)
 {
-    m_noiseType = Noise::CONSTANT;
+    m_noiseType = Noise::Type::CONSTANT;
     m_noiseAmp = 0;
     m_noiseLvlPercent = 0;
 }
@@ -81,7 +81,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
     QScopedPointer<AbstractNoise> noise;
     switch(m_noiseType)
     {
-        case Noise::CONSTANT:
+        case Noise::Type::CONSTANT:
         {
             noise.reset(new ConstNoise(t_img,
                                        m_noiseLvlPercent,
@@ -90,7 +90,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
             break;
         }
 
-        case Noise::RANDOM:
+        case Noise::Type::RANDOM:
         {
             noise.reset(new RandNoise(t_img,
                                       m_noiseLvlPercent,
@@ -99,7 +99,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
             break;
         }
 
-        case Noise::ABS_RANDOM:
+        case Noise::Type::ABS_RANDOM:
         {
             noise.reset(new AbsRandNoise(t_img,
                                          m_noiseLvlPercent,
@@ -107,7 +107,7 @@ QImage NoiseGenerator::NoiseImage(const QImage &t_img)
             break;
         }
 
-        case Noise::DEFAULT_LAST:
+        case Noise::Type::DEFAULT_LAST:
         default:
         {
             QImage sameImg = t_img;

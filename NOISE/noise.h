@@ -3,7 +3,7 @@
 
 namespace Noise
 {
-    enum Type
+    enum class Type
     {
         CONSTANT = 0,
         RANDOM,
