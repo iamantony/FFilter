@@ -3,12 +3,13 @@
 #include <time.h>
 #include <math.h>
 
+#include <QImage>
 #include <QColor>
 #include <QDebug>
 
 const double MIN_SD = 0.00001;
 
-ImgService::ImgService(QObject *parent) :
+ImgService::ImgService(QObject* parent) :
     QObject(parent)
 {
 }
@@ -17,12 +18,12 @@ ImgService::ImgService(QObject *parent) :
 // @input:
 // - t_img - not empty image
 // @output:
-// QImage - grayscaled copy of input image. Or empty image in case of error
-QImage ImgService::ColorImgToGray(const QImage &t_img)
+// - QImage - grayscaled copy of input image. Or empty image in case of error
+QImage ImgService::ColorImgToGray(const QImage& t_img)
 {
     if ( t_img.isNull() )
     {
-        qDebug() << __FUNCTION__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Error - invalid arguments";
         return QImage();
     }
 
@@ -44,12 +45,13 @@ QImage ImgService::ColorImgToGray(const QImage &t_img)
                                0.0722 * pixel.blue();
 
             int resultLuminance = (int)floor(grayPixel + 0.5);
-            resultLuminance = qMax(resultLuminance, 0);
-            resultLuminance = qMin(resultLuminance, 255);
+            resultLuminance = qMin(qMax(resultLuminance, 0), 255);
 
             grayImg.setPixel(wdt,
                              hgt,
-                             qRgb(resultLuminance, resultLuminance, resultLuminance));
+                             qRgb(resultLuminance,
+                                  resultLuminance,
+                                  resultLuminance));
         }
 
         ++counter;
@@ -70,17 +72,18 @@ QImage ImgService::ColorImgToGray(const QImage &t_img)
 // - t_secondImg - not empty image with size equal to first image size
 // @output:
 // - double - result SD. In case of error function will return 0
-double ImgService::CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg)
+double ImgService::CalcImgsSD(const QImage& t_firstImg,
+                              const QImage& t_secondImg)
 {
     double sd = 0.0;
     if ( t_firstImg.isNull() || t_firstImg.size() != t_secondImg.size() )
     {
-        qDebug() << __FUNCTION__ << "Invalid arguments";
+        qDebug() << __FUNCTION__ << "Error - invalid arguments";
         return sd;
     }
 
-    int imgWdt = t_firstImg.width();
-    int imgHgt = t_firstImg.height();
+    const int imgWdt = t_firstImg.width();
+    const int imgHgt = t_firstImg.height();
 
     int onePercent = ( imgWdt * imgHgt )/100;
     int progressPrc = 0;

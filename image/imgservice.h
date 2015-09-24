@@ -2,7 +2,8 @@
 #define IMGSERVICE_H
 
 #include <QObject>
-#include <QImage>
+
+class QImage;
 
 class ImgService : public QObject
 {
@@ -10,12 +11,12 @@ class ImgService : public QObject
 
     // == METHODS ==
 public:
-    explicit ImgService(QObject *parent = 0);
+    explicit ImgService(QObject* parent = 0);
 
     // Transform color image to gray image
-    QImage ColorImgToGray(const QImage &t_img);
+    QImage ColorImgToGray(const QImage& t_img);
     // Calc Standart Deviation (SD) between two images of the same size
-    double CalcImgsSD(const QImage &t_firstImg, const QImage &t_secondImg);
+    double CalcImgsSD(const QImage& t_firstImg, const QImage& t_secondImg);
 
 signals:
     void SignalProgressPrc(int t_progress);
