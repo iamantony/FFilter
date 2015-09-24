@@ -15,7 +15,7 @@ public:
                            const unsigned int &t_noiseLvl,
                            const int &t_noiseAmp);
 
-    virtual ~AbstractNoise();
+    virtual ~AbstractNoise() {}
 
     // Get noised copy of image
     QImage GetNoisedImage();

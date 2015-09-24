@@ -1,6 +1,7 @@
 #include "noisegenerator.h"
 
 #include <QScopedPointer>
+#include <QImage>
 #include <QDebug>
 
 #include "noise/noise.h"
@@ -15,10 +16,6 @@ NoiseGenerator::NoiseGenerator(QObject *parent) :
     m_noiseType = Noise::CONSTANT;
     m_noiseAmp = 0;
     m_noiseLvlPercent = 0;
-}
-
-NoiseGenerator::~NoiseGenerator()
-{
 }
 
 // Set noise type

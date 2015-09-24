@@ -2,9 +2,10 @@
 #define NOISEGENERATOR_H
 
 #include <QObject>
-#include <QImage>
 
 #include "noise.h"
+
+class QImage;
 
 class NoiseGenerator : public QObject
 {
@@ -13,7 +14,7 @@ class NoiseGenerator : public QObject
     // == METHODS ==
 public:
     explicit NoiseGenerator(QObject *parent = 0);
-    virtual ~NoiseGenerator();
+    virtual ~NoiseGenerator() {}
 
     // Set noise type
     void SetNoiseType(const Noise::Type &t_type);

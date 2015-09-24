@@ -9,10 +9,6 @@ ConstNoise::ConstNoise(const QImage &t_img,
 {
 }
 
-ConstNoise::~ConstNoise()
-{
-}
-
 // Generate noise values
 // @output:
 // - QVector<int> - noise values

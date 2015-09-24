@@ -1,9 +1,9 @@
 #ifndef CONSTNOISE_H
 #define CONSTNOISE_H
 
-#include <QImage>
-
 #include "noise/abstractnoise.h"
+
+class QImage;
 
 class ConstNoise : public AbstractNoise
 {
@@ -15,7 +15,7 @@ public:
                         const unsigned int &t_noiseLvl,
                         const int &t_noiseAmp);
 
-    virtual ~ConstNoise();
+    virtual ~ConstNoise() {}
 
 protected:
     // Generate noise values

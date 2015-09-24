@@ -11,10 +11,6 @@ RandNoise::RandNoise(const QImage &t_img,
 {
 }
 
-RandNoise::~RandNoise()
-{
-}
-
 // Generate noise values
 // @output:
 // - QVector<int> - noise values

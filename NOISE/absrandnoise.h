@@ -1,9 +1,9 @@
 #ifndef ABSRANDNOISE_H
 #define ABSRANDNOISE_H
 
-#include <QImage>
-
 #include "noise/abstractnoise.h"
+
+class QImage;
 
 class AbsRandNoise : public AbstractNoise
 {
@@ -15,7 +15,7 @@ public:
                           const unsigned int &t_noiseLvl,
                           const int &t_noiseAmp);
 
-    virtual ~AbsRandNoise();
+    virtual ~AbsRandNoise() {}
 
 protected:
     // Generate noise values

@@ -33,10 +33,6 @@ AbstractNoise::AbstractNoise(const QImage &t_img,
     CreatePixelsMap(t_noiseLvl);
 }
 
-AbstractNoise::~AbstractNoise()
-{
-}
-
 // Create map of pixels by whitch we can define should this pixel be noised
 // or not
 // @input:

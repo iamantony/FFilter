@@ -11,10 +11,6 @@ AbsRandNoise::AbsRandNoise(const QImage &t_img,
 {
 }
 
-AbsRandNoise::~AbsRandNoise()
-{
-}
-
 // Generate noise values
 // @output:
 // - QVector<int> - noise values
