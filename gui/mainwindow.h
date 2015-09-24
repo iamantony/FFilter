@@ -21,22 +21,24 @@ class MainWindow : public QMainWindow
 
     // == METHODS ==
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    explicit MainWindow(QWidget* parent = 0);
+    virtual ~MainWindow();
 
 public slots:
     // Slot to set Standart Deviation value
-    void SlotSetSD(const double &t_sko);
+    void SlotSetSD(const double& t_sd);
 
 private:
     // Set up connections to GUI elements
     void SetConnections();
-    // Enable/disable functional UI elements
-    void EnableGUI(const bool &t_mode);
+    // Enable/disable functional GUI elements
+    void EnableGUI(const bool& t_mode);
     // Set original image on label
-    void SetOriginalImg(const QImage &t_origImg);
-    // Set result (filtered) image on label
-    void SetResultImg(const QImage &t_resultImg);
+    void SetOriginalImg(const QImage& t_origImg);
+    // Set noised image on label
+    void SetNoisedImg(const QImage& t_noisedImg);
+    // Set filtered image on label
+    void SetFilteredImg(const QImage& t_filteredImg);
 
 private slots:
     // Slot for opening original image
@@ -56,7 +58,7 @@ private slots:
 
     // == DATA ==
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     ImgHandler m_imgHandler;
     AggregFilterSettingsDialog m_aggregFilterSettings;
     NoiseSettingsDialog m_noiseSettings;

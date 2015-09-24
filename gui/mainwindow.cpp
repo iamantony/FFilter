@@ -2,9 +2,10 @@
 #include "ui_mainwindow.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget* parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -52,8 +53,11 @@ void MainWindow::SetConnections()
             &m_imgHandler, SLOT(SlotRecieveNoiseAmp(int)));
 }
 
-// Enable/disable functional UI elements
-void MainWindow::EnableGUI(const bool &t_mode)
+// Enable/disable functional GUI elements
+// @input:
+// - t_mode - desired mode og GUI elements. True if elements should be enabled,
+// False otherwise
+void MainWindow::EnableGUI(const bool& t_mode)
 {
     ui->noiseLeveler->setEnabled(t_mode);
     ui->filterPB->setEnabled(t_mode);
@@ -62,31 +66,44 @@ void MainWindow::EnableGUI(const bool &t_mode)
 }
 
 // Set original image on label
-void MainWindow::SetOriginalImg(const QImage &t_origImg)
+// @input:
+// - t_origImg - valid image object
+void MainWindow::SetOriginalImg(const QImage& t_origImg)
 {
-    if ( t_origImg.isNull() )
+    if ( false == t_origImg.isNull() )
     {
-        return;
+        ui->originalImgLbl->setPixmap( QPixmap::fromImage(t_origImg) );
     }
-
-    ui->originalImgLbl->setPixmap( QPixmap::fromImage(t_origImg) );
 }
 
-// Set result (filtered) image on label
-void MainWindow::SetResultImg(const QImage &t_resultImg)
+// Set noised image on label
+// @input:
+// - t_noisedImg - valid image object
+void MainWindow::SetNoisedImg(const QImage& t_noisedImg)
 {
-    if ( t_resultImg.isNull() )
+    if ( false == t_noisedImg.isNull() )
     {
-        return;
+        ui->noisedImgLbl->setPixmap( QPixmap::fromImage(t_noisedImg) );
     }
+}
 
-    ui->resultImgLbl->setPixmap( QPixmap::fromImage(t_resultImg) );
+// Set filtered image on label
+// @input:
+// - t_resultImg - valid image object
+void MainWindow::SetFilteredImg(const QImage& t_filteredImg)
+{
+    if ( false == t_filteredImg.isNull() )
+    {
+        ui->resultImgLbl->setPixmap( QPixmap::fromImage(t_filteredImg) );
+    }
 }
 
 // Slot to set Standart Deviation value
-void MainWindow::SlotSetSD(const double &t_sko)
+// @input:
+// - t_sko - calculated value of SD
+void MainWindow::SlotSetSD(const double& t_sd)
 {
-    ui->sdLE->setText( QString::number(t_sko) );
+    ui->sdLE->setText( QString::number(t_sd) );
 }
 
 // Slot for opening original image
@@ -96,7 +113,6 @@ void MainWindow::on_openImgPB_clicked()
                                        "Open image",
                                        QDir::currentPath(),
                                        "IMG files (*.png *.jpg *.jpeg *.bmp)");
-
     if( fName.isEmpty())
     {
         return;
@@ -106,7 +122,8 @@ void MainWindow::on_openImgPB_clicked()
     m_imgHandler.SetOriginalImg(origImg);
 
     SetOriginalImg( m_imgHandler.GetOriginalImg() );
-    SetResultImg( m_imgHandler.GetTargetImg() );
+    SetNoisedImg( m_imgHandler.GetTargetImg() );
+    SetFilteredImg( m_imgHandler.GetTargetImg() );
 
     // Set initial SD
     SlotSetSD(0.0);
@@ -121,7 +138,7 @@ void MainWindow::on_noiseLeveler_valueChanged(int value)
     ui->noisePrcLbl->setText(strNoiseLvl);
 
     m_imgHandler.SetNoiseLevelPrc(value);
-    SetOriginalImg( m_imgHandler.GetNoisyImg() );
+    SetNoisedImg( m_imgHandler.GetNoisyImg() );
 }
 
 // Start filtration
@@ -129,7 +146,7 @@ void MainWindow::on_filterPB_clicked()
 {
     EnableGUI(false);
 
-    SetResultImg( m_imgHandler.FilterTargetImg() );
+    SetFilteredImg( m_imgHandler.FilterTargetImg() );
 
     EnableGUI(true);
 }
@@ -165,14 +182,44 @@ void MainWindow::on_actionMaskFilterSettings_triggered()
     m_maskSettings->exec();
 }
 
-// TODO
 void MainWindow::on_saveNoisedImgPB_clicked()
 {
+    QString imgName = QFileDialog::getSaveFileName(this,
+                                    "Save noised image to...",
+                                    QDir::currentPath(),
+                                    "IMG files (*.png *.jpg *.jpeg *.bmp)");
 
+    if ( imgName.isEmpty() )
+    {
+        return;
+    }
+
+    QImage noisedImg = m_imgHandler.GetNoisyImg();
+    if ( false == noisedImg.save(imgName) )
+    {
+        QMessageBox::critical(this,
+                              "Fail",
+                              "Program failed to save noised image. Sorry.");
+    }
 }
 
-// TODO
 void MainWindow::on_saveFilteredImgPB_clicked()
 {
+    QString imgName = QFileDialog::getSaveFileName(this,
+                                    "Save filtered image to...",
+                                    QDir::currentPath(),
+                                    "IMG files (*.png *.jpg *.jpeg *.bmp)");
 
+    if ( imgName.isEmpty() )
+    {
+        return;
+    }
+
+    QImage filteredImg = m_imgHandler.GetTargetImg();
+    if ( false == filteredImg.save(imgName) )
+    {
+        QMessageBox::critical(this,
+                              "Fail",
+                              "Program failed to save filtered image. Sorry.");
+    }
 }
