@@ -32,8 +32,8 @@ signals:
 private:
     // Create list of pixels that located in mask
     QList<double> FormMaskPixels(const QImage& t_img,
-                                 const unsigned int& t_width,
-                                 const unsigned int& t_height);
+                                 const int& t_width,
+                                 const int& t_height);
 
     // == DATA ==
 private:
