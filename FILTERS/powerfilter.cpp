@@ -131,8 +131,8 @@ QList<double> PowerFilter::FormMaskPixels(const QImage& t_img,
             int pixHeight = std::min(std::max(0, t_height + heightOffset),
                                      t_img.height() - 1);
 
-            pixels << t_img.pixel(pixWidth, pixHeight) *
-                      m_mask->GetPixelWeight(row, col);
+            int pixelValue = qRed(t_img.pixel(pixWidth, pixHeight));
+            pixels << pixelValue * m_mask->GetPixelWeight(row, col);
         }
     }
 
