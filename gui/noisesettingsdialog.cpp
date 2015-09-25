@@ -105,7 +105,7 @@ void NoiseSettingsDialog::on_noiseTypeCB_currentIndexChanged(
     Noise::Type type = model->getType(text);
     emit SignalNoiseType(type);
 
-    ui->amplituteLE->setEnabled( Noise::Type::ABS_RANDOM == type );
+    ui->amplituteLE->setEnabled( Noise::Type::ABS_RANDOM != type );
 }
 
 // Slot that will be called on change of noise amplitude
