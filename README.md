@@ -1,5 +1,7 @@
-FFilter is an app can be used for study different types of noise filters in image processing or actually for image
-filtering. Currently only grayscale images are supported.
+# FFilter
+
+FFilter is an app can be used for study different types of noise generators / noise filters in image processing. 
+Currently only grayscale images are supported.
 
 Features:
 
