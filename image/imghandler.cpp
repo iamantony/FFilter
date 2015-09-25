@@ -41,7 +41,8 @@ bool ImgHandler::SetOriginalImg(const QImage &t_img)
         m_originalImg = t_img;
     }
 
-    m_targetImg = m_originalImg;
+    m_noisedImg = m_originalImg;
+    m_filteredImg = m_originalImg;
 
     return true;
 }
@@ -54,12 +55,12 @@ QImage ImgHandler::GetOriginalImg()
     return m_originalImg;
 }
 
-// Get target image
+// Get filtered image
 // @output:
-// - QImage - current target image
-QImage ImgHandler::GetTargetImg()
+// - QImage - filtered image
+QImage ImgHandler::GetFilteredImg()
 {
-    return m_targetImg;
+    return m_filteredImg;
 }
 
 // Set image mode
@@ -87,17 +88,11 @@ QImage ImgHandler::GetNoisyImg()
     connect(&m_noise, SIGNAL(SignalProgressPrc(int)),
             this, SLOT(SlotProgressPrc(int)));
 
-    QImage noisyImg = m_noise.NoiseImage( m_originalImg );
+    m_noisedImg = m_noise.NoiseImage( m_originalImg );
 
-    // Process ended, so we no more need connection with progress bar
     m_noise.disconnect(SIGNAL(SignalProgressPrc(int)));
 
-    if ( false == noisyImg.isNull() )
-    {
-        m_targetImg = noisyImg;
-    }
-
-    return m_targetImg;
+    return m_noisedImg;
 }
 
 // Calc SD between original and target images
@@ -109,7 +104,7 @@ double ImgHandler::CalcImgsSD()
     connect(&imgService, SIGNAL(SignalProgressPrc(int)),
             this, SLOT(SlotProgressPrc(int)));
 
-    double sd =  imgService.CalcImgsSD(m_originalImg, m_targetImg);
+    double sd =  imgService.CalcImgsSD(m_originalImg, m_filteredImg);
 
     imgService.disconnect(SIGNAL(SignalProgressPrc(int)));
 
@@ -133,17 +128,13 @@ QImage ImgHandler::FilterTargetImg()
     connect(&filter, SIGNAL(SignalProgressPrc(int)),
             this, SLOT(SlotProgressPrc(int)));
 
-    QImage filteredImg = filter.FilterImg(m_targetImg);
+    m_filteredImg = filter.FilterImg(m_noisedImg);
 
     filter.disconnect(SIGNAL(SignalProgressPrc(int)));
 
-    if ( false == filteredImg.isNull() )
-    {
-        m_targetImg = filteredImg;
-        CalcImgsSD();
-    }
+    CalcImgsSD();
 
-    return m_targetImg;
+    return m_filteredImg;
 }
 
 // Get current aggregation operator type

@@ -23,8 +23,8 @@ public:
     bool SetOriginalImg(const QImage &t_img);
     // Get original image
     QImage GetOriginalImg();
-    // Get target image
-    QImage GetTargetImg();
+    // Get filtered image
+    QImage GetFilteredImg();
     // Set image mode
     void SetImgMode(const Image::Mode &t_mode);
     // Set percent of noise level
@@ -70,7 +70,8 @@ public slots:
     // == DATA ==
 private:
     QImage m_originalImg;
-    QImage m_targetImg;
+    QImage m_noisedImg;
+    QImage m_filteredImg;
     Image::Mode m_imgMode;
     NoiseGenerator m_noise;
     QSharedPointer<Mask> m_mask;

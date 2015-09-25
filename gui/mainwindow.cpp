@@ -122,8 +122,8 @@ void MainWindow::on_openImgPB_clicked()
     m_imgHandler.SetOriginalImg(origImg);
 
     SetOriginalImg( m_imgHandler.GetOriginalImg() );
-    SetNoisedImg( m_imgHandler.GetTargetImg() );
-    SetFilteredImg( m_imgHandler.GetTargetImg() );
+    SetNoisedImg( m_imgHandler.GetFilteredImg() );
+    SetFilteredImg( m_imgHandler.GetFilteredImg() );
 
     // Set initial SD
     SlotSetSD(0.0);
@@ -215,7 +215,7 @@ void MainWindow::on_saveFilteredImgPB_clicked()
         return;
     }
 
-    QImage filteredImg = m_imgHandler.GetTargetImg();
+    QImage filteredImg = m_imgHandler.GetFilteredImg();
     if ( false == filteredImg.save(imgName) )
     {
         QMessageBox::critical(this,
