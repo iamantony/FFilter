@@ -28,8 +28,8 @@ int MeanAggregOperator::Calc(const QList<double>& t_list)
         return 0;
     }
 
-    auto accPower = [&m_power](const double& a, const double& b) {
-        return a + std::pow(b, m_power);
+    auto accPower = [this](const double& a, const double& b) {
+        return a + std::pow(b, this->m_power);
     };
 
     double summ = std::accumulate(
